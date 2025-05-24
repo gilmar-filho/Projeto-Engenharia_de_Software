@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0" version="27.0.9" pages="2">
   <diagram id="QU1VG3sRyyTv4m1DJWj3" name="Diagrama_Descrito">
-    <mxGraphModel dx="985" dy="575" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="689" dy="403" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -8,7 +8,7 @@
           <mxGeometry x="370" y="1030" width="790" height="640" as="geometry" />
         </mxCell>
         <mxCell id="CMSNJL8uuIETDpdzAiZ_-71" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;dashed=1;" parent="1" vertex="1">
-          <mxGeometry x="1210" y="1508" width="540" height="510" as="geometry" />
+          <mxGeometry x="1210" y="1508" width="540" height="472" as="geometry" />
         </mxCell>
         <mxCell id="CMSNJL8uuIETDpdzAiZ_-69" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;dashed=1;" parent="1" vertex="1">
           <mxGeometry x="1170" y="1030" width="1150" height="240" as="geometry" />
@@ -25,8 +25,8 @@
         <mxCell id="CMSNJL8uuIETDpdzAiZ_-2" value="- codigo: String&lt;div&gt;- volume: double&lt;/div&gt;&lt;div&gt;- tipoResiduo: String&lt;/div&gt;&lt;div&gt;- responsavel: Responsavel&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;labelPosition=center;verticalLabelPosition=middle;verticalAlign=middle;" parent="1" vertex="1">
           <mxGeometry x="1225" y="1588" width="275" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="CMSNJL8uuIETDpdzAiZ_-3" value="+ getCodigo(): String&lt;div&gt;+ getVolume(): double&lt;/div&gt;&lt;div&gt;+ getTipoResiduo(): String&lt;/div&gt;&lt;div&gt;+ getResponsavel(): Responsavel&lt;/div&gt;&lt;div&gt;+ setCodigo(novoCod: String): void&lt;div&gt;+ setVolume(novoVol: double): void&lt;/div&gt;&lt;div&gt;+ setTipoResiduo(novoTipo: String): void&lt;/div&gt;&lt;/div&gt;&lt;div&gt;+ setResponsavel(novoResp: Responsavel): void&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
-          <mxGeometry x="1225" y="1658" width="275" height="145" as="geometry" />
+        <mxCell id="CMSNJL8uuIETDpdzAiZ_-3" value="+ getCodigo(): String&lt;div&gt;+ getVolume(): double&lt;/div&gt;&lt;div&gt;+ getTipoResiduo(): String&lt;/div&gt;&lt;div&gt;+ getResponsavel(): Responsavel&lt;/div&gt;&lt;div&gt;&lt;div&gt;+ setVolume(novoVol: double): void&lt;/div&gt;&lt;div&gt;+ setTipoResiduo(novoTipo: String): void&lt;/div&gt;&lt;/div&gt;&lt;div&gt;+ setResponsavel(novoResp: Responsavel): void&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
+          <mxGeometry x="1225" y="1658" width="275" height="122" as="geometry" />
         </mxCell>
         <mxCell id="CMSNJL8uuIETDpdzAiZ_-4" value="Responsavel" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1525" y="1713" width="215" height="60" as="geometry" />
@@ -34,8 +34,8 @@
         <mxCell id="CMSNJL8uuIETDpdzAiZ_-5" value="- cpf: String&lt;div&gt;- nome: String&lt;/div&gt;&lt;div&gt;- telefone: String&lt;/div&gt;&lt;div&gt;- setor: String&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;labelPosition=center;verticalLabelPosition=middle;verticalAlign=middle;" parent="1" vertex="1">
           <mxGeometry x="1525" y="1773" width="215" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="CMSNJL8uuIETDpdzAiZ_-6" value="+ getCPF(): String&lt;div&gt;+ getNome(): String&lt;/div&gt;&lt;div&gt;+ getTelefone(): String&lt;/div&gt;&lt;div&gt;+ getSetor(): String&lt;/div&gt;&lt;div&gt;+ setCPF(novoCPF: String): void&lt;div&gt;+ setNome(novoNome: String): void&lt;/div&gt;&lt;div&gt;+ setTelefone(novoTel: String): void&lt;/div&gt;&lt;div&gt;+ setSetor(novoSetor: String): void&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
-          <mxGeometry x="1525" y="1843" width="215" height="150" as="geometry" />
+        <mxCell id="CMSNJL8uuIETDpdzAiZ_-6" value="+ getCPF(): String&lt;div&gt;+ getNome(): String&lt;/div&gt;&lt;div&gt;+ getTelefone(): String&lt;/div&gt;&lt;div&gt;+ getSetor(): String&lt;/div&gt;&lt;div&gt;&lt;div&gt;+ setNome(novoNome: String): void&lt;/div&gt;&lt;div&gt;+ setTelefone(novoTel: String): void&lt;/div&gt;&lt;div&gt;+ setSetor(novoSetor: String): void&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
+          <mxGeometry x="1525" y="1843" width="215" height="127" as="geometry" />
         </mxCell>
         <mxCell id="CMSNJL8uuIETDpdzAiZ_-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=block;endFill=0;dashed=1;dashPattern=8 8;" parent="1" source="CMSNJL8uuIETDpdzAiZ_-8" target="CMSNJL8uuIETDpdzAiZ_-53" edge="1">
           <mxGeometry relative="1" as="geometry" />
