@@ -213,7 +213,7 @@ class TelaListagemResponsaveis:
         titulo.pack(pady=(0, 20))
         
         # Variáveis dos campos
-        cpf_formatado = self.responsavel_controller.formatar_cpf_para_exibicao(responsavel.get_cpf())
+        cpf_formatado = responsavel.get_cpf()
         var_nome = tk.StringVar(value=responsavel.get_nome())
         var_telefone = tk.StringVar(value=responsavel.get_telefone())
         var_setor = tk.StringVar(value=responsavel.get_setor())

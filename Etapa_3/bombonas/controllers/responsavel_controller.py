@@ -168,15 +168,6 @@ class ResponsavelController:
             print(f"Erro ao editar responsável: {e}")
             raise
     
-    def get_setores_validos(self) -> List[str]:
-        """
-        Retorna os setores válidos.
-        
-        Returns:
-            List[str]: Lista de setores válidos
-        """
-        return self._responsavel_factory.get_setores_validos()
-    
     def formatar_cpf_para_exibicao(self, cpf: str) -> str:
         """
         Formata o CPF para exibição.

@@ -7,7 +7,6 @@ import os
 from typing import List, Optional
 from dao.interfaces.bombona_dao_interface import BombonaDAOInterface
 from models.bombona import Bombona
-from models.responsavel import Responsavel
 
 
 class BombonaDAO(BombonaDAOInterface):

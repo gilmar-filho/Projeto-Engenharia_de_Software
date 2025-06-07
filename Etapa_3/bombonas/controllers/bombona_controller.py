@@ -9,7 +9,6 @@ from dao.interfaces.bombona_dao_interface import BombonaDAOInterface
 from dao.interfaces.responsavel_dao_interface import ResponsavelDAOInterface
 from factory.bombona_factory import BombonaFactory
 from models.bombona import Bombona
-from models.responsavel import Responsavel
 
 
 class BombonaController:

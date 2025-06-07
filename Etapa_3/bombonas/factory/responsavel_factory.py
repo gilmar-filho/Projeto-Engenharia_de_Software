@@ -13,22 +13,6 @@ class ResponsavelFactory:
     responsáveis válidos sejam criados.
     """
     
-    # Setores sugeridos (para orientação do usuário, mas não limitantes)
-    SETORES_SUGERIDOS = [
-        'LABORATÓRIO',
-        'QUÍMICA',
-        'BIOLOGIA', 
-        'FÍSICA',
-        'ENGENHARIA',
-        'MEDICINA',
-        'FARMÁCIA',
-        'VETERINÁRIA',
-        'AGRONOMIA',
-        'MANUTENÇÃO',
-        'SEGURANÇA',
-        'ADMINISTRAÇÃO'
-    ]
-    
     @classmethod
     def criar_responsavel(cls, cpf: str, nome: str, telefone: str, setor: str) -> Responsavel:
         """
@@ -215,63 +199,3 @@ class ResponsavelFactory:
         
         # Retorna em maiúsculas para padronização
         return setor.upper()
-    
-    @classmethod
-    def get_setores_sugeridos(cls) -> list:
-        """
-        Retorna a lista de setores sugeridos (não limitantes).
-        
-        Returns:
-            list: Lista de setores sugeridos
-        """
-        return cls.SETORES_SUGERIDOS.copy()
-    
-    @classmethod
-    def get_setores_validos(cls) -> list:
-        """
-        Mantém compatibilidade com código existente.
-        Retorna setores sugeridos já que agora qualquer setor é válido.
-        
-        Returns:
-            list: Lista de setores sugeridos
-        """
-        return cls.get_setores_sugeridos()
-    
-    @classmethod
-    def formatar_cpf_para_exibicao(cls, cpf: str) -> str:
-        """
-        Formata o CPF para exibição (XXX.XXX.XXX-XX).
-        
-        Args:
-            cpf (str): CPF apenas com números
-            
-        Returns:
-            str: CPF formatado para exibição
-        """
-        if not cpf or len(cpf) != 11:
-            return cpf
-        
-        return f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}"
-    
-    @classmethod
-    def formatar_telefone_para_exibicao(cls, telefone: str) -> str:
-        """
-        Formata o telefone para exibição.
-        
-        Args:
-            telefone (str): Telefone apenas com números
-            
-        Returns:
-            str: Telefone formatado para exibição
-        """
-        if not telefone:
-            return telefone
-        
-        telefone_limpo = re.sub(r'\D', '', telefone)
-        
-        if len(telefone_limpo) == 11:
-            return f"({telefone_limpo[:2]}) {telefone_limpo[2]} {telefone_limpo[3:7]}-{telefone_limpo[7:]}"
-        elif len(telefone_limpo) == 10:
-            return f"({telefone_limpo[:2]}) {telefone_limpo[2:6]}-{telefone_limpo[6:]}"
-        
-        return telefone
