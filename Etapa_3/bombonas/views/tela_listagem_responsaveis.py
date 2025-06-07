@@ -84,7 +84,7 @@ class TelaListagemResponsaveis:
         self.tree.column('Telefone', width=120, anchor=tk.CENTER)
         self.tree.column('Setor', width=150, anchor=tk.CENTER)
         
-        # Scrollbar
+        # Scrollbar vertical apenas
         scrollbar = ttk.Scrollbar(table_frame, orient=tk.VERTICAL, command=self.tree.yview)
         self.tree.configure(yscrollcommand=scrollbar.set)
         
@@ -114,23 +114,15 @@ class TelaListagemResponsaveis:
             width=15
         ).pack(side=tk.LEFT, padx=(0, 5))
         
-        # Botões da direita
-        ttk.Button(
-            button_frame,
-            text="Atualizar",
-            command=self._carregar_responsaveis,
-            width=15
-        ).pack(side=tk.RIGHT, padx=(5, 0))
-        
+        # Botão da direita (apenas Fechar)
         ttk.Button(
             button_frame,
             text="Fechar",
             command=self.janela.destroy,
             width=15
-        ).pack(side=tk.RIGHT, padx=(5, 0))
+        ).pack(side=tk.RIGHT)
         
-        # Bind para teclas
-        self.janela.bind('<F5>', lambda e: self._carregar_responsaveis())
+        # Bind para teclas (removido F5 para atualizar)
         self.janela.bind('<Delete>', lambda e: self._excluir_responsavel())
     
     def _carregar_responsaveis(self):

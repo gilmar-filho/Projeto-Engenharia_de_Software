@@ -68,7 +68,7 @@ class SistemaBombonas:
         """Cria a interface gráfica principal."""
         self.root = tk.Tk()
         self.root.title("Sistema de Gerenciamento de Bombonas")
-        self.root.geometry("800x600")
+        self.root.geometry("900x700")  # Aumentado de 800x600 para 900x700
         self.root.resizable(True, True)
         
         # Centraliza a janela
@@ -86,11 +86,25 @@ class SistemaBombonas:
         return self.root
     
     def _centralizar_janela(self):
-        """Centraliza a janela na tela."""
+        """Posiciona a janela no centro-superior da tela."""
         self.root.update_idletasks()
-        x = (self.root.winfo_screenwidth() // 2) - (800 // 2)
-        y = (self.root.winfo_screenheight() // 2) - (600 // 2)
-        self.root.geometry(f"800x600+{x}+{y}")
+        
+        # Obtém dimensões da tela
+        largura_tela = self.root.winfo_screenwidth()
+        altura_tela = self.root.winfo_screenheight()
+        
+        # Dimensões da janela
+        largura_janela = 900
+        altura_janela = 700
+        
+        # Calcula posição X (centro horizontal)
+        x = (largura_tela - largura_janela) // 2
+        
+        # Calcula posição Y (parte superior - aproximadamente 15% da altura da tela)
+        y = int(altura_tela * 0.15)  # 15% do topo da tela
+        
+        # Define a posição da janela
+        self.root.geometry(f"{largura_janela}x{altura_janela}+{x}+{y}")
     
     def _configurar_estilo(self):
         """Configura o estilo da interface."""
@@ -110,46 +124,19 @@ class SistemaBombonas:
             style.configure('Info.TLabel', font=('Arial', 10))
     
     def _criar_menu(self):
-        """Cria o menu principal."""
+        """Cria o menu principal simplificado."""
         menubar = tk.Menu(self.root)
         self.root.config(menu=menubar)
         
-        # Menu Responsáveis
-        menu_responsaveis = tk.Menu(menubar, tearoff=0)
-        menubar.add_cascade(label="Responsáveis", menu=menu_responsaveis)
-        menu_responsaveis.add_command(
-            label="Cadastrar Responsável", 
-            command=self._abrir_cadastro_responsavel
-        )
-        menu_responsaveis.add_command(
-            label="Listar Responsáveis", 
-            command=self._abrir_listagem_responsaveis
-        )
+        # Adiciona espaços vazios para empurrar o menu Ajuda para a direita
+        # Isso é uma técnica simples para alinhar à direita
+        menubar.add_command(label="", state="disabled")  # Espaço invisível
         
-        # Menu Bombonas
-        menu_bombonas = tk.Menu(menubar, tearoff=0)
-        menubar.add_cascade(label="Bombonas", menu=menu_bombonas)
-        menu_bombonas.add_command(
-            label="Cadastrar Bombona", 
-            command=self._abrir_cadastro_bombona
-        )
-        menu_bombonas.add_command(
-            label="Listar Bombonas", 
-            command=self._abrir_listagem_bombonas
-        )
-        
-        # Menu Relatórios
-        menu_relatorios = tk.Menu(menubar, tearoff=0)
-        menubar.add_cascade(label="Relatórios", menu=menu_relatorios)
-        menu_relatorios.add_command(
-            label="Gerar Relatório", 
-            command=self._abrir_relatorios
-        )
-        
-        # Menu Ajuda
+        # Menu Ajuda (alinhado à direita)
         menu_ajuda = tk.Menu(menubar, tearoff=0)
         menubar.add_cascade(label="Ajuda", menu=menu_ajuda)
         menu_ajuda.add_command(label="Sobre", command=self._mostrar_sobre)
+        menu_ajuda.add_separator()
         menu_ajuda.add_command(label="Sair", command=self._sair_aplicacao)
     
     def _criar_tela_principal(self):
@@ -174,9 +161,9 @@ class SistemaBombonas:
         )
         subtitulo.pack(pady=(0, 20))
         
-        # Frame para botões
+        # Frame para botões - espaço reduzido
         botoes_frame = ttk.Frame(main_frame)
-        botoes_frame.pack(pady=20)
+        botoes_frame.pack(pady=10)  # Reduzido de 20 para 10
         
         # Seção Responsáveis
         resp_frame = ttk.LabelFrame(botoes_frame, text="Responsáveis", padding="15")
@@ -216,7 +203,7 @@ class SistemaBombonas:
         
         # Seção Relatórios
         rel_frame = ttk.LabelFrame(botoes_frame, text="Relatórios", padding="15")
-        rel_frame.pack(fill=tk.X, pady=(0, 20))
+        rel_frame.pack(fill=tk.X, pady=(0, 15))  # Reduzido de 20 para 15
         
         ttk.Button(
             rel_frame, 
@@ -225,27 +212,27 @@ class SistemaBombonas:
             width=25
         ).pack()
         
-        # Área de estatísticas
+        # Área de estatísticas - espaço aumentado
         self._criar_area_estatisticas(main_frame)
         
-        # Botão sair
+        # Botão sair - espaço reduzido
         ttk.Button(
             main_frame,
             text="Sair do Sistema",
             command=self._sair_aplicacao,
             width=20
-        ).pack(pady=(20, 0))
+        ).pack(pady=(15, 0))  # Reduzido de 20 para 15
     
     def _criar_area_estatisticas(self, parent):
         """Cria a área de estatísticas."""
-        stats_frame = ttk.LabelFrame(parent, text="Estatísticas do Sistema", padding="10")
-        stats_frame.pack(fill=tk.BOTH, expand=True, pady=(20, 0))
+        stats_frame = ttk.LabelFrame(parent, text="Estatísticas do Sistema", padding="15")
+        stats_frame.pack(fill=tk.BOTH, expand=True, pady=(15, 0))  # Reduzido de 20 para 15
         
-        # Text widget para estatísticas
+        # Text widget para estatísticas - altura aumentada
         text_frame = ttk.Frame(stats_frame)
         text_frame.pack(fill=tk.BOTH, expand=True)
         
-        self.stats_text = tk.Text(text_frame, height=10, width=70, state='disabled', wrap=tk.WORD)
+        self.stats_text = tk.Text(text_frame, height=15, width=80, state='disabled', wrap=tk.WORD, font=('Arial', 10))  # Aumentado height de 10 para 15, width de 70 para 80
         scrollbar = ttk.Scrollbar(text_frame, orient="vertical", command=self.stats_text.yview)
         self.stats_text.configure(yscrollcommand=scrollbar.set)
         
@@ -257,7 +244,7 @@ class SistemaBombonas:
             stats_frame, 
             text="Atualizar Estatísticas", 
             command=self._atualizar_estatisticas
-        ).pack(pady=(10, 0))
+        ).pack(pady=(15, 0))  # Aumentado de 10 para 15
         
         # Carrega estatísticas iniciais
         self._atualizar_estatisticas()
@@ -269,60 +256,57 @@ class SistemaBombonas:
             self.stats_text.config(state='normal')
             self.stats_text.delete(1.0, tk.END)
             
-            # Verificar se os métodos existem antes de chamar
             try:
-                # Tentar obter estatísticas dos controllers
-                if hasattr(self.bombona_controller, 'get_estatisticas'):
-                    stats_bombonas = self.bombona_controller.get_estatisticas()
-                else:
-                    # Fallback: obter dados básicos
-                    bombonas = self.bombona_controller.listarBombonas()
-                    stats_bombonas = {
-                        'total_bombonas': len(bombonas),
-                        'volume_total': sum(b.getVolume() for b in bombonas),
-                        'volume_medio': sum(b.getVolume() for b in bombonas) / len(bombonas) if bombonas else 0,
-                        'tipos_residuo': {}
-                    }
-                    # Contar tipos
-                    for b in bombonas:
-                        tipo = b.getTipoResiduo()
-                        stats_bombonas['tipos_residuo'][tipo] = stats_bombonas['tipos_residuo'].get(tipo, 0) + 1
+                # Obter estatísticas básicas
+                responsaveis = self.responsavel_controller.listar_responsaveis()
+                bombonas = self.bombona_controller.listar_bombonas()
                 
-                if hasattr(self.responsavel_controller, 'get_estatisticas'):
-                    stats_responsaveis = self.responsavel_controller.get_estatisticas()
-                else:
-                    # Fallback: obter dados básicos
-                    responsaveis = self.responsavel_controller.listarResponsaveis()
-                    stats_responsaveis = {
-                        'total_responsaveis': len(responsaveis),
-                        'responsaveis_por_setor': {}
-                    }
-                    # Contar por setor
-                    for r in responsaveis:
-                        setor = r.getSetor()
-                        stats_responsaveis['responsaveis_por_setor'][setor] = stats_responsaveis['responsaveis_por_setor'].get(setor, 0) + 1
+                total_responsaveis = len(responsaveis)
+                total_bombonas = len(bombonas)
                 
-                # Construir texto das estatísticas
+                # Construir texto das estatísticas sem volumes
                 texto = f"""ESTATÍSTICAS DO SISTEMA
 {'='*50}
 
 BOMBONAS:
-• Total de bombonas: {stats_bombonas['total_bombonas']}
-• Volume total: {stats_bombonas['volume_total']:.1f} L
-• Volume médio: {stats_bombonas['volume_medio']:.1f} L
+• Total de bombonas: {total_bombonas}
 
 RESPONSÁVEIS:
-• Total de responsáveis: {stats_responsaveis['total_responsaveis']}
+• Total de responsáveis: {total_responsaveis}
 
 BOMBONAS POR TIPO DE RESÍDUO:
 """
                 
-                for tipo, qtd in stats_bombonas['tipos_residuo'].items():
+                # Contar tipos de resíduo
+                tipos_residuo = {}
+                for b in bombonas:
+                    tipo = b.get_tipo_residuo()
+                    tipos_residuo[tipo] = tipos_residuo.get(tipo, 0) + 1
+                
+                for tipo, qtd in tipos_residuo.items():
                     texto += f"• {tipo}: {qtd} bombona(s)\n"
                 
                 texto += "\nRESPONSÁVEIS POR SETOR:\n"
-                for setor, qtd in stats_responsaveis['responsaveis_por_setor'].items():
+                
+                # Contar responsáveis por setor
+                setores = {}
+                for r in responsaveis:
+                    setor = r.get_setor()
+                    setores[setor] = setores.get(setor, 0) + 1
+                
+                for setor, qtd in setores.items():
                     texto += f"• {setor}: {qtd} responsável(is)\n"
+                
+                # Bombonas por setor
+                texto += "\nBOMBONAS POR SETOR:\n"
+                bombonas_por_setor = {}
+                for b in bombonas:
+                    if b.get_responsavel():
+                        setor = b.get_responsavel().get_setor()
+                        bombonas_por_setor[setor] = bombonas_por_setor.get(setor, 0) + 1
+                
+                for setor, qtd in bombonas_por_setor.items():
+                    texto += f"• {setor}: {qtd} bombona(s)\n"
                 
                 self.stats_text.insert(1.0, texto)
                 
@@ -391,9 +375,29 @@ BOMBONAS POR TIPO DE RESÍDUO:
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao abrir tela de listagem de bombonas:\n{e}")
     
+    """
+    Alterações simples no main.py para integrar a nova tela de relatórios
+    Substituir apenas o método _abrir_relatorios() no arquivo main.py existente
+    """
+
+    # Substituir este método na classe SistemaBombonas:
+
     def _abrir_relatorios(self):
         """Abre a tela de relatórios."""
         try:
+            # Verifica se há dados mínimos
+            responsaveis = self.responsavel_controller.listar_responsaveis()
+            bombonas = self.bombona_controller.listar_bombonas()
+            
+            if not responsaveis and not bombonas:
+                messagebox.showwarning(
+                    "Aviso", 
+                    "Não há dados para gerar relatórios.\n"
+                    "Cadastre pelo menos alguns responsáveis e bombonas primeiro."
+                )
+                return
+            
+            # Importa e abre a tela de relatórios
             from views.tela_relatorio import TelaRelatorio
             tela = TelaRelatorio(
                 self.root, 
@@ -401,8 +405,13 @@ BOMBONAS POR TIPO DE RESÍDUO:
                 self.responsavel_controller
             )
             tela.exibir_tela()
+            
         except ImportError:
-            messagebox.showerror("Erro", "Módulo tela_relatorio não encontrado.\nVerifique se o arquivo está no diretório views/")
+            messagebox.showerror(
+                "Erro", 
+                "Módulo tela_relatorio não encontrado.\n"
+                "Verifique se o arquivo está no diretório views/"
+            )
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao abrir tela de relatórios:\n{e}")
     
@@ -410,26 +419,26 @@ BOMBONAS POR TIPO DE RESÍDUO:
         """Mostra informações sobre o sistema."""
         sobre_texto = """Sistema de Gerenciamento de Bombonas de Resíduos Químicos
         
-Versão: 1.0
-Desenvolvido para a disciplina de Engenharia de Software
+                        Versão: 1.0
+                        Desenvolvido para a disciplina de Engenharia de Software
 
-Funcionalidades:
-• Cadastro e gerenciamento de responsáveis
-• Cadastro e gerenciamento de bombonas
-• Geração de relatórios
-• Controle de acesso aos dados
+                        Funcionalidades:
+                        • Cadastro e gerenciamento de responsáveis
+                        • Cadastro e gerenciamento de bombonas
+                        • Geração de relatórios
+                        • Controle de acesso aos dados
 
-Arquitetura:
-• Padrão MVC (Model-View-Controller)
-• Padrão DAO (Data Access Object)
-• Padrão Factory Method
-• Interface gráfica com Tkinter
-• Persistência em arquivos
+                        Arquitetura:
+                        • Padrão MVC (Model-View-Controller)
+                        • Padrão DAO (Data Access Object)
+                        • Padrão Factory Method
+                        • Interface gráfica com Tkinter
+                        • Persistência em arquivos
 
-Requisitos:
-• Python 3.6+
-• Tkinter (incluído no Python)
-• Estrutura de pastas: dao/, controllers/, views/, models/"""
+                        Requisitos:
+                        • Python 3.6+
+                        • Tkinter (incluído no Python)
+                        • Estrutura de pastas: dao/, controllers/, views/, models/"""
         
         messagebox.showinfo("Sobre o Sistema", sobre_texto)
     

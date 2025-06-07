@@ -345,26 +345,22 @@ class BombonaController:
     
     def get_estatisticas(self) -> dict:
         """
-        Retorna estatísticas sobre as bombonas cadastradas.
+        Retorna estatísticas simples sobre as bombonas cadastradas.
         
         Returns:
-            dict: Dicionário com estatísticas
+            dict: Dicionário com estatísticas básicas
         """
         try:
-            bombonas = self.listar_bombonas()  # Usa o método que resolve as referências
+            bombonas = self.listar_bombonas()
             
             # Conta bombonas por tipo de resíduo
             tipos_residuo = {}
-            volume_total = 0
             setores = {}
             
             for bombona in bombonas:
                 # Contagem por tipo de resíduo
                 tipo = bombona.get_tipo_residuo()
                 tipos_residuo[tipo] = tipos_residuo.get(tipo, 0) + 1
-                
-                # Volume total
-                volume_total += bombona.get_volume()
                 
                 # Contagem por setor do responsável
                 if bombona.get_responsavel():
@@ -373,8 +369,6 @@ class BombonaController:
             
             return {
                 'total_bombonas': len(bombonas),
-                'volume_total': round(volume_total, 2),
-                'volume_medio': round(volume_total / len(bombonas), 2) if bombonas else 0,
                 'tipos_residuo': tipos_residuo,
                 'setores': setores
             }
@@ -383,8 +377,80 @@ class BombonaController:
             print(f"Erro ao calcular estatísticas: {e}")
             return {
                 'total_bombonas': 0,
-                'volume_total': 0,
-                'volume_medio': 0,
                 'tipos_residuo': {},
                 'setores': {}
             }
+        
+    """
+    Métodos adicionais para o BombonaController - Versão Simples
+    Adicionar estes métodos ao arquivo bombona_controller.py existente
+    """
+
+    # Adicionar estes métodos à classe BombonaController existente:
+
+    def buscar_bombonas_por_cpf_responsavel(self, cpf: str) -> List[Bombona]:
+        """
+        Busca bombonas por CPF do responsável com as referências resolvidas.
+        
+        Args:
+            cpf (str): CPF do responsável
+            
+        Returns:
+            List[Bombona]: Lista de bombonas do responsável
+        """
+        try:
+            cpf_formatado = self._validar_e_formatar_cpf(cpf)
+            bombonas = self._bombona_dao.buscar_por_responsavel(cpf_formatado)
+            return self._resolver_referencias_responsaveis(bombonas)
+        except Exception as e:
+            print(f"Erro ao buscar bombonas por responsável: {e}")
+            return []
+
+    def filtrar_bombonas_por_setor(self, setor: str) -> List[Bombona]:
+        """
+        Filtra bombonas por setor do responsável.
+        
+        Args:
+            setor (str): Setor para filtrar
+            
+        Returns:
+            List[Bombona]: Lista de bombonas do setor
+        """
+        try:
+            bombonas = self.listar_bombonas()
+            bombonas_filtradas = []
+            
+            for bombona in bombonas:
+                responsavel = bombona.get_responsavel()
+                if responsavel and responsavel.get_setor() == setor:
+                    bombonas_filtradas.append(bombona)
+            
+            return bombonas_filtradas
+            
+        except Exception as e:
+            print(f"Erro ao filtrar bombonas por setor: {e}")
+            return []
+
+    def filtrar_bombonas_por_tipo_residuo(self, tipo_residuo: str) -> List[Bombona]:
+        """
+        Filtra bombonas por tipo de resíduo.
+        
+        Args:
+            tipo_residuo (str): Tipo de resíduo para filtrar
+            
+        Returns:
+            List[Bombona]: Lista de bombonas do tipo
+        """
+        try:
+            bombonas = self.listar_bombonas()
+            bombonas_filtradas = []
+            
+            for bombona in bombonas:
+                if bombona.get_tipo_residuo() == tipo_residuo:
+                    bombonas_filtradas.append(bombona)
+            
+            return bombonas_filtradas
+            
+        except Exception as e:
+            print(f"Erro ao filtrar bombonas por tipo: {e}")
+            return []

@@ -68,7 +68,11 @@ sistema_bombonas/
 │
 ├── views/                         # Interface gráfica
 │   ├── __init__.py
-│   └── [Será implementado nas próximas etapas]
+│   ├── tela_cadastro_bombona.py
+│   ├── tela_cadastro_responsavel.py
+│   ├── tela_listagem_bombonas.py
+│   ├── tela_listagem_responsaveis.py
+│   └── tela_relatorio.py
 │
 ├── utils/                         # Utilitários
 │   ├── __init__.py

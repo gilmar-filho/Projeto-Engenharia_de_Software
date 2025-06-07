@@ -240,36 +240,105 @@ class ResponsavelController:
     
     def get_estatisticas(self) -> dict:
         """
-        Retorna estatísticas sobre os responsáveis.
+        Retorna estatísticas simples sobre os responsáveis.
         
         Returns:
-            dict: Dicionário com estatísticas
+            dict: Dicionário com estatísticas básicas
         """
         try:
-            responsaveis = self._responsavel_dao.listar_todos()
+            responsaveis = self.listar_responsaveis()
             
             # Contagem por setor
-            setores = {}
-            total_bombonas_por_setor = {}
+            responsaveis_por_setor = {}
+            bombonas_por_setor = {}
+            responsaveis_sem_bombonas = 0
             
             for responsavel in responsaveis:
                 setor = responsavel.get_setor()
-                setores[setor] = setores.get(setor, 0) + 1
+                
+                # Conta responsáveis por setor
+                responsaveis_por_setor[setor] = responsaveis_por_setor.get(setor, 0) + 1
                 
                 # Conta bombonas por setor
                 bombonas = self._bombona_dao.buscar_por_responsavel(responsavel.get_cpf())
-                total_bombonas_por_setor[setor] = total_bombonas_por_setor.get(setor, 0) + len(bombonas)
+                if not bombonas:
+                    responsaveis_sem_bombonas += 1
+                
+                if setor not in bombonas_por_setor:
+                    bombonas_por_setor[setor] = 0
+                bombonas_por_setor[setor] += len(bombonas)
+            
+            # Setor com mais responsáveis
+            setor_mais_responsaveis = max(responsaveis_por_setor.items(), 
+                                        key=lambda x: x[1])[0] if responsaveis_por_setor else None
             
             return {
                 'total_responsaveis': len(responsaveis),
-                'responsaveis_por_setor': setores,
-                'bombonas_por_setor': total_bombonas_por_setor
+                'total_setores': len(responsaveis_por_setor),
+                'responsaveis_por_setor': responsaveis_por_setor,
+                'bombonas_por_setor': bombonas_por_setor,
+                'responsaveis_sem_bombonas': responsaveis_sem_bombonas,
+                'setor_com_mais_responsaveis': setor_mais_responsaveis
             }
             
         except Exception as e:
             print(f"Erro ao calcular estatísticas: {e}")
             return {
                 'total_responsaveis': 0,
+                'total_setores': 0,
                 'responsaveis_por_setor': {},
-                'bombonas_por_setor': {}
+                'bombonas_por_setor': {},
+                'responsaveis_sem_bombonas': 0,
+                'setor_com_mais_responsaveis': None
             }
+        
+    """
+    Métodos adicionais para o ResponsavelController - Versão Simples
+    Adicionar estes métodos ao arquivo responsavel_controller.py existente
+    """
+
+    # Adicionar estes métodos à classe ResponsavelController existente:
+
+    def obter_setores_disponiveis(self) -> List[str]:
+        """
+        Retorna lista de setores únicos dos responsáveis cadastrados.
+        
+        Returns:
+            List[str]: Lista de setores únicos ordenados
+        """
+        try:
+            responsaveis = self.listar_responsaveis()
+            setores = set()
+            
+            for responsavel in responsaveis:
+                setores.add(responsavel.get_setor())
+            
+            return sorted(list(setores))
+            
+        except Exception as e:
+            print(f"Erro ao obter setores: {e}")
+            return []
+
+    def filtrar_responsaveis_por_setor(self, setor: str) -> List[Responsavel]:
+        """
+        Filtra responsáveis por setor.
+        
+        Args:
+            setor (str): Setor para filtrar
+            
+        Returns:
+            List[Responsavel]: Lista de responsáveis do setor
+        """
+        try:
+            responsaveis = self.listar_responsaveis()
+            responsaveis_filtrados = []
+            
+            for responsavel in responsaveis:
+                if responsavel.get_setor() == setor:
+                    responsaveis_filtrados.append(responsavel)
+            
+            return responsaveis_filtrados
+            
+        except Exception as e:
+            print(f"Erro ao filtrar responsáveis por setor: {e}")
+            return []

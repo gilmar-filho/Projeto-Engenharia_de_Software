@@ -81,23 +81,20 @@ class TelaListagemBombonas:
         self.tree.heading('Responsável', text='Responsável')
         self.tree.heading('CPF', text='CPF')
         
-        # Largura das colunas
-        self.tree.column('Código', width=120, anchor=tk.CENTER)
+        # Largura das colunas ajustadas para caber na janela (900px de largura)
+        self.tree.column('Código', width=100, anchor=tk.CENTER)
         self.tree.column('Volume', width=80, anchor=tk.CENTER)
-        self.tree.column('Tipo Resíduo', width=150, anchor=tk.CENTER)
+        self.tree.column('Tipo Resíduo', width=120, anchor=tk.CENTER)
         self.tree.column('Responsável', width=200, anchor=tk.W)
-        self.tree.column('CPF', width=120, anchor=tk.CENTER)
+        self.tree.column('CPF', width=130, anchor=tk.CENTER)
         
-        # Scrollbars
+        # APENAS scrollbar vertical
         scrollbar_v = ttk.Scrollbar(table_frame, orient=tk.VERTICAL, command=self.tree.yview)
-        scrollbar_h = ttk.Scrollbar(table_frame, orient=tk.HORIZONTAL, command=self.tree.xview)
+        self.tree.configure(yscrollcommand=scrollbar_v.set)
         
-        self.tree.configure(yscrollcommand=scrollbar_v.set, xscrollcommand=scrollbar_h.set)
-        
-        # Pack da tabela e scrollbars
+        # Pack da tabela e scrollbar vertical apenas
         self.tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         scrollbar_v.pack(side=tk.RIGHT, fill=tk.Y)
-        scrollbar_h.pack(side=tk.BOTTOM, fill=tk.X)
         
         # Bind para duplo clique
         self.tree.bind('<Double-1>', self._on_duplo_clique)
@@ -121,23 +118,15 @@ class TelaListagemBombonas:
             width=15
         ).pack(side=tk.LEFT, padx=(0, 5))
         
-        # Botões da direita
-        ttk.Button(
-            button_frame,
-            text="Atualizar",
-            command=self._carregar_bombonas,
-            width=15
-        ).pack(side=tk.RIGHT, padx=(5, 0))
-        
+        # Botão da direita
         ttk.Button(
             button_frame,
             text="Fechar",
             command=self.janela.destroy,
             width=15
-        ).pack(side=tk.RIGHT, padx=(5, 0))
+        ).pack(side=tk.RIGHT)
         
         # Bind para teclas
-        self.janela.bind('<F5>', lambda e: self._carregar_bombonas())
         self.janela.bind('<Delete>', lambda e: self._excluir_bombona())
     
     def _carregar_bombonas(self):
