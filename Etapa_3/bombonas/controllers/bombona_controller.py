@@ -4,6 +4,8 @@ Controller para gerenciamento de Bombonas
 
 import csv
 import os
+import unicodedata
+from datetime import datetime
 from typing import List, Optional
 from dao.interfaces.bombona_dao_interface import BombonaDAOInterface
 from dao.interfaces.responsavel_dao_interface import ResponsavelDAOInterface
@@ -181,23 +183,29 @@ class BombonaController:
             print(f"Erro ao buscar bombonas por responsável: {e}")
             return []
 
-    def gerar_relatorio(self, formato: str = "csv") -> str:
+    def gerar_relatorio(self, formato: str = "csv", arquivo: str = None, filtros_ativos: list = None) -> str:
         """
-        Gera relatório das bombonas.
-
+        Gera relatório das bombonas em formato especificado.
+        
         Args:
-            formato (str): Formato do relatório ("csv" ou "txt")
-
+            formato (str): "csv" ou "pdf"
+            arquivo (str): Caminho do arquivo (obrigatório para PDF)
+            filtros_ativos (list): Lista de filtros aplicados (apenas para PDF)
+            
         Returns:
             str: Caminho do arquivo gerado
         """
         try:
-            bombonas = self.listar_bombonas()  # Usa o método que resolve as referências
+            bombonas = self.listar_bombonas()
 
             if formato.lower() == "csv":
                 return self._gerar_relatorio_csv(bombonas)
+            elif formato.lower() == "pdf":
+                if not arquivo:
+                    raise ValueError("Caminho do arquivo é obrigatório para PDF")
+                return self.gerar_relatorio_pdf_bombonas(bombonas, arquivo, filtros_ativos or [])
             else:
-                return self._gerar_relatorio_txt(bombonas)
+                raise ValueError("Formatos suportados: 'csv' ou 'pdf'")
 
         except Exception as e:
             print(f"Erro ao gerar relatório: {e}")
@@ -235,38 +243,135 @@ class BombonaController:
 
         return arquivo
 
-    def _gerar_relatorio_txt(self, bombonas: List[Bombona]) -> str:
-        """
-        Gera relatório em formato TXT.
+    # def _gerar_relatorio_txt(self, bombonas: List[Bombona]) -> str:
+    #     """
+    #     Gera relatório em formato TXT.
 
+    #     Args:
+    #         bombonas (List[Bombona]): Lista de bombonas
+
+    #     Returns:
+    #         str: Caminho do arquivo gerado
+    #     """
+    #     arquivo = "data/relatorio_bombonas.txt"
+
+    #     # Cria o diretório se não existir
+    #     os.makedirs(os.path.dirname(arquivo), exist_ok=True)
+
+    #     with open(arquivo, 'w', encoding='utf-8') as f:
+    #         f.write("RELATÓRIO DE BOMBONAS DE RESÍDUOS QUÍMICOS\n")
+    #         f.write("=" * 50 + "\n\n")
+
+    #         for i, bombona in enumerate(bombonas, 1):
+    #             responsavel = bombona.get_responsavel()
+    #             f.write(f"Bombona {i}:\n")
+    #             f.write(f"  Código: {bombona.get_codigo()}\n")
+    #             f.write(f"  Volume: {bombona.get_volume()} L\n")
+    #             f.write(f"  Tipo Resíduo: {bombona.get_tipo_residuo()}\n")
+    #             f.write(f"  Responsável: {responsavel.get_nome() if responsavel else 'N/A'}\n")
+    #             f.write(f"  CPF: {responsavel.get_cpf() if responsavel else 'N/A'}\n")
+    #             f.write(f"  Setor: {responsavel.get_setor() if responsavel else 'N/A'}\n")
+    #             f.write("-" * 30 + "\n")
+
+    #         f.write(f"\nTotal de bombonas: {len(bombonas)}\n")
+
+    #     return arquivo
+
+    # ADICIONAR método novo:
+    def gerar_relatorio_pdf_bombonas(self, bombonas: List[Bombona], arquivo: str, filtros_ativos: list) -> str:
+        """
+        Gera relatório PDF de bombonas.
+        
         Args:
             bombonas (List[Bombona]): Lista de bombonas
-
+            arquivo (str): Caminho do arquivo
+            filtros_ativos (list): Filtros aplicados
+            
         Returns:
             str: Caminho do arquivo gerado
         """
-        arquivo = "data/relatorio_bombonas.txt"
-
-        # Cria o diretório se não existir
-        os.makedirs(os.path.dirname(arquivo), exist_ok=True)
-
-        with open(arquivo, 'w', encoding='utf-8') as f:
-            f.write("RELATÓRIO DE BOMBONAS DE RESÍDUOS QUÍMICOS\n")
-            f.write("=" * 50 + "\n\n")
-
-            for i, bombona in enumerate(bombonas, 1):
-                responsavel = bombona.get_responsavel()
-                f.write(f"Bombona {i}:\n")
-                f.write(f"  Código: {bombona.get_codigo()}\n")
-                f.write(f"  Volume: {bombona.get_volume()} L\n")
-                f.write(f"  Tipo Resíduo: {bombona.get_tipo_residuo()}\n")
-                f.write(f"  Responsável: {responsavel.get_nome() if responsavel else 'N/A'}\n")
-                f.write(f"  CPF: {responsavel.get_cpf() if responsavel else 'N/A'}\n")
-                f.write(f"  Setor: {responsavel.get_setor() if responsavel else 'N/A'}\n")
-                f.write("-" * 30 + "\n")
-
-            f.write(f"\nTotal de bombonas: {len(bombonas)}\n")
-
+        try:
+            from fpdf import FPDF
+        except ImportError:
+            raise ImportError("Biblioteca FPDF não encontrada. Instale com: pip install fpdf2")
+        
+        def sanitizar_texto(texto):
+            if not texto:
+                return texto
+            nfd = unicodedata.normalize('NFD', texto)
+            return nfd.encode('ascii', 'ignore').decode('ascii')
+        
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font('Arial', 'B', 16)
+        
+        # Título
+        titulo = "RELATORIO DE BOMBONAS FILTRADAS" if filtros_ativos else "RELATORIO COMPLETO DE BOMBONAS"
+        pdf.cell(0, 10, titulo, ln=True, align='C')
+        pdf.ln(5)
+        
+        # Filtros (se houver)
+        if filtros_ativos:
+            pdf.set_font('Arial', 'B', 12)
+            pdf.cell(0, 8, "Filtros aplicados:", ln=True)
+            pdf.set_font('Arial', '', 10)
+            for filtro in filtros_ativos:
+                filtro_limpo = sanitizar_texto(filtro)
+                pdf.cell(0, 6, f"  - {filtro_limpo}", ln=True)
+            pdf.ln(5)
+        
+        # Total
+        pdf.set_font('Arial', 'B', 12)
+        pdf.cell(0, 8, f"Total de bombonas: {len(bombonas)}", ln=True)
+        pdf.ln(5)
+        
+        # Cabeçalho da tabela
+        pdf.set_font('Arial', 'B', 10)
+        pdf.cell(30, 8, 'Codigo', 1, 0, 'C')
+        pdf.cell(25, 8, 'Volume (L)', 1, 0, 'C')
+        pdf.cell(35, 8, 'Tipo Residuo', 1, 0, 'C')
+        pdf.cell(60, 8, 'Responsavel', 1, 0, 'C')
+        pdf.cell(40, 8, 'Setor', 1, 1, 'C')
+        
+        # Dados
+        pdf.set_font('Arial', '', 9)
+        for bombona in bombonas:
+            resp = bombona.get_responsavel()
+            
+            # Sanitizar textos
+            codigo_limpo = sanitizar_texto(bombona.get_codigo())
+            tipo_limpo = sanitizar_texto(bombona.get_tipo_residuo())
+            nome_resp = sanitizar_texto(resp.get_nome()) if resp else 'N/A'
+            setor_resp = sanitizar_texto(resp.get_setor()) if resp else 'N/A'
+            
+            # Truncar se necessário
+            nome_resp = (nome_resp[:25] + "...") if len(nome_resp) > 25 else nome_resp
+            setor_resp = (setor_resp[:18] + "...") if len(setor_resp) > 18 else setor_resp
+            
+            pdf.cell(30, 6, codigo_limpo, 1, 0, 'C')
+            pdf.cell(25, 6, f"{bombona.get_volume():.1f}", 1, 0, 'C')
+            pdf.cell(35, 6, tipo_limpo, 1, 0, 'C')
+            pdf.cell(60, 6, nome_resp, 1, 0, 'L')
+            pdf.cell(40, 6, setor_resp, 1, 1, 'L')
+            
+            # Nova página se necessário
+            if pdf.get_y() > 250:
+                pdf.add_page()
+                pdf.set_font('Arial', 'B', 10)
+                pdf.cell(30, 8, 'Codigo', 1, 0, 'C')
+                pdf.cell(25, 8, 'Volume (L)', 1, 0, 'C')
+                pdf.cell(35, 8, 'Tipo Residuo', 1, 0, 'C')
+                pdf.cell(60, 8, 'Responsavel', 1, 0, 'C')
+                pdf.cell(40, 8, 'Setor', 1, 1, 'C')
+                pdf.set_font('Arial', '', 9)
+        
+        # Rodapé
+        pdf.ln(10)
+        pdf.set_font('Arial', 'I', 8)
+        data_geracao = datetime.now().strftime("%d/%m/%Y as %H:%M:%S")
+        pdf.cell(0, 6, f"Relatorio gerado em {data_geracao}", ln=True, align='L')
+        
+        pdf.output(arquivo)
         return arquivo
 
     def _resolver_referencias_responsaveis(self, bombonas: List[Bombona]) -> List[Bombona]:

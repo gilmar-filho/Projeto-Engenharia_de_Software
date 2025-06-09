@@ -322,13 +322,12 @@ class TelaRelatorio:
             messagebox.showerror("Erro", f"Erro ao baixar relatório de responsáveis:\n{str(e)}")
     
     def _gerar_arquivo_bombonas(self, bombonas, nome_base, filtros_ativos, formato):
-        """Gera arquivo de bombonas no formato especificado."""
+        """Gera arquivo de bombonas usando o controller."""
         ext = f".{formato}"
         
-        # Define tipos de arquivo baseado no formato selecionado
         if formato == "csv":
             filetypes = [("CSV files", "*.csv"), ("PDF files", "*.pdf"), ("All files", "*.*")]
-        else:  # formato == "pdf"
+        else:
             filetypes = [("PDF files", "*.pdf"), ("CSV files", "*.csv"), ("All files", "*.*")]
         
         arquivo = filedialog.asksaveasfilename(
@@ -340,24 +339,32 @@ class TelaRelatorio:
         if not arquivo:
             return
         
-        if formato == "csv":
-            self._criar_csv_bombonas(arquivo, bombonas, filtros_ativos)
-        else:  # formato == "pdf"
-            self._criar_pdf_bombonas(arquivo, bombonas, filtros_ativos)
-        
-        messagebox.showinfo("Sucesso", f"Relatório salvo com sucesso!\n\nLocal: {arquivo}")
-        
-        if messagebox.askyesno("Abrir Arquivo", "Deseja abrir o relatório agora?"):
-            os.startfile(arquivo)
+        try:
+            # ✅ NOVA LÓGICA: Chama controller em vez de método local
+            if formato == "csv":
+                arquivo_gerado = self.bombona_controller.gerar_relatorio("csv")
+                # Copia arquivo gerado para local escolhido pelo usuário
+                import shutil
+                shutil.copy(arquivo_gerado, arquivo)
+            else:  # formato == "pdf"
+                # Controller gera PDF diretamente no local escolhido
+                self.bombona_controller.gerar_relatorio_pdf_bombonas(bombonas, arquivo, filtros_ativos)
+            
+            messagebox.showinfo("Sucesso", f"Relatório salvo com sucesso!\n\nLocal: {arquivo}")
+            
+            if messagebox.askyesno("Abrir Arquivo", "Deseja abrir o relatório agora?"):
+                os.startfile(arquivo)
+                
+        except Exception as e:
+            messagebox.showerror("Erro", f"Erro ao gerar relatório:\n{str(e)}")
     
     def _gerar_arquivo_responsaveis(self, responsaveis, nome_base, formato):
-        """Gera arquivo de responsáveis no formato especificado."""
+        """Gera arquivo de responsáveis usando o controller."""
         ext = f".{formato}"
         
-        # Define tipos de arquivo baseado no formato selecionado
         if formato == "csv":
             filetypes = [("CSV files", "*.csv"), ("PDF files", "*.pdf"), ("All files", "*.*")]
-        else:  # formato == "pdf"
+        else:
             filetypes = [("PDF files", "*.pdf"), ("CSV files", "*.csv"), ("All files", "*.*")]
         
         arquivo = filedialog.asksaveasfilename(
@@ -369,15 +376,24 @@ class TelaRelatorio:
         if not arquivo:
             return
         
-        if formato == "csv":
-            self._criar_csv_responsaveis(arquivo, responsaveis)
-        else:  # formato == "pdf"
-            self._criar_pdf_responsaveis(arquivo, responsaveis)
-        
-        messagebox.showinfo("Sucesso", f"Relatório salvo com sucesso!\n\nLocal: {arquivo}")
-        
-        if messagebox.askyesno("Abrir Arquivo", "Deseja abrir o relatório agora?"):
-            os.startfile(arquivo)
+        try:
+            # ✅ NOVA LÓGICA: Chama controller em vez de método local
+            if formato == "csv":
+                arquivo_gerado = self.responsavel_controller.gerar_relatorio("csv")
+                # Copia arquivo gerado para local escolhido pelo usuário
+                import shutil
+                shutil.copy(arquivo_gerado, arquivo)
+            else:  # formato == "pdf"
+                # Controller gera PDF diretamente no local escolhido
+                self.responsavel_controller.gerar_relatorio_pdf_responsaveis(responsaveis, arquivo)
+            
+            messagebox.showinfo("Sucesso", f"Relatório salvo com sucesso!\n\nLocal: {arquivo}")
+            
+            if messagebox.askyesno("Abrir Arquivo", "Deseja abrir o relatório agora?"):
+                os.startfile(arquivo)
+                
+        except Exception as e:
+            messagebox.showerror("Erro", f"Erro ao gerar relatório:\n{str(e)}")
     
     def _criar_csv_bombonas(self, arquivo, bombonas, filtros_ativos):
         """Cria arquivo CSV de bombonas."""
@@ -425,144 +441,144 @@ class TelaRelatorio:
     Adicionar estes métodos ao final da classe TelaRelatorio
     """
 
-    def _criar_pdf_bombonas(self, arquivo, bombonas, filtros_ativos):
-        """Cria arquivo PDF de bombonas."""
-        from fpdf import FPDF
+    # def _criar_pdf_bombonas(self, arquivo, bombonas, filtros_ativos):
+    #     """Cria arquivo PDF de bombonas."""
+    #     from fpdf import FPDF
         
-        pdf = FPDF()
-        pdf.add_page()
-        pdf.set_font('Arial', 'B', 16)
+    #     pdf = FPDF()
+    #     pdf.add_page()
+    #     pdf.set_font('Arial', 'B', 16)
         
-        # Título
-        titulo = "RELATÓRIO DE BOMBONAS FILTRADAS" if filtros_ativos else "RELATÓRIO COMPLETO DE BOMBONAS"
-        pdf.cell(0, 10, titulo, ln=True, align='C')
-        pdf.ln(5)
+    #     # Título
+    #     titulo = "RELATÓRIO DE BOMBONAS FILTRADAS" if filtros_ativos else "RELATÓRIO COMPLETO DE BOMBONAS"
+    #     pdf.cell(0, 10, titulo, ln=True, align='C')
+    #     pdf.ln(5)
         
-        # Filtros aplicados (se houver)
-        if filtros_ativos:
-            pdf.set_font('Arial', 'B', 12)
-            pdf.cell(0, 8, "Filtros aplicados:", ln=True)
-            pdf.set_font('Arial', '', 10)
-            for filtro in filtros_ativos:
-                pdf.cell(0, 6, f"  - {filtro}", ln=True)
-            pdf.ln(5)
+    #     # Filtros aplicados (se houver)
+    #     if filtros_ativos:
+    #         pdf.set_font('Arial', 'B', 12)
+    #         pdf.cell(0, 8, "Filtros aplicados:", ln=True)
+    #         pdf.set_font('Arial', '', 10)
+    #         for filtro in filtros_ativos:
+    #             pdf.cell(0, 6, f"  - {filtro}", ln=True)
+    #         pdf.ln(5)
         
-        # Total de bombonas
-        pdf.set_font('Arial', 'B', 12)
-        pdf.cell(0, 8, f"Total de bombonas: {len(bombonas)}", ln=True)
-        pdf.ln(5)
+    #     # Total de bombonas
+    #     pdf.set_font('Arial', 'B', 12)
+    #     pdf.cell(0, 8, f"Total de bombonas: {len(bombonas)}", ln=True)
+    #     pdf.ln(5)
         
-        # Cabeçalho da tabela
-        pdf.set_font('Arial', 'B', 10)
-        pdf.cell(30, 8, 'Código', 1, 0, 'C')
-        pdf.cell(25, 8, 'Volume (L)', 1, 0, 'C')
-        pdf.cell(35, 8, 'Tipo Resíduo', 1, 0, 'C')
-        pdf.cell(60, 8, 'Responsável', 1, 0, 'C')
-        pdf.cell(40, 8, 'Setor', 1, 1, 'C')
+    #     # Cabeçalho da tabela
+    #     pdf.set_font('Arial', 'B', 10)
+    #     pdf.cell(30, 8, 'Código', 1, 0, 'C')
+    #     pdf.cell(25, 8, 'Volume (L)', 1, 0, 'C')
+    #     pdf.cell(35, 8, 'Tipo Resíduo', 1, 0, 'C')
+    #     pdf.cell(60, 8, 'Responsável', 1, 0, 'C')
+    #     pdf.cell(40, 8, 'Setor', 1, 1, 'C')
         
-        # Dados das bombonas
-        pdf.set_font('Arial', '', 9)
-        for bombona in bombonas:
-            resp = bombona.get_responsavel()
+    #     # Dados das bombonas
+    #     pdf.set_font('Arial', '', 9)
+    #     for bombona in bombonas:
+    #         resp = bombona.get_responsavel()
             
-            # Trunca texto se muito longo
-            nome_resp = (resp.get_nome()[:25] + "...") if resp and len(resp.get_nome()) > 25 else (resp.get_nome() if resp else 'N/A')
-            setor_resp = (resp.get_setor()[:18] + "...") if resp and len(resp.get_setor()) > 18 else (resp.get_setor() if resp else 'N/A')
+    #         # Trunca texto se muito longo
+    #         nome_resp = (resp.get_nome()[:25] + "...") if resp and len(resp.get_nome()) > 25 else (resp.get_nome() if resp else 'N/A')
+    #         setor_resp = (resp.get_setor()[:18] + "...") if resp and len(resp.get_setor()) > 18 else (resp.get_setor() if resp else 'N/A')
             
-            pdf.cell(30, 6, bombona.get_codigo(), 1, 0, 'C')
-            pdf.cell(25, 6, f"{bombona.get_volume():.1f}", 1, 0, 'C')
-            pdf.cell(35, 6, bombona.get_tipo_residuo(), 1, 0, 'C')
-            pdf.cell(60, 6, nome_resp, 1, 0, 'L')
-            pdf.cell(40, 6, setor_resp, 1, 1, 'L')
+    #         pdf.cell(30, 6, bombona.get_codigo(), 1, 0, 'C')
+    #         pdf.cell(25, 6, f"{bombona.get_volume():.1f}", 1, 0, 'C')
+    #         pdf.cell(35, 6, bombona.get_tipo_residuo(), 1, 0, 'C')
+    #         pdf.cell(60, 6, nome_resp, 1, 0, 'L')
+    #         pdf.cell(40, 6, setor_resp, 1, 1, 'L')
             
-            # Nova página se necessário
-            if pdf.get_y() > 250:
-                pdf.add_page()
-                # Reimprime cabeçalho
-                pdf.set_font('Arial', 'B', 10)
-                pdf.cell(30, 8, 'Código', 1, 0, 'C')
-                pdf.cell(25, 8, 'Volume (L)', 1, 0, 'C')
-                pdf.cell(35, 8, 'Tipo Resíduo', 1, 0, 'C')
-                pdf.cell(60, 8, 'Responsável', 1, 0, 'C')
-                pdf.cell(40, 8, 'Setor', 1, 1, 'C')
-                pdf.set_font('Arial', '', 9)
+    #         # Nova página se necessário
+    #         if pdf.get_y() > 250:
+    #             pdf.add_page()
+    #             # Reimprime cabeçalho
+    #             pdf.set_font('Arial', 'B', 10)
+    #             pdf.cell(30, 8, 'Código', 1, 0, 'C')
+    #             pdf.cell(25, 8, 'Volume (L)', 1, 0, 'C')
+    #             pdf.cell(35, 8, 'Tipo Resíduo', 1, 0, 'C')
+    #             pdf.cell(60, 8, 'Responsável', 1, 0, 'C')
+    #             pdf.cell(40, 8, 'Setor', 1, 1, 'C')
+    #             pdf.set_font('Arial', '', 9)
         
-        # Rodapé
-        pdf.ln(10)
-        pdf.set_font('Arial', 'I', 8)
-        from datetime import datetime
-        data_geracao = datetime.now().strftime("%d/%m/%Y às %H:%M:%S")
-        pdf.cell(0, 6, f"Relatório gerado em {data_geracao}", ln=True, align='L')
+    #     # Rodapé
+    #     pdf.ln(10)
+    #     pdf.set_font('Arial', 'I', 8)
+    #     from datetime import datetime
+    #     data_geracao = datetime.now().strftime("%d/%m/%Y às %H:%M:%S")
+    #     pdf.cell(0, 6, f"Relatório gerado em {data_geracao}", ln=True, align='L')
         
-        pdf.output(arquivo)
+    #     pdf.output(arquivo)
 
-    def _criar_pdf_responsaveis(self, arquivo, responsaveis):
-        """Cria arquivo PDF de responsáveis."""
-        from fpdf import FPDF
+    # def _criar_pdf_responsaveis(self, arquivo, responsaveis):
+    #     """Cria arquivo PDF de responsáveis."""
+    #     from fpdf import FPDF
         
-        pdf = FPDF()
-        pdf.add_page()
-        pdf.set_font('Arial', 'B', 16)
+    #     pdf = FPDF()
+    #     pdf.add_page()
+    #     pdf.set_font('Arial', 'B', 16)
         
-        # Título
-        pdf.cell(0, 10, "RELATÓRIO COMPLETO DE RESPONSÁVEIS", ln=True, align='C')
-        pdf.ln(5)
+    #     # Título
+    #     pdf.cell(0, 10, "RELATÓRIO COMPLETO DE RESPONSÁVEIS", ln=True, align='C')
+    #     pdf.ln(5)
         
-        # Total de responsáveis
-        pdf.set_font('Arial', 'B', 12)
-        pdf.cell(0, 8, f"Total de responsáveis: {len(responsaveis)}", ln=True)
-        pdf.ln(5)
+    #     # Total de responsáveis
+    #     pdf.set_font('Arial', 'B', 12)
+    #     pdf.cell(0, 8, f"Total de responsáveis: {len(responsaveis)}", ln=True)
+    #     pdf.ln(5)
         
-        # Cabeçalho da tabela
-        pdf.set_font('Arial', 'B', 10)
-        pdf.cell(50, 8, 'Nome', 1, 0, 'C')
-        pdf.cell(35, 8, 'CPF', 1, 0, 'C')
-        pdf.cell(35, 8, 'Telefone', 1, 0, 'C')
-        pdf.cell(35, 8, 'Setor', 1, 0, 'C')
-        pdf.cell(25, 8, 'Bombonas', 1, 1, 'C')
+    #     # Cabeçalho da tabela
+    #     pdf.set_font('Arial', 'B', 10)
+    #     pdf.cell(50, 8, 'Nome', 1, 0, 'C')
+    #     pdf.cell(35, 8, 'CPF', 1, 0, 'C')
+    #     pdf.cell(35, 8, 'Telefone', 1, 0, 'C')
+    #     pdf.cell(35, 8, 'Setor', 1, 0, 'C')
+    #     pdf.cell(25, 8, 'Bombonas', 1, 1, 'C')
         
-        # Dados dos responsáveis
-        pdf.set_font('Arial', '', 9)
-        for resp in responsaveis:
-            bombonas = self.bombona_controller.buscar_bombonas_por_cpf_responsavel(resp.get_cpf())
+    #     # Dados dos responsáveis
+    #     pdf.set_font('Arial', '', 9)
+    #     for resp in responsaveis:
+    #         bombonas = self.bombona_controller.buscar_bombonas_por_cpf_responsavel(resp.get_cpf())
             
-            # Trunca texto se muito longo
-            nome = (resp.get_nome()[:22] + "...") if len(resp.get_nome()) > 22 else resp.get_nome()
-            setor = (resp.get_setor()[:15] + "...") if len(resp.get_setor()) > 15 else resp.get_setor()
+    #         # Trunca texto se muito longo
+    #         nome = (resp.get_nome()[:22] + "...") if len(resp.get_nome()) > 22 else resp.get_nome()
+    #         setor = (resp.get_setor()[:15] + "...") if len(resp.get_setor()) > 15 else resp.get_setor()
             
-            # Formata CPF e telefone
-            cpf_formatado = f"{resp.get_cpf()[:3]}.{resp.get_cpf()[3:6]}.{resp.get_cpf()[6:9]}-{resp.get_cpf()[9:]}"
-            telefone = resp.get_telefone()
-            if len(telefone) == 11:
-                tel_formatado = f"({telefone[:2]}) {telefone[2]} {telefone[3:7]}-{telefone[7:]}"
-            elif len(telefone) == 10:
-                tel_formatado = f"({telefone[:2]}) {telefone[2:6]}-{telefone[6:]}"
-            else:
-                tel_formatado = telefone
+    #         # Formata CPF e telefone
+    #         cpf_formatado = f"{resp.get_cpf()[:3]}.{resp.get_cpf()[3:6]}.{resp.get_cpf()[6:9]}-{resp.get_cpf()[9:]}"
+    #         telefone = resp.get_telefone()
+    #         if len(telefone) == 11:
+    #             tel_formatado = f"({telefone[:2]}) {telefone[2]} {telefone[3:7]}-{telefone[7:]}"
+    #         elif len(telefone) == 10:
+    #             tel_formatado = f"({telefone[:2]}) {telefone[2:6]}-{telefone[6:]}"
+    #         else:
+    #             tel_formatado = telefone
             
-            pdf.cell(50, 6, nome, 1, 0, 'L')
-            pdf.cell(35, 6, cpf_formatado, 1, 0, 'C')
-            pdf.cell(35, 6, tel_formatado, 1, 0, 'C')
-            pdf.cell(35, 6, setor, 1, 0, 'L')
-            pdf.cell(25, 6, str(len(bombonas)), 1, 1, 'C')
+    #         pdf.cell(50, 6, nome, 1, 0, 'L')
+    #         pdf.cell(35, 6, cpf_formatado, 1, 0, 'C')
+    #         pdf.cell(35, 6, tel_formatado, 1, 0, 'C')
+    #         pdf.cell(35, 6, setor, 1, 0, 'L')
+    #         pdf.cell(25, 6, str(len(bombonas)), 1, 1, 'C')
             
-            # Nova página se necessário
-            if pdf.get_y() > 250:
-                pdf.add_page()
-                # Reimprime cabeçalho
-                pdf.set_font('Arial', 'B', 10)
-                pdf.cell(50, 8, 'Nome', 1, 0, 'C')
-                pdf.cell(35, 8, 'CPF', 1, 0, 'C')
-                pdf.cell(35, 8, 'Telefone', 1, 0, 'C')
-                pdf.cell(35, 8, 'Setor', 1, 0, 'C')
-                pdf.cell(25, 8, 'Bombonas', 1, 1, 'C')
-                pdf.set_font('Arial', '', 9)
+    #         # Nova página se necessário
+    #         if pdf.get_y() > 250:
+    #             pdf.add_page()
+    #             # Reimprime cabeçalho
+    #             pdf.set_font('Arial', 'B', 10)
+    #             pdf.cell(50, 8, 'Nome', 1, 0, 'C')
+    #             pdf.cell(35, 8, 'CPF', 1, 0, 'C')
+    #             pdf.cell(35, 8, 'Telefone', 1, 0, 'C')
+    #             pdf.cell(35, 8, 'Setor', 1, 0, 'C')
+    #             pdf.cell(25, 8, 'Bombonas', 1, 1, 'C')
+    #             pdf.set_font('Arial', '', 9)
         
-        # Rodapé
-        pdf.ln(10)
-        pdf.set_font('Arial', 'I', 8)
-        from datetime import datetime
-        data_geracao = datetime.now().strftime("%d/%m/%Y às %H:%M:%S")
-        pdf.cell(0, 6, f"Relatório gerado em {data_geracao}", ln=True, align='L')
+    #     # Rodapé
+    #     pdf.ln(10)
+    #     pdf.set_font('Arial', 'I', 8)
+    #     from datetime import datetime
+    #     data_geracao = datetime.now().strftime("%d/%m/%Y às %H:%M:%S")
+    #     pdf.cell(0, 6, f"Relatório gerado em {data_geracao}", ln=True, align='L')
         
-        pdf.output(arquivo)
+    #     pdf.output(arquivo)
