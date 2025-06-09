@@ -167,31 +167,7 @@ class ResponsavelController:
         except Exception as e:
             print(f"Erro ao editar responsável: {e}")
             raise
-    
-    def formatar_cpf_para_exibicao(self, cpf: str) -> str:
-        """
-        Formata o CPF para exibição.
         
-        Args:
-            cpf (str): CPF apenas com números
-            
-        Returns:
-            str: CPF formatado (XXX.XXX.XXX-XX)
-        """
-        return self._responsavel_factory.formatar_cpf_para_exibicao(cpf)
-    
-    def formatar_telefone_para_exibicao(self, telefone: str) -> str:
-        """
-        Formata o telefone para exibição.
-        
-        Args:
-            telefone (str): Telefone apenas com números
-            
-        Returns:
-            str: Telefone formatado
-        """
-        return self._responsavel_factory.formatar_telefone_para_exibicao(telefone)
-    
     def get_responsaveis_com_bombonas(self) -> List[tuple]:
         """
         Retorna lista de responsáveis com a quantidade de bombonas.
