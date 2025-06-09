@@ -73,53 +73,53 @@ class Bombona:
         """
         self._responsavel = novo_responsavel
     
-    def __str__(self) -> str:
-        """Representação em string da bombona."""
-        return f"Bombona[{self._codigo}] - Volume: {self._volume}L - Tipo: {self._tipo_residuo} - Responsável: {self._responsavel.get_nome() if self._responsavel else 'N/A'}"
+    # def __str__(self) -> str:
+    #     """Representação em string da bombona."""
+    #     return f"Bombona[{self._codigo}] - Volume: {self._volume}L - Tipo: {self._tipo_residuo} - Responsável: {self._responsavel.get_nome() if self._responsavel else 'N/A'}"
     
-    def __repr__(self) -> str:
-        """Representação para debug da bombona."""
-        return f"Bombona(codigo='{self._codigo}', volume={self._volume}, tipo_residuo='{self._tipo_residuo}', responsavel={repr(self._responsavel)})"
+    # def __repr__(self) -> str:
+    #     """Representação para debug da bombona."""
+    #     return f"Bombona(codigo='{self._codigo}', volume={self._volume}, tipo_residuo='{self._tipo_residuo}', responsavel={repr(self._responsavel)})"
     
-    def __eq__(self, other) -> bool:
-        """Compara duas bombonas baseado no código."""
-        if not isinstance(other, Bombona):
-            return False
-        return self._codigo == other._codigo
+    # def __eq__(self, other) -> bool:
+    #     """Compara duas bombonas baseado no código."""
+    #     if not isinstance(other, Bombona):
+    #         return False
+    #     return self._codigo == other._codigo
     
-    def __hash__(self) -> int:
-        """Hash baseado no código da bombona."""
-        return hash(self._codigo)
+    # def __hash__(self) -> int:
+    #     """Hash baseado no código da bombona."""
+    #     return hash(self._codigo)
     
-    def to_dict(self) -> dict:
-        """
-        Converte a bombona para dicionário.
+    # def to_dict(self) -> dict:
+    #     """
+    #     Converte a bombona para dicionário.
         
-        Returns:
-            dict: Dicionário com os dados da bombona
-        """
-        return {
-            'codigo': self._codigo,
-            'volume': self._volume,
-            'tipo_residuo': self._tipo_residuo,
-            'cpf_responsavel': self._responsavel.get_cpf() if self._responsavel else None
-        }
+    #     Returns:
+    #         dict: Dicionário com os dados da bombona
+    #     """
+    #     return {
+    #         'codigo': self._codigo,
+    #         'volume': self._volume,
+    #         'tipo_residuo': self._tipo_residuo,
+    #         'cpf_responsavel': self._responsavel.get_cpf() if self._responsavel else None
+    #     }
     
-    @classmethod
-    def from_dict(cls, data: dict, responsavel=None):
-        """
-        Cria uma instância de Bombona a partir de um dicionário.
+    # @classmethod
+    # def from_dict(cls, data: dict, responsavel=None):
+    #     """
+    #     Cria uma instância de Bombona a partir de um dicionário.
         
-        Args:
-            data (dict): Dicionário com os dados da bombona
-            responsavel (Responsavel): Instância do responsável
+    #     Args:
+    #         data (dict): Dicionário com os dados da bombona
+    #         responsavel (Responsavel): Instância do responsável
             
-        Returns:
-            Bombona: Nova instância de Bombona
-        """
-        return cls(
-            codigo=data['codigo'],
-            volume=float(data['volume']),
-            tipo_residuo=data['tipo_residuo'],
-            responsavel=responsavel
-        )
+    #     Returns:
+    #         Bombona: Nova instância de Bombona
+    #     """
+    #     return cls(
+    #         codigo=data['codigo'],
+    #         volume=float(data['volume']),
+    #         tipo_residuo=data['tipo_residuo'],
+    #         responsavel=responsavel
+    #     )

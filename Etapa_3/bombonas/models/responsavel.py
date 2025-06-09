@@ -73,52 +73,52 @@ class Responsavel:
         """
         self._setor = novo_setor
     
-    def __str__(self) -> str:
-        """Representação em string do responsável."""
-        return f"{self._nome} - CPF: {self._cpf} - Setor: {self._setor}"
+    # def __str__(self) -> str:
+    #     """Representação em string do responsável."""
+    #     return f"{self._nome} - CPF: {self._cpf} - Setor: {self._setor}"
     
-    def __repr__(self) -> str:
-        """Representação para debug do responsável."""
-        return f"Responsavel(cpf='{self._cpf}', nome='{self._nome}', telefone='{self._telefone}', setor='{self._setor}')"
+    # def __repr__(self) -> str:
+    #     """Representação para debug do responsável."""
+    #     return f"Responsavel(cpf='{self._cpf}', nome='{self._nome}', telefone='{self._telefone}', setor='{self._setor}')"
     
-    def __eq__(self, other) -> bool:
-        """Compara dois responsáveis baseado no CPF."""
-        if not isinstance(other, Responsavel):
-            return False
-        return self._cpf == other._cpf
+    # def __eq__(self, other) -> bool:
+    #     """Compara dois responsáveis baseado no CPF."""
+    #     if not isinstance(other, Responsavel):
+    #         return False
+    #     return self._cpf == other._cpf
     
-    def __hash__(self) -> int:
-        """Hash baseado no CPF do responsável."""
-        return hash(self._cpf)
+    # def __hash__(self) -> int:
+    #     """Hash baseado no CPF do responsável."""
+    #     return hash(self._cpf)
     
-    def to_dict(self) -> dict:
-        """
-        Converte o responsável para dicionário.
+    # def to_dict(self) -> dict:
+    #     """
+    #     Converte o responsável para dicionário.
         
-        Returns:
-            dict: Dicionário com os dados do responsável
-        """
-        return {
-            'cpf': self._cpf,
-            'nome': self._nome,
-            'telefone': self._telefone,
-            'setor': self._setor
-        }
+    #     Returns:
+    #         dict: Dicionário com os dados do responsável
+    #     """
+    #     return {
+    #         'cpf': self._cpf,
+    #         'nome': self._nome,
+    #         'telefone': self._telefone,
+    #         'setor': self._setor
+    #     }
     
-    @classmethod
-    def from_dict(cls, data: dict):
-        """
-        Cria uma instância de Responsavel a partir de um dicionário.
+    # @classmethod
+    # def from_dict(cls, data: dict):
+    #     """
+    #     Cria uma instância de Responsavel a partir de um dicionário.
         
-        Args:
-            data (dict): Dicionário com os dados do responsável
+    #     Args:
+    #         data (dict): Dicionário com os dados do responsável
             
-        Returns:
-            Responsavel: Nova instância de Responsavel
-        """
-        return cls(
-            cpf=data['cpf'],
-            nome=data['nome'],
-            telefone=data['telefone'],
-            setor=data['setor']
-        )
+    #     Returns:
+    #         Responsavel: Nova instância de Responsavel
+    #     """
+    #     return cls(
+    #         cpf=data['cpf'],
+    #         nome=data['nome'],
+    #         telefone=data['telefone'],
+    #         setor=data['setor']
+    #     )

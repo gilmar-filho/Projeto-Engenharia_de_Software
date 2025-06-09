@@ -444,7 +444,7 @@ class TelaRelatorio:
             pdf.cell(0, 8, "Filtros aplicados:", ln=True)
             pdf.set_font('Arial', '', 10)
             for filtro in filtros_ativos:
-                pdf.cell(0, 6, f"  • {filtro}", ln=True)
+                pdf.cell(0, 6, f"  - {filtro}", ln=True)
             pdf.ln(5)
         
         # Total de bombonas
