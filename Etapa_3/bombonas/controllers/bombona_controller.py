@@ -82,25 +82,25 @@ class BombonaController:
             print(f"Erro ao listar bombonas: {e}")
             return []
 
-    def buscar_bombona_por_codigo(self, codigo: str) -> Optional[Bombona]:
-        """
-        Busca uma bombona pelo código com a referência ao responsável resolvida.
+    # def buscar_bombona_por_codigo(self, codigo: str) -> Optional[Bombona]:
+    #     """
+    #     Busca uma bombona pelo código com a referência ao responsável resolvida.
 
-        Args:
-            codigo (str): Código da bombona
+    #     Args:
+    #         codigo (str): Código da bombona
 
-        Returns:
-            Optional[Bombona]: Bombona encontrada ou None
-        """
-        try:
-            bombona = self._bombona_dao.buscar_por_codigo(codigo)
-            if bombona:
-                bombonas_resolvidas = self._resolver_referencias_responsaveis([bombona])
-                return bombonas_resolvidas[0] if bombonas_resolvidas else None
-            return None
-        except Exception as e:
-            print(f"Erro ao buscar bombona: {e}")
-            return None
+    #     Returns:
+    #         Optional[Bombona]: Bombona encontrada ou None
+    #     """
+    #     try:
+    #         bombona = self._bombona_dao.buscar_por_codigo(codigo)
+    #         if bombona:
+    #             bombonas_resolvidas = self._resolver_referencias_responsaveis([bombona])
+    #             return bombonas_resolvidas[0] if bombonas_resolvidas else None
+    #         return None
+    #     except Exception as e:
+    #         print(f"Erro ao buscar bombona: {e}")
+    #         return None
 
     def remover_bombona(self, codigo: str) -> bool:
         """
