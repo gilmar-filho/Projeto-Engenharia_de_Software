@@ -32,38 +32,35 @@ class BombonaController:
 
     def cadastrar_bombona(self, codigo: str, volume: float, tipo_residuo: str, cpf: str) -> bool:
         """
-        Cadastra uma nova bombona.
-
-        Args:
-            codigo (str): Código da bombona
-            volume (float): Volume em litros
-            tipo_residuo (str): Tipo de resíduo
-            cpf (str): CPF do responsável
-
-        Returns:
-            bool: True se cadastrou com sucesso, False caso contrário
-
-        Raises:
-            ValueError: Se algum parâmetro for inválido
+        Cadastra uma nova bombona com responsável vinculado.
+        
+        REFATORAÇÃO: Agora Controller faz a vinculação após validação via BD.
         """
         try:
-            # Valida e formata o CPF
-            cpf_formatado = self._validar_e_formatar_cpf(cpf)
-
-            # Busca o responsável
-            responsavel = self._responsavel_dao.buscar_por_cpf(cpf_formatado)
-            if not responsavel:
-                raise ValueError(f"Responsável com CPF {cpf} não encontrado")
-
-            # Verifica se o código já existe
+            # Verifica se o código já existe ANTES de processar
             if self._bombona_dao.existe_codigo(codigo):
                 raise ValueError(f"Já existe uma bombona com o código {codigo}")
 
-            # Cria a bombona usando a factory
-            bombona = self._bombona_factory.criar_bombona(codigo, volume, tipo_residuo, responsavel)
+            # 1. NOVA LÓGICA: Factory cria bombona sem responsável (validação dos dados próprios)
+            bombona_temp = self._bombona_factory.criar_bombona(codigo, volume, tipo_residuo)
 
-            # Salva a bombona
-            self._bombona_dao.salvar(bombona)
+            # 2. NOVA LÓGICA: Controller valida e busca responsável (acesso ao BD)
+            cpf_formatado = self._validar_e_formatar_cpf(cpf)
+            responsavel = self._responsavel_dao.buscar_por_cpf(cpf_formatado)
+            
+            if not responsavel:
+                raise ValueError(f"Responsável com CPF {cpf} não encontrado")
+
+            # 3. NOVA LÓGICA: Controller cria bombona final com responsável vinculado
+            bombona_final = Bombona(
+                codigo=bombona_temp.get_codigo(),
+                volume=bombona_temp.get_volume(),
+                tipo_residuo=bombona_temp.get_tipo_residuo(),
+                responsavel=responsavel
+            )
+
+            # 4. Salva a bombona com responsável vinculado
+            self._bombona_dao.salvar(bombona_final)
 
             return True
 
@@ -130,15 +127,8 @@ class BombonaController:
     def editar_bombona(self, codigo: str, novo_volume: float, novo_tipo_residuo: str, cpf_responsavel: str) -> bool:
         """
         Edita os dados de uma bombona existente.
-
-        Args:
-            codigo (str): Código da bombona a ser editada
-            novo_volume (float): Novo volume
-            novo_tipo_residuo (str): Novo tipo de resíduo
-            cpf_responsavel (str): CPF do novo responsável
-
-        Returns:
-            bool: True se editou com sucesso, False caso contrário
+        
+        REFATORAÇÃO: Aplica a mesma lógica de vinculação na edição.
         """
         try:
             # Busca a bombona existente
@@ -146,19 +136,26 @@ class BombonaController:
             if not bombona:
                 raise ValueError(f"Bombona com código {codigo} não encontrada")
 
-            # Valida e formata o CPF
-            cpf_formatado = self._validar_e_formatar_cpf(cpf_responsavel)
+            # 1. NOVA LÓGICA: Factory valida apenas os dados da bombona
+            bombona_temp = self._bombona_factory.criar_bombona(codigo, novo_volume, novo_tipo_residuo)
 
-            # Busca o responsável
+            # 2. NOVA LÓGICA: Controller valida e busca responsável
+            cpf_formatado = self._validar_e_formatar_cpf(cpf_responsavel)
             responsavel = self._responsavel_dao.buscar_por_cpf(cpf_formatado)
+            
             if not responsavel:
                 raise ValueError(f"Responsável com CPF {cpf_responsavel} não encontrado")
 
-            # Cria uma nova bombona com os dados atualizados (para validar)
-            nova_bombona = self._bombona_factory.criar_bombona(codigo, novo_volume, novo_tipo_residuo, responsavel)
+            # 3. NOVA LÓGICA: Controller cria bombona final com responsável vinculado
+            bombona_atualizada = Bombona(
+                codigo=bombona_temp.get_codigo(),
+                volume=bombona_temp.get_volume(),
+                tipo_residuo=bombona_temp.get_tipo_residuo(),
+                responsavel=responsavel
+            )
 
-            # Atualiza a bombona
-            self._bombona_dao.atualizar(nova_bombona)
+            # 4. Atualiza a bombona
+            self._bombona_dao.atualizar(bombona_atualizada)
 
             return True
 
