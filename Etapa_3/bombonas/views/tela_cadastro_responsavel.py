@@ -173,7 +173,7 @@ class TelaCadastroResponsavel:
         return True
     
     def _cadastrar_responsavel(self):
-        """Cadastra o responsável."""
+        """Cadastra o responsável - VERSÃO CORRIGIDA."""
         
         if not self._validar_formulario():
             return
@@ -205,14 +205,23 @@ class TelaCadastroResponsavel:
                 if resposta:
                     self._limpar_formulario()
                 else:
-                    self.janela.destroy()
+                    # ✅ CORREÇÃO: Verifica se janela existe antes de destruir
+                    if hasattr(self, 'janela') and self.janela.winfo_exists():
+                        self.janela.destroy()
+                    return  # ← Sai da função para não tentar reabilitar botão
             
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao cadastrar responsável:\n{str(e)}")
         
         finally:
-            # Reabilita o botão
-            self.btn_cadastrar.config(state='normal')
+            # ✅ CORREÇÃO: Só reabilita botão se widget ainda existir
+            try:
+                if hasattr(self, 'btn_cadastrar') and hasattr(self, 'janela'):
+                    if self.janela.winfo_exists():
+                        self.btn_cadastrar.config(state='normal')
+            except tk.TclError:
+                # Widget foi destruído - não faz nada
+                pass
     
     def _limpar_formulario(self):
         """Limpa todos os campos do formulário."""
