@@ -6,7 +6,7 @@ import csv
 import os
 import unicodedata
 from datetime import datetime
-from typing import List, Optional
+from typing import List
 from dao.interfaces.bombona_dao_interface import BombonaDAOInterface
 from dao.interfaces.responsavel_dao_interface import ResponsavelDAOInterface
 from factory.bombona_factory import BombonaFactory
@@ -83,26 +83,6 @@ class BombonaController:
         except Exception as e:
             print(f"Erro ao listar bombonas: {e}")
             return []
-
-    # def buscar_bombona_por_codigo(self, codigo: str) -> Optional[Bombona]:
-    #     """
-    #     Busca uma bombona pelo código com a referência ao responsável resolvida.
-
-    #     Args:
-    #         codigo (str): Código da bombona
-
-    #     Returns:
-    #         Optional[Bombona]: Bombona encontrada ou None
-    #     """
-    #     try:
-    #         bombona = self._bombona_dao.buscar_por_codigo(codigo)
-    #         if bombona:
-    #             bombonas_resolvidas = self._resolver_referencias_responsaveis([bombona])
-    #             return bombonas_resolvidas[0] if bombonas_resolvidas else None
-    #         return None
-    #     except Exception as e:
-    #         print(f"Erro ao buscar bombona: {e}")
-    #         return None
 
     def remover_bombona(self, codigo: str) -> bool:
         """
@@ -243,41 +223,6 @@ class BombonaController:
 
         return arquivo
 
-    # def _gerar_relatorio_txt(self, bombonas: List[Bombona]) -> str:
-    #     """
-    #     Gera relatório em formato TXT.
-
-    #     Args:
-    #         bombonas (List[Bombona]): Lista de bombonas
-
-    #     Returns:
-    #         str: Caminho do arquivo gerado
-    #     """
-    #     arquivo = "data/relatorio_bombonas.txt"
-
-    #     # Cria o diretório se não existir
-    #     os.makedirs(os.path.dirname(arquivo), exist_ok=True)
-
-    #     with open(arquivo, 'w', encoding='utf-8') as f:
-    #         f.write("RELATÓRIO DE BOMBONAS DE RESÍDUOS QUÍMICOS\n")
-    #         f.write("=" * 50 + "\n\n")
-
-    #         for i, bombona in enumerate(bombonas, 1):
-    #             responsavel = bombona.get_responsavel()
-    #             f.write(f"Bombona {i}:\n")
-    #             f.write(f"  Código: {bombona.get_codigo()}\n")
-    #             f.write(f"  Volume: {bombona.get_volume()} L\n")
-    #             f.write(f"  Tipo Resíduo: {bombona.get_tipo_residuo()}\n")
-    #             f.write(f"  Responsável: {responsavel.get_nome() if responsavel else 'N/A'}\n")
-    #             f.write(f"  CPF: {responsavel.get_cpf() if responsavel else 'N/A'}\n")
-    #             f.write(f"  Setor: {responsavel.get_setor() if responsavel else 'N/A'}\n")
-    #             f.write("-" * 30 + "\n")
-
-    #         f.write(f"\nTotal de bombonas: {len(bombonas)}\n")
-
-    #     return arquivo
-
-    # ADICIONAR método novo:
     def gerar_relatorio_pdf_bombonas(self, bombonas: List[Bombona], arquivo: str, filtros_ativos: list) -> str:
         """
         Gera relatório PDF de bombonas.
@@ -444,6 +389,78 @@ class BombonaController:
         """
         return self._bombona_factory.get_tipos_residuos_validos()
 
+    def filtrar_bombonas_por_setor(self, setor: str) -> List[Bombona]:
+        """
+        Filtra bombonas por setor do responsável.
+
+        Args:
+            setor (str): Setor para filtrar
+
+        Returns:
+            List[Bombona]: Lista de bombonas do setor
+        """
+        try:
+            bombonas = self.listar_bombonas()
+            bombonas_filtradas = []
+
+            for bombona in bombonas:
+                responsavel = bombona.get_responsavel()
+                if responsavel and responsavel.get_setor() == setor:
+                    bombonas_filtradas.append(bombona)
+
+            return bombonas_filtradas
+
+        except Exception as e:
+            print(f"Erro ao filtrar bombonas por setor: {e}")
+            return []
+
+    def filtrar_bombonas_por_tipo_residuo(self, tipo_residuo: str) -> List[Bombona]:
+        """
+        Filtra bombonas por tipo de resíduo.
+
+        Args:
+            tipo_residuo (str): Tipo de resíduo para filtrar
+
+        Returns:
+            List[Bombona]: Lista de bombonas do tipo
+        """
+        try:
+            bombonas = self.listar_bombonas()
+            bombonas_filtradas = []
+
+            for bombona in bombonas:
+                if bombona.get_tipo_residuo() == tipo_residuo:
+                    bombonas_filtradas.append(bombona)
+
+            return bombonas_filtradas
+
+        except Exception as e:
+            print(f"Erro ao filtrar bombonas por tipo: {e}")
+            return []
+        
+
+
+
+    # def buscar_bombona_por_codigo(self, codigo: str) -> Optional[Bombona]:
+    #     """
+    #     Busca uma bombona pelo código com a referência ao responsável resolvida.
+
+    #     Args:
+    #         codigo (str): Código da bombona
+
+    #     Returns:
+    #         Optional[Bombona]: Bombona encontrada ou None
+    #     """
+    #     try:
+    #         bombona = self._bombona_dao.buscar_por_codigo(codigo)
+    #         if bombona:
+    #             bombonas_resolvidas = self._resolver_referencias_responsaveis([bombona])
+    #             return bombonas_resolvidas[0] if bombonas_resolvidas else None
+    #         return None
+    #     except Exception as e:
+    #         print(f"Erro ao buscar bombona: {e}")
+    #         return None
+
     # def get_estatisticas(self) -> dict:
     #     """
     #     Retorna estatísticas simples sobre as bombonas cadastradas.
@@ -507,51 +524,36 @@ class BombonaController:
     #         print(f"Erro ao buscar bombonas por responsável: {e}")
     #         return []
 
-    def filtrar_bombonas_por_setor(self, setor: str) -> List[Bombona]:
-        """
-        Filtra bombonas por setor do responsável.
+    # def _gerar_relatorio_txt(self, bombonas: List[Bombona]) -> str:
+    #     """
+    #     Gera relatório em formato TXT.
 
-        Args:
-            setor (str): Setor para filtrar
+    #     Args:
+    #         bombonas (List[Bombona]): Lista de bombonas
 
-        Returns:
-            List[Bombona]: Lista de bombonas do setor
-        """
-        try:
-            bombonas = self.listar_bombonas()
-            bombonas_filtradas = []
+    #     Returns:
+    #         str: Caminho do arquivo gerado
+    #     """
+    #     arquivo = "data/relatorio_bombonas.txt"
 
-            for bombona in bombonas:
-                responsavel = bombona.get_responsavel()
-                if responsavel and responsavel.get_setor() == setor:
-                    bombonas_filtradas.append(bombona)
+    #     # Cria o diretório se não existir
+    #     os.makedirs(os.path.dirname(arquivo), exist_ok=True)
 
-            return bombonas_filtradas
+    #     with open(arquivo, 'w', encoding='utf-8') as f:
+    #         f.write("RELATÓRIO DE BOMBONAS DE RESÍDUOS QUÍMICOS\n")
+    #         f.write("=" * 50 + "\n\n")
 
-        except Exception as e:
-            print(f"Erro ao filtrar bombonas por setor: {e}")
-            return []
+    #         for i, bombona in enumerate(bombonas, 1):
+    #             responsavel = bombona.get_responsavel()
+    #             f.write(f"Bombona {i}:\n")
+    #             f.write(f"  Código: {bombona.get_codigo()}\n")
+    #             f.write(f"  Volume: {bombona.get_volume()} L\n")
+    #             f.write(f"  Tipo Resíduo: {bombona.get_tipo_residuo()}\n")
+    #             f.write(f"  Responsável: {responsavel.get_nome() if responsavel else 'N/A'}\n")
+    #             f.write(f"  CPF: {responsavel.get_cpf() if responsavel else 'N/A'}\n")
+    #             f.write(f"  Setor: {responsavel.get_setor() if responsavel else 'N/A'}\n")
+    #             f.write("-" * 30 + "\n")
 
-    def filtrar_bombonas_por_tipo_residuo(self, tipo_residuo: str) -> List[Bombona]:
-        """
-        Filtra bombonas por tipo de resíduo.
+    #         f.write(f"\nTotal de bombonas: {len(bombonas)}\n")
 
-        Args:
-            tipo_residuo (str): Tipo de resíduo para filtrar
-
-        Returns:
-            List[Bombona]: Lista de bombonas do tipo
-        """
-        try:
-            bombonas = self.listar_bombonas()
-            bombonas_filtradas = []
-
-            for bombona in bombonas:
-                if bombona.get_tipo_residuo() == tipo_residuo:
-                    bombonas_filtradas.append(bombona)
-
-            return bombonas_filtradas
-
-        except Exception as e:
-            print(f"Erro ao filtrar bombonas por tipo: {e}")
-            return []
+    #     return arquivo

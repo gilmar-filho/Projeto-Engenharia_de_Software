@@ -167,28 +167,7 @@ class ResponsavelController:
         except Exception as e:
             print(f"Erro ao editar responsável: {e}")
             raise
-        
-    # def get_responsaveis_com_bombonas(self) -> List[tuple]: # Quero ver com a Claude
-    #     """
-    #     Retorna lista de responsáveis com a quantidade de bombonas.
-        
-    #     Returns:
-    #         List[tuple]: Lista de tuplas (responsavel, qtd_bombonas)
-    #     """
-    #     try:
-    #         responsaveis = self._responsavel_dao.listar_todos()
-    #         resultado = []
             
-    #         for responsavel in responsaveis:
-    #             bombonas = self._bombona_dao.buscar_por_responsavel(responsavel.get_cpf())
-    #             resultado.append((responsavel, len(bombonas)))
-            
-    #         return resultado
-            
-    #     except Exception as e:
-    #         print(f"Erro ao buscar responsáveis com bombonas: {e}")
-    #         return []
-    
     def validar_cpf_existe(self, cpf: str) -> bool:
         """
         Verifica se um CPF já está cadastrado.
@@ -205,67 +184,6 @@ class ResponsavelController:
         except:
             return False
     
-    # def get_estatisticas(self) -> dict:
-    #     """
-    #     Retorna estatísticas simples sobre os responsáveis.
-        
-    #     Returns:
-    #         dict: Dicionário com estatísticas básicas
-    #     """
-    #     try:
-    #         responsaveis = self.listar_responsaveis()
-            
-    #         # Contagem por setor
-    #         responsaveis_por_setor = {}
-    #         bombonas_por_setor = {}
-    #         responsaveis_sem_bombonas = 0
-            
-    #         for responsavel in responsaveis:
-    #             setor = responsavel.get_setor()
-                
-    #             # Conta responsáveis por setor
-    #             responsaveis_por_setor[setor] = responsaveis_por_setor.get(setor, 0) + 1
-                
-    #             # Conta bombonas por setor
-    #             bombonas = self._bombona_dao.buscar_por_responsavel(responsavel.get_cpf())
-    #             if not bombonas:
-    #                 responsaveis_sem_bombonas += 1
-                
-    #             if setor not in bombonas_por_setor:
-    #                 bombonas_por_setor[setor] = 0
-    #             bombonas_por_setor[setor] += len(bombonas)
-            
-    #         # Setor com mais responsáveis
-    #         setor_mais_responsaveis = max(responsaveis_por_setor.items(), 
-    #                                     key=lambda x: x[1])[0] if responsaveis_por_setor else None
-            
-    #         return {
-    #             'total_responsaveis': len(responsaveis),
-    #             'total_setores': len(responsaveis_por_setor),
-    #             'responsaveis_por_setor': responsaveis_por_setor,
-    #             'bombonas_por_setor': bombonas_por_setor,
-    #             'responsaveis_sem_bombonas': responsaveis_sem_bombonas,
-    #             'setor_com_mais_responsaveis': setor_mais_responsaveis
-    #         }
-            
-    #     except Exception as e:
-    #         print(f"Erro ao calcular estatísticas: {e}")
-    #         return {
-    #             'total_responsaveis': 0,
-    #             'total_setores': 0,
-    #             'responsaveis_por_setor': {},
-    #             'bombonas_por_setor': {},
-    #             'responsaveis_sem_bombonas': 0,
-    #             'setor_com_mais_responsaveis': None
-    #         }
-        
-    """
-    Métodos adicionais para o ResponsavelController - Versão Simples
-    Adicionar estes métodos ao arquivo responsavel_controller.py existente
-    """
-
-    # Adicionar estes métodos à classe ResponsavelController existente:
-
     def obter_setores_disponiveis(self) -> List[str]:
         """
         Retorna lista de setores únicos dos responsáveis cadastrados.
@@ -462,3 +380,80 @@ class ResponsavelController:
         
         pdf.output(arquivo)
         return arquivo
+    
+
+
+    # def get_responsaveis_com_bombonas(self) -> List[tuple]: # Quero ver com a Claude
+    #     """
+    #     Retorna lista de responsáveis com a quantidade de bombonas.
+        
+    #     Returns:
+    #         List[tuple]: Lista de tuplas (responsavel, qtd_bombonas)
+    #     """
+    #     try:
+    #         responsaveis = self._responsavel_dao.listar_todos()
+    #         resultado = []
+            
+    #         for responsavel in responsaveis:
+    #             bombonas = self._bombona_dao.buscar_por_responsavel(responsavel.get_cpf())
+    #             resultado.append((responsavel, len(bombonas)))
+            
+    #         return resultado
+            
+    #     except Exception as e:
+    #         print(f"Erro ao buscar responsáveis com bombonas: {e}")
+    #         return []
+
+    # def get_estatisticas(self) -> dict:
+    #     """
+    #     Retorna estatísticas simples sobre os responsáveis.
+        
+    #     Returns:
+    #         dict: Dicionário com estatísticas básicas
+    #     """
+    #     try:
+    #         responsaveis = self.listar_responsaveis()
+            
+    #         # Contagem por setor
+    #         responsaveis_por_setor = {}
+    #         bombonas_por_setor = {}
+    #         responsaveis_sem_bombonas = 0
+            
+    #         for responsavel in responsaveis:
+    #             setor = responsavel.get_setor()
+                
+    #             # Conta responsáveis por setor
+    #             responsaveis_por_setor[setor] = responsaveis_por_setor.get(setor, 0) + 1
+                
+    #             # Conta bombonas por setor
+    #             bombonas = self._bombona_dao.buscar_por_responsavel(responsavel.get_cpf())
+    #             if not bombonas:
+    #                 responsaveis_sem_bombonas += 1
+                
+    #             if setor not in bombonas_por_setor:
+    #                 bombonas_por_setor[setor] = 0
+    #             bombonas_por_setor[setor] += len(bombonas)
+            
+    #         # Setor com mais responsáveis
+    #         setor_mais_responsaveis = max(responsaveis_por_setor.items(), 
+    #                                     key=lambda x: x[1])[0] if responsaveis_por_setor else None
+            
+    #         return {
+    #             'total_responsaveis': len(responsaveis),
+    #             'total_setores': len(responsaveis_por_setor),
+    #             'responsaveis_por_setor': responsaveis_por_setor,
+    #             'bombonas_por_setor': bombonas_por_setor,
+    #             'responsaveis_sem_bombonas': responsaveis_sem_bombonas,
+    #             'setor_com_mais_responsaveis': setor_mais_responsaveis
+    #         }
+            
+    #     except Exception as e:
+    #         print(f"Erro ao calcular estatísticas: {e}")
+    #         return {
+    #             'total_responsaveis': 0,
+    #             'total_setores': 0,
+    #             'responsaveis_por_setor': {},
+    #             'bombonas_por_setor': {},
+    #             'responsaveis_sem_bombonas': 0,
+    #             'setor_com_mais_responsaveis': None
+    #         }
