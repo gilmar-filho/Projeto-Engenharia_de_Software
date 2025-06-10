@@ -13,8 +13,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Importações das camadas do sistema
 try:
-    from dao.responsavel_dao import ResponsavelDAO
-    from dao.bombona_dao import BombonaDAO
+    from factory.dao_factory import DAOFactory
     from controllers.responsavel_controller import ResponsavelController
     from controllers.bombona_controller import BombonaController
     from views.tela_login import TelaLogin
@@ -46,21 +45,28 @@ class SistemaBombonas:
     def _inicializar_sistema(self):
         """Inicializa os componentes do sistema."""
         try:
-            # Inicializa os DAOs
-            self.responsavel_dao = ResponsavelDAO()
-            self.bombona_dao = BombonaDAO()
-
-            # Inicializa os Controllers
+            # Cria todos os DAOs de uma vez
+            daos = DAOFactory.criar_todos_daos()
+            self.responsavel_dao = daos['responsavel_dao']
+            self.bombona_dao = daos['bombona_dao']
+            
+            # Controllers
             self.responsavel_controller = ResponsavelController(
-                self.responsavel_dao,
+                self.responsavel_dao, 
                 self.bombona_dao
             )
             self.bombona_controller = BombonaController(
-                self.bombona_dao,
+                self.bombona_dao, 
                 self.responsavel_dao
             )
-
+            
             print("Sistema inicializado com sucesso!")
+            
+        except Exception as e:
+            print(f"Erro ao inicializar sistema: {e}")
+            messagebox.showerror("Erro de Inicialização", 
+                f"Não foi possível inicializar o sistema:\n{e}")
+            sys.exit(1)
 
         except Exception as e:
             print(f"Erro ao inicializar sistema: {e}")
