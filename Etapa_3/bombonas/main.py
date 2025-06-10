@@ -68,7 +68,7 @@ class SistemaBombonas:
         """Cria a interface gráfica principal."""
         self.root = tk.Tk()
         self.root.title("Sistema de Gerenciamento de Bombonas")
-        self.root.geometry("900x700")  # Aumentado de 800x600 para 900x700
+        self.root.geometry("600x700")  # Aumentado de 800x600 para 900x700
         self.root.resizable(True, True)
         
         # Centraliza a janela
@@ -94,7 +94,7 @@ class SistemaBombonas:
         altura_tela = self.root.winfo_screenheight()
         
         # Dimensões da janela
-        largura_janela = 900
+        largura_janela = 600
         altura_janela = 700
         
         # Calcula posição X (centro horizontal)
@@ -161,9 +161,9 @@ class SistemaBombonas:
         )
         subtitulo.pack(pady=(0, 20))
         
-        # Frame para botões - espaço reduzido
+        # Frame para botões
         botoes_frame = ttk.Frame(main_frame)
-        botoes_frame.pack(pady=10)  # Reduzido de 20 para 10
+        botoes_frame.pack(expand=True)  # Centraliza verticalmente
         
         # Seção Responsáveis
         resp_frame = ttk.LabelFrame(botoes_frame, text="Responsáveis", padding="15")
@@ -203,7 +203,7 @@ class SistemaBombonas:
         
         # Seção Relatórios
         rel_frame = ttk.LabelFrame(botoes_frame, text="Relatórios", padding="15")
-        rel_frame.pack(fill=tk.X, pady=(0, 15))  # Reduzido de 20 para 15
+        rel_frame.pack(fill=tk.X, pady=(0, 20))
         
         ttk.Button(
             rel_frame, 
@@ -212,111 +212,108 @@ class SistemaBombonas:
             width=25
         ).pack()
         
-        # Área de estatísticas - espaço aumentado
-        self._criar_area_estatisticas(main_frame)
-        
-        # Botão sair - espaço reduzido
+        # Botão sair
         ttk.Button(
             main_frame,
             text="Sair do Sistema",
             command=self._sair_aplicacao,
             width=20
-        ).pack(pady=(15, 0))  # Reduzido de 20 para 15
+        ).pack(pady=(30, 0))
     
-    def _criar_area_estatisticas(self, parent):
-        """Cria a área de estatísticas."""
-        stats_frame = ttk.LabelFrame(parent, text="Estatísticas do Sistema", padding="15")
-        stats_frame.pack(fill=tk.BOTH, expand=True, pady=(15, 0))  # Reduzido de 20 para 15
+#     def _criar_area_estatisticas(self, parent):
+#         """Cria a área de estatísticas."""
+#         stats_frame = ttk.LabelFrame(parent, text="Estatísticas do Sistema", padding="15")
+#         stats_frame.pack(fill=tk.BOTH, expand=True, pady=(15, 0))  # Reduzido de 20 para 15
         
-        # Text widget para estatísticas - altura aumentada
-        text_frame = ttk.Frame(stats_frame)
-        text_frame.pack(fill=tk.BOTH, expand=True)
+#         # Text widget para estatísticas - altura aumentada
+#         text_frame = ttk.Frame(stats_frame)
+#         text_frame.pack(fill=tk.BOTH, expand=True)
         
-        self.stats_text = tk.Text(text_frame, height=15, width=80, state='disabled', wrap=tk.WORD, font=('Arial', 10))  # Aumentado height de 10 para 15, width de 70 para 80
-        scrollbar = ttk.Scrollbar(text_frame, orient="vertical", command=self.stats_text.yview)
-        self.stats_text.configure(yscrollcommand=scrollbar.set)
+#         self.stats_text = tk.Text(text_frame, height=15, width=80, state='disabled', wrap=tk.WORD, font=('Arial', 10))  # Aumentado height de 10 para 15, width de 70 para 80
+#         scrollbar = ttk.Scrollbar(text_frame, orient="vertical", command=self.stats_text.yview)
+#         self.stats_text.configure(yscrollcommand=scrollbar.set)
         
-        self.stats_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+#         self.stats_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+#         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         
-        # Botão para atualizar estatísticas
-        ttk.Button(
-            stats_frame, 
-            text="Atualizar Estatísticas", 
-            command=self._atualizar_estatisticas
-        ).pack(pady=(15, 0))  # Aumentado de 10 para 15
+#         # Botão para atualizar estatísticas
+#         ttk.Button(
+#             stats_frame, 
+#             text="Atualizar Estatísticas", 
+#             command=self._atualizar_estatisticas
+#         ).pack(pady=(15, 0))  # Aumentado de 10 para 15
         
-        # Carrega estatísticas iniciais
-        self._atualizar_estatisticas()
+#         # Carrega estatísticas iniciais
+#         self._atualizar_estatisticas()
     
-    def _atualizar_estatisticas(self):
-        """Atualiza as estatísticas exibidas."""
-        try:
-            # Limpar texto
-            self.stats_text.config(state='normal')
-            self.stats_text.delete(1.0, tk.END)
+#     def _atualizar_estatisticas(self):
+#         """Atualiza as estatísticas exibidas."""
+#         try:
+#             # Limpar texto
+#             self.stats_text.config(state='normal')
+#             self.stats_text.delete(1.0, tk.END)
             
-            try:
-                # Obter estatísticas básicas
-                responsaveis = self.responsavel_controller.listar_responsaveis()
-                bombonas = self.bombona_controller.listar_bombonas()
+#             try:
+#                 # Obter estatísticas básicas
+#                 responsaveis = self.responsavel_controller.listar_responsaveis()
+#                 bombonas = self.bombona_controller.listar_bombonas()
                 
-                total_responsaveis = len(responsaveis)
-                total_bombonas = len(bombonas)
+#                 total_responsaveis = len(responsaveis)
+#                 total_bombonas = len(bombonas)
                 
-                # Construir texto das estatísticas sem volumes
-                texto = f"""ESTATÍSTICAS DO SISTEMA
-{'='*50}
+#                 # Construir texto das estatísticas sem volumes
+#                 texto = f"""ESTATÍSTICAS DO SISTEMA
+# {'='*50}
 
-BOMBONAS:
-• Total de bombonas: {total_bombonas}
+# BOMBONAS:
+# • Total de bombonas: {total_bombonas}
 
-RESPONSÁVEIS:
-• Total de responsáveis: {total_responsaveis}
+# RESPONSÁVEIS:
+# • Total de responsáveis: {total_responsaveis}
 
-BOMBONAS POR TIPO DE RESÍDUO:
-"""
+# BOMBONAS POR TIPO DE RESÍDUO:
+# """
                 
-                # Contar tipos de resíduo
-                tipos_residuo = {}
-                for b in bombonas:
-                    tipo = b.get_tipo_residuo()
-                    tipos_residuo[tipo] = tipos_residuo.get(tipo, 0) + 1
+#                 # Contar tipos de resíduo
+#                 tipos_residuo = {}
+#                 for b in bombonas:
+#                     tipo = b.get_tipo_residuo()
+#                     tipos_residuo[tipo] = tipos_residuo.get(tipo, 0) + 1
                 
-                for tipo, qtd in tipos_residuo.items():
-                    texto += f"• {tipo}: {qtd} bombona(s)\n"
+#                 for tipo, qtd in tipos_residuo.items():
+#                     texto += f"• {tipo}: {qtd} bombona(s)\n"
                 
-                texto += "\nRESPONSÁVEIS POR SETOR:\n"
+#                 texto += "\nRESPONSÁVEIS POR SETOR:\n"
                 
-                # Contar responsáveis por setor
-                setores = {}
-                for r in responsaveis:
-                    setor = r.get_setor()
-                    setores[setor] = setores.get(setor, 0) + 1
+#                 # Contar responsáveis por setor
+#                 setores = {}
+#                 for r in responsaveis:
+#                     setor = r.get_setor()
+#                     setores[setor] = setores.get(setor, 0) + 1
                 
-                for setor, qtd in setores.items():
-                    texto += f"• {setor}: {qtd} responsável(is)\n"
+#                 for setor, qtd in setores.items():
+#                     texto += f"• {setor}: {qtd} responsável(is)\n"
                 
-                # Bombonas por setor
-                texto += "\nBOMBONAS POR SETOR:\n"
-                bombonas_por_setor = {}
-                for b in bombonas:
-                    if b.get_responsavel():
-                        setor = b.get_responsavel().get_setor()
-                        bombonas_por_setor[setor] = bombonas_por_setor.get(setor, 0) + 1
+#                 # Bombonas por setor
+#                 texto += "\nBOMBONAS POR SETOR:\n"
+#                 bombonas_por_setor = {}
+#                 for b in bombonas:
+#                     if b.get_responsavel():
+#                         setor = b.get_responsavel().get_setor()
+#                         bombonas_por_setor[setor] = bombonas_por_setor.get(setor, 0) + 1
                 
-                for setor, qtd in bombonas_por_setor.items():
-                    texto += f"• {setor}: {qtd} bombona(s)\n"
+#                 for setor, qtd in bombonas_por_setor.items():
+#                     texto += f"• {setor}: {qtd} bombona(s)\n"
                 
-                self.stats_text.insert(1.0, texto)
+#                 self.stats_text.insert(1.0, texto)
                 
-            except Exception as e:
-                self.stats_text.insert(1.0, f"Erro ao carregar estatísticas: {e}\n\nVerifique se os controllers estão implementados corretamente.")
+#             except Exception as e:
+#                 self.stats_text.insert(1.0, f"Erro ao carregar estatísticas: {e}\n\nVerifique se os controllers estão implementados corretamente.")
             
-            self.stats_text.config(state='disabled')
+#             self.stats_text.config(state='disabled')
             
-        except Exception as e:
-            messagebox.showerror("Erro", f"Erro ao atualizar estatísticas: {e}")
+#         except Exception as e:
+#             messagebox.showerror("Erro", f"Erro ao atualizar estatísticas: {e}")
     
     # Métodos para abrir as diferentes telas
     def _abrir_cadastro_responsavel(self):
@@ -326,7 +323,7 @@ BOMBONAS POR TIPO DE RESÍDUO:
             tela = TelaCadastroResponsavel(self.root, self.responsavel_controller)
             tela.exibir_formulario()
             # Atualiza estatísticas após fechar a tela
-            self.root.after(1000, self._atualizar_estatisticas)
+            # self.root.after(1000, self._atualizar_estatisticas)
         except ImportError:
             messagebox.showerror("Erro", "Módulo tela_cadastro_responsavel não encontrado.\nVerifique se o arquivo está no diretório views/")
         except Exception as e:
@@ -354,7 +351,7 @@ BOMBONAS POR TIPO DE RESÍDUO:
             )
             tela.exibir_formulario()
             # Atualiza estatísticas após fechar a tela
-            self.root.after(1000, self._atualizar_estatisticas)
+            # self.root.after(1000, self._atualizar_estatisticas)
         except ImportError:
             messagebox.showerror("Erro", "Módulo tela_cadastro_bombona não encontrado.\nVerifique se o arquivo está no diretório views/")
         except Exception as e:

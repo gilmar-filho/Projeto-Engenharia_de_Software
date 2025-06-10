@@ -60,9 +60,9 @@ class TelaRelatorio:
     def _centralizar_janela(self):
         """Centraliza a janela na tela."""
         self.janela.update_idletasks()
-        x = (self.janela.winfo_screenwidth() // 2) - (650 // 2)
-        y = (self.janela.winfo_screenheight() // 2) - (800 // 2)
-        self.janela.geometry(f"650x800+{x}+{y}")
+        x = (self.janela.winfo_screenwidth() // 2) - (475 // 2)
+        y = (self.janela.winfo_screenheight() // 2) - (625 // 2)
+        self.janela.geometry(f"475x625+{x}+{y}")
     
     def _carregar_dados_filtros(self):
         """Carrega os dados necessários para os filtros."""
@@ -99,9 +99,6 @@ class TelaRelatorio:
         titulo = ttk.Label(main_frame, text="Relatórios do Sistema", font=('Arial', 16, 'bold'))
         titulo.pack(pady=(0, 20))
         
-        # Seção de estatísticas
-        self._criar_estatisticas(main_frame)
-        
         # Seção de formato de arquivo
         self._criar_selecao_formato(main_frame)
         
@@ -114,24 +111,24 @@ class TelaRelatorio:
         # Botão fechar
         ttk.Button(main_frame, text="Fechar", command=self.janela.destroy, width=15).pack(pady=(20, 0))
     
-    def _criar_estatisticas(self, parent):
-        """Cria a seção de estatísticas rápidas."""
+    # def _criar_estatisticas(self, parent):
+    #     """Cria a seção de estatísticas rápidas."""
         
-        stats_frame = ttk.LabelFrame(parent, text="Estatísticas", padding="15")
-        stats_frame.pack(fill=tk.X, pady=(0, 15))
+    #     stats_frame = ttk.LabelFrame(parent, text="Estatísticas", padding="15")
+    #     stats_frame.pack(fill=tk.X, pady=(0, 15))
         
-        try:
-            responsaveis = self.responsavel_controller.listar_responsaveis()
-            bombonas = self.bombona_controller.listar_bombonas()
+    #     try:
+    #         responsaveis = self.responsavel_controller.listar_responsaveis()
+    #         bombonas = self.bombona_controller.listar_bombonas()
             
-            total_responsaveis = len(responsaveis)
-            total_bombonas = len(bombonas)
+    #         total_responsaveis = len(responsaveis)
+    #         total_bombonas = len(bombonas)
             
-            ttk.Label(stats_frame, text=f"Responsáveis: {total_responsaveis}").pack(anchor=tk.W)
-            ttk.Label(stats_frame, text=f"Bombonas: {total_bombonas}").pack(anchor=tk.W)
+    #         ttk.Label(stats_frame, text=f"Responsáveis: {total_responsaveis}").pack(anchor=tk.W)
+    #         ttk.Label(stats_frame, text=f"Bombonas: {total_bombonas}").pack(anchor=tk.W)
             
-        except Exception as e:
-            ttk.Label(stats_frame, text=f"Erro: {str(e)}", foreground="red").pack()
+    #     except Exception as e:
+    #         ttk.Label(stats_frame, text=f"Erro: {str(e)}", foreground="red").pack()
     
     def _criar_selecao_formato(self, parent):
         """Cria a seção de seleção do formato de arquivo."""

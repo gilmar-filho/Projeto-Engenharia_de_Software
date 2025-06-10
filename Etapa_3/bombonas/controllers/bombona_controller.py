@@ -444,43 +444,43 @@ class BombonaController:
         """
         return self._bombona_factory.get_tipos_residuos_validos()
 
-    def get_estatisticas(self) -> dict:
-        """
-        Retorna estatísticas simples sobre as bombonas cadastradas.
+    # def get_estatisticas(self) -> dict:
+    #     """
+    #     Retorna estatísticas simples sobre as bombonas cadastradas.
 
-        Returns:
-            dict: Dicionário com estatísticas básicas
-        """
-        try:
-            bombonas = self.listar_bombonas()
+    #     Returns:
+    #         dict: Dicionário com estatísticas básicas
+    #     """
+    #     try:
+    #         bombonas = self.listar_bombonas()
 
-            # Conta bombonas por tipo de resíduo
-            tipos_residuo = {}
-            setores = {}
+    #         # Conta bombonas por tipo de resíduo
+    #         tipos_residuo = {}
+    #         setores = {}
 
-            for bombona in bombonas:
-                # Contagem por tipo de resíduo
-                tipo = bombona.get_tipo_residuo()
-                tipos_residuo[tipo] = tipos_residuo.get(tipo, 0) + 1
+    #         for bombona in bombonas:
+    #             # Contagem por tipo de resíduo
+    #             tipo = bombona.get_tipo_residuo()
+    #             tipos_residuo[tipo] = tipos_residuo.get(tipo, 0) + 1
 
-                # Contagem por setor do responsável
-                if bombona.get_responsavel():
-                    setor = bombona.get_responsavel().get_setor()
-                    setores[setor] = setores.get(setor, 0) + 1
+    #             # Contagem por setor do responsável
+    #             if bombona.get_responsavel():
+    #                 setor = bombona.get_responsavel().get_setor()
+    #                 setores[setor] = setores.get(setor, 0) + 1
 
-            return {
-                'total_bombonas': len(bombonas),
-                'tipos_residuo': tipos_residuo,
-                'setores': setores
-            }
+    #         return {
+    #             'total_bombonas': len(bombonas),
+    #             'tipos_residuo': tipos_residuo,
+    #             'setores': setores
+    #         }
 
-        except Exception as e:
-            print(f"Erro ao calcular estatísticas: {e}")
-            return {
-                'total_bombonas': 0,
-                'tipos_residuo': {},
-                'setores': {}
-            }
+    #     except Exception as e:
+    #         print(f"Erro ao calcular estatísticas: {e}")
+    #         return {
+    #             'total_bombonas': 0,
+    #             'tipos_residuo': {},
+    #             'setores': {}
+    #         }
 
     """
     Métodos adicionais para o BombonaController - Versão Simples
