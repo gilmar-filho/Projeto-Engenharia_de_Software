@@ -228,28 +228,56 @@ class TelaRelatorio:
         self.var_filtro_tipo_residuo.set("Todos")
     
     def _aplicar_filtros(self, bombonas):
-        """Aplica os filtros às bombonas."""
-        bombonas_filtradas = bombonas.copy()
-        
-        # Filtro por setor
-        if self.var_filtro_setor.get() != "Todos":
-            setor = self.var_filtro_setor.get()
-            bombonas_filtradas = [b for b in bombonas_filtradas 
-                                 if b.get_responsavel() and b.get_responsavel().get_setor() == setor]
-        
-        # Filtro por responsável
-        if self.var_filtro_responsavel.get() != "Todos":
-            cpf = self.responsaveis_dict.get(self.var_filtro_responsavel.get())
-            if cpf:
-                bombonas_filtradas = [b for b in bombonas_filtradas 
-                                     if b.get_responsavel() and b.get_responsavel().get_cpf() == cpf]
-        
-        # Filtro por tipo de resíduo
-        if self.var_filtro_tipo_residuo.get() != "Todos":
-            tipo = self.var_filtro_tipo_residuo.get()
-            bombonas_filtradas = [b for b in bombonas_filtradas if b.get_tipo_residuo() == tipo]
-        
-        return bombonas_filtradas
+        """
+        Aplica os filtros às bombonas usando os métodos do controller.
+        Versão otimizada que aplica filtros em sequência.
+        """
+        try:
+            # Lista de filtros a aplicar
+            filtros = []
+            
+            # Coleta filtros ativos
+            if self.var_filtro_setor.get() != "Todos":
+                filtros.append(('setor', self.var_filtro_setor.get()))
+                
+            if self.var_filtro_responsavel.get() != "Todos":
+                cpf = self.responsaveis_dict.get(self.var_filtro_responsavel.get())
+                if cpf:
+                    filtros.append(('responsavel', cpf))
+                    
+            if self.var_filtro_tipo_residuo.get() != "Todos":
+                filtros.append(('tipo_residuo', self.var_filtro_tipo_residuo.get()))
+            
+            # Se não há filtros, retorna lista original
+            if not filtros:
+                return bombonas
+            
+            # Aplica filtros usando métodos do controller
+            bombonas_resultado = None
+            
+            for tipo_filtro, valor in filtros:
+                if tipo_filtro == 'setor':
+                    bombonas_resultado = self.bombona_controller.filtrar_bombonas_por_setor(valor)
+                elif tipo_filtro == 'responsavel':
+                    if bombonas_resultado is None:
+                        bombonas_resultado = self.bombona_controller.buscar_bombonas_por_cpf_responsavel(valor)
+                    else:
+                        # Aplica sobre resultado anterior
+                        bombonas_resultado = [b for b in bombonas_resultado 
+                                            if b.get_responsavel() and b.get_responsavel().get_cpf() == valor]
+                elif tipo_filtro == 'tipo_residuo':
+                    if bombonas_resultado is None:
+                        bombonas_resultado = self.bombona_controller.filtrar_bombonas_por_tipo_residuo(valor)
+                    else:
+                        # Aplica sobre resultado anterior
+                        bombonas_resultado = [b for b in bombonas_resultado 
+                                            if b.get_tipo_residuo() == valor]
+            
+            return bombonas_resultado or []
+            
+        except Exception as e:
+            print(f"Erro ao aplicar filtros: {e}")
+            return []
     
     def _verificar_filtros_ativos(self):
         """Verifica se há filtros ativos."""
@@ -336,17 +364,25 @@ class TelaRelatorio:
         if not arquivo:
             return
         
+        # try:
+        #     # ✅ NOVA LÓGICA: Chama controller em vez de método local
+        #     if formato == "csv":
+        #         arquivo_gerado = self.bombona_controller.gerar_relatorio("csv")
+        #         # Copia arquivo gerado para local escolhido pelo usuário
+        #         import shutil
+        #         shutil.copy(arquivo_gerado, arquivo)
+        #     else:  # formato == "pdf"
+        #         # Controller gera PDF diretamente no local escolhido
+        #         self.bombona_controller.gerar_relatorio_pdf_bombonas(bombonas, arquivo, filtros_ativos)
+
         try:
-            # ✅ NOVA LÓGICA: Chama controller em vez de método local
             if formato == "csv":
-                arquivo_gerado = self.bombona_controller.gerar_relatorio("csv")
-                # Copia arquivo gerado para local escolhido pelo usuário
-                import shutil
-                shutil.copy(arquivo_gerado, arquivo)
+                # ✅ CORREÇÃO SIMPLES: Usar método CSV existente do controller mas com bombonas filtradas
+                # Temporariamente criar arquivo CSV com bombonas filtradas
+                self._criar_csv_bombonas(arquivo, bombonas, filtros_ativos)
             else:  # formato == "pdf"
-                # Controller gera PDF diretamente no local escolhido
                 self.bombona_controller.gerar_relatorio_pdf_bombonas(bombonas, arquivo, filtros_ativos)
-            
+
             messagebox.showinfo("Sucesso", f"Relatório salvo com sucesso!\n\nLocal: {arquivo}")
             
             if messagebox.askyesno("Abrir Arquivo", "Deseja abrir o relatório agora?"):
