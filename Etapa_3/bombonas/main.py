@@ -13,9 +13,9 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Importações das camadas do sistema
 try:
-    from factory.dao_factory import DAOFactory
-    from controllers.responsavel_controller import ResponsavelController
-    from controllers.bombona_controller import BombonaController
+    # from factory.dao_factory import DAOFactory
+    # from controllers.responsavel_controller import ResponsavelController
+    # from controllers.bombona_controller import BombonaController
     from views.tela_login import TelaLogin
 except ImportError as e:
     print(f"Erro ao importar módulos: {e}")

@@ -12,6 +12,11 @@ from dao.interfaces.responsavel_dao_interface import ResponsavelDAOInterface
 from factory.bombona_factory import BombonaFactory
 from models.bombona import Bombona
 
+try:
+    from fpdf import FPDF
+except ImportError:
+    FPDF = None  # Para tratar caso não esteja instalado
+
 
 class BombonaController:
     """
@@ -19,18 +24,6 @@ class BombonaController:
     Atua como intermediário entre a camada de apresentação e os DAOs.
     Utiliza as interfaces dos DAOs para garantir baixo acoplamento.
     """
-
-    # def __init__(self, bombona_dao: BombonaDAOInterface, responsavel_dao: ResponsavelDAOInterface):
-    #     """
-    #     Inicializa o controller.
-
-    #     Args:
-    #         bombona_dao (BombonaDAOInterface): Interface do DAO para bombonas
-    #         responsavel_dao (ResponsavelDAOInterface): Interface do DAO para responsáveis
-    #     """
-    #     self._bombona_dao = bombona_dao
-    #     self._responsavel_dao = responsavel_dao
-    #     self._bombona_factory = BombonaFactory()
 
     def __init__(self):
         """
@@ -177,53 +170,70 @@ class BombonaController:
             print(f"Erro ao buscar bombonas por responsável: {e}")
             return []
 
-    def gerar_relatorio(self, formato: str = "csv", arquivo: str = None, filtros_ativos: list = None) -> str:
+    def gerar_relatorio(self, bombonas_filtradas: List[Bombona] = None, arquivo: str = None, filtros_ativos: list = None, formato: str = "csv") -> str:
         """
         Gera relatório das bombonas em formato especificado.
         
         Args:
-            formato (str): "csv" ou "pdf"
-            arquivo (str): Caminho do arquivo (obrigatório para PDF)
-            filtros_ativos (list): Lista de filtros aplicados (apenas para PDF)
+            bombonas_filtradas: Lista de bombonas filtradas (se None, usa todas)
+            arquivo: Caminho do arquivo (se None, gera em data/)
+            filtros_ativos: Lista de filtros aplicados (para exibir no relatório)
+            formato: "csv" ou "pdf"
             
         Returns:
             str: Caminho do arquivo gerado
         """
         try:
-            bombonas = self.listar_bombonas()
-
+            # Se não passou bombonas, usa todas
+            if bombonas_filtradas is None:
+                bombonas_filtradas = self.listar_bombonas()
+            
             if formato.lower() == "csv":
-                return self._gerar_relatorio_csv(bombonas)
+                return self._gerar_csv(bombonas_filtradas, arquivo, filtros_ativos)
             elif formato.lower() == "pdf":
                 if not arquivo:
                     raise ValueError("Caminho do arquivo é obrigatório para PDF")
-                return self.gerar_relatorio_pdf_bombonas(bombonas, arquivo, filtros_ativos or [])
+                return self._gerar_pdf(bombonas_filtradas, arquivo, filtros_ativos)
             else:
                 raise ValueError("Formatos suportados: 'csv' ou 'pdf'")
 
         except Exception as e:
             print(f"Erro ao gerar relatório: {e}")
             raise
-
-    def _gerar_relatorio_csv(self, bombonas: List[Bombona]) -> str:
+    
+    def _gerar_csv(self, bombonas: List[Bombona], arquivo: str = None, filtros_ativos: list = None) -> str:
         """
-        Gera relatório em formato CSV.
-
+        Gera relatório CSV das bombonas.
+        
         Args:
-            bombonas (List[Bombona]): Lista de bombonas
-
+            bombonas: Lista de bombonas
+            arquivo: Caminho do arquivo (se None, gera em data/)
+            filtros_ativos: Lista de filtros aplicados
+            
         Returns:
             str: Caminho do arquivo gerado
         """
-        arquivo = "data/relatorio_bombonas.csv"
-
-        # Cria o diretório se não existir
+        # Define arquivo se não especificado
+        if not arquivo:
+            nome_arquivo = "relatorio_bombonas_filtradas.csv" if filtros_ativos else "relatorio_bombonas.csv"
+            arquivo = f"data/{nome_arquivo}"
+        
+        # Cria diretório se necessário
         os.makedirs(os.path.dirname(arquivo), exist_ok=True)
-
+        
         with open(arquivo, 'w', newline='', encoding='utf-8') as f:
             writer = csv.writer(f)
+            
+            # Cabeçalho com filtros se houver
+            if filtros_ativos:
+                writer.writerow([f'# Filtros aplicados: {"; ".join(filtros_ativos)}'])
+                writer.writerow([f'# Total de bombonas encontradas: {len(bombonas)}'])
+                writer.writerow([])  # Linha vazia
+            
+            # Cabeçalho da tabela
             writer.writerow(['Código', 'Volume (L)', 'Tipo Resíduo', 'Responsável', 'CPF', 'Setor'])
-
+            
+            # Dados
             for bombona in bombonas:
                 responsavel = bombona.get_responsavel()
                 writer.writerow([
@@ -234,24 +244,22 @@ class BombonaController:
                     responsavel.get_cpf() if responsavel else 'N/A',
                     responsavel.get_setor() if responsavel else 'N/A'
                 ])
-
+        
         return arquivo
-
-    def gerar_relatorio_pdf_bombonas(self, bombonas: List[Bombona], arquivo: str, filtros_ativos: list) -> str:
+    
+    def _gerar_pdf(self, bombonas: List[Bombona], arquivo: str, filtros_ativos: list = None) -> str:
         """
-        Gera relatório PDF de bombonas.
+        Gera relatório PDF das bombonas.
         
         Args:
-            bombonas (List[Bombona]): Lista de bombonas
-            arquivo (str): Caminho do arquivo
-            filtros_ativos (list): Filtros aplicados
+            bombonas: Lista de bombonas
+            arquivo: Caminho do arquivo
+            filtros_ativos: Lista de filtros aplicados
             
         Returns:
             str: Caminho do arquivo gerado
         """
-        try:
-            from fpdf import FPDF
-        except ImportError:
+        if FPDF is None:
             raise ImportError("Biblioteca FPDF não encontrada. Instale com: pip install fpdf2")
         
         def sanitizar_texto(texto):
@@ -455,6 +463,80 @@ class BombonaController:
 
 
 
+
+
+
+
+
+    # def gerar_relatorio_filtrado_arquivo(self, bombonas_filtradas: List[Bombona], arquivo: str, filtros_ativos: list, formato: str) -> None:
+    #     """
+    #     Gera arquivo de relatório com bombonas filtradas no local especificado.
+        
+    #     Args:
+    #         bombonas_filtradas: Lista de bombonas filtradas
+    #         arquivo: Caminho completo do arquivo
+    #         filtros_ativos: Lista de filtros aplicados
+    #         formato: "csv" ou "pdf"
+    #     """
+    #     try:
+    #         if formato.lower() == "csv":
+    #             self._gerar_csv_filtrado_arquivo(bombonas_filtradas, arquivo, filtros_ativos)
+    #         elif formato.lower() == "pdf":
+    #             self.gerar_relatorio_pdf_bombonas(bombonas_filtradas, arquivo, filtros_ativos)
+    #         else:
+    #             raise ValueError("Formato deve ser 'csv' ou 'pdf'")
+                
+    #     except Exception as e:
+    #         print(f"Erro ao gerar arquivo de relatório: {e}")
+    #         raise
+
+    # def _gerar_csv_filtrado_arquivo(self, bombonas_filtradas: List[Bombona], arquivo: str, filtros_ativos: list) -> None:
+    #     """
+    #     Gera arquivo CSV com bombonas filtradas.
+        
+    #     Args:
+    #         bombonas_filtradas: Lista de bombonas filtradas
+    #         arquivo: Caminho completo do arquivo
+    #         filtros_ativos: Lista de filtros aplicados
+    #     """
+    #     with open(arquivo, 'w', newline='', encoding='utf-8') as f:
+    #         writer = csv.writer(f)
+            
+    #         # Cabeçalho com filtros se houver
+    #         if filtros_ativos:
+    #             writer.writerow([f'# Filtros aplicados: {"; ".join(filtros_ativos)}'])
+    #             writer.writerow([f'# Total de bombonas encontradas: {len(bombonas_filtradas)}'])
+    #             writer.writerow([])  # Linha vazia
+            
+    #         # Cabeçalho da tabela
+    #         writer.writerow(['Código', 'Volume (L)', 'Tipo Resíduo', 'Responsável', 'CPF', 'Setor'])
+            
+    #         # Dados
+    #         for bombona in bombonas_filtradas:
+    #             resp = bombona.get_responsavel()
+    #             writer.writerow([
+    #                 bombona.get_codigo(),
+    #                 bombona.get_volume(),
+    #                 bombona.get_tipo_residuo(),
+    #                 resp.get_nome() if resp else 'N/A',
+    #                 resp.get_cpf() if resp else 'N/A',
+    #                 resp.get_setor() if resp else 'N/A'
+    #             ])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     # def buscar_bombona_por_codigo(self, codigo: str) -> Optional[Bombona]:
     #     """
     #     Busca uma bombona pelo código com a referência ao responsável resolvida.
@@ -570,4 +652,175 @@ class BombonaController:
 
     #         f.write(f"\nTotal de bombonas: {len(bombonas)}\n")
 
+    #     return arquivo
+
+    # def __init__(self, bombona_dao: BombonaDAOInterface, responsavel_dao: ResponsavelDAOInterface):
+    #     """
+    #     Inicializa o controller.
+
+    #     Args:
+    #         bombona_dao (BombonaDAOInterface): Interface do DAO para bombonas
+    #         responsavel_dao (ResponsavelDAOInterface): Interface do DAO para responsáveis
+    #     """
+    #     self._bombona_dao = bombona_dao
+    #     self._responsavel_dao = responsavel_dao
+    #     self._bombona_factory = BombonaFactory()
+
+
+
+
+    # def gerar_relatorio(self, formato: str = "csv", arquivo: str = None, filtros_ativos: list = None) -> str:
+    #     """
+    #     Gera relatório das bombonas em formato especificado.
+        
+    #     Args:
+    #         formato (str): "csv" ou "pdf"
+    #         arquivo (str): Caminho do arquivo (obrigatório para PDF)
+    #         filtros_ativos (list): Lista de filtros aplicados (apenas para PDF)
+            
+    #     Returns:
+    #         str: Caminho do arquivo gerado
+    #     """
+    #     try:
+    #         bombonas = self.listar_bombonas()
+
+    #         if formato.lower() == "csv":
+    #             return self._gerar_relatorio_csv(bombonas)
+    #         elif formato.lower() == "pdf":
+    #             if not arquivo:
+    #                 raise ValueError("Caminho do arquivo é obrigatório para PDF")
+    #             return self.gerar_relatorio_pdf_bombonas(bombonas, arquivo, filtros_ativos or [])
+    #         else:
+    #             raise ValueError("Formatos suportados: 'csv' ou 'pdf'")
+
+    #     except Exception as e:
+    #         print(f"Erro ao gerar relatório: {e}")
+    #         raise
+
+    # def _gerar_relatorio_csv(self, bombonas: List[Bombona]) -> str:
+    #     """
+    #     Gera relatório em formato CSV.
+
+    #     Args:
+    #         bombonas (List[Bombona]): Lista de bombonas
+
+    #     Returns:
+    #         str: Caminho do arquivo gerado
+    #     """
+    #     arquivo = "data/relatorio_bombonas.csv"
+
+    #     # Cria o diretório se não existir
+    #     os.makedirs(os.path.dirname(arquivo), exist_ok=True)
+
+    #     with open(arquivo, 'w', newline='', encoding='utf-8') as f:
+    #         writer = csv.writer(f)
+    #         writer.writerow(['Código', 'Volume (L)', 'Tipo Resíduo', 'Responsável', 'CPF', 'Setor'])
+
+    #         for bombona in bombonas:
+    #             responsavel = bombona.get_responsavel()
+    #             writer.writerow([
+    #                 bombona.get_codigo(),
+    #                 bombona.get_volume(),
+    #                 bombona.get_tipo_residuo(),
+    #                 responsavel.get_nome() if responsavel else 'N/A',
+    #                 responsavel.get_cpf() if responsavel else 'N/A',
+    #                 responsavel.get_setor() if responsavel else 'N/A'
+    #             ])
+
+    #     return arquivo
+
+    # def gerar_relatorio_pdf_bombonas(self, bombonas: List[Bombona], arquivo: str, filtros_ativos: list) -> str:
+    #     """
+    #     Gera relatório PDF de bombonas.
+        
+    #     Args:
+    #         bombonas (List[Bombona]): Lista de bombonas
+    #         arquivo (str): Caminho do arquivo
+    #         filtros_ativos (list): Filtros aplicados
+            
+    #     Returns:
+    #         str: Caminho do arquivo gerado
+    #     """
+    #     try:
+    #         from fpdf import FPDF
+    #     except ImportError:
+    #         raise ImportError("Biblioteca FPDF não encontrada. Instale com: pip install fpdf2")
+        
+    #     def sanitizar_texto(texto):
+    #         if not texto:
+    #             return texto
+    #         nfd = unicodedata.normalize('NFD', texto)
+    #         return nfd.encode('ascii', 'ignore').decode('ascii')
+        
+    #     pdf = FPDF()
+    #     pdf.add_page()
+    #     pdf.set_font('Arial', 'B', 16)
+        
+    #     # Título
+    #     titulo = "RELATORIO DE BOMBONAS FILTRADAS" if filtros_ativos else "RELATORIO COMPLETO DE BOMBONAS"
+    #     pdf.cell(0, 10, titulo, ln=True, align='C')
+    #     pdf.ln(5)
+        
+    #     # Filtros (se houver)
+    #     if filtros_ativos:
+    #         pdf.set_font('Arial', 'B', 12)
+    #         pdf.cell(0, 8, "Filtros aplicados:", ln=True)
+    #         pdf.set_font('Arial', '', 10)
+    #         for filtro in filtros_ativos:
+    #             filtro_limpo = sanitizar_texto(filtro)
+    #             pdf.cell(0, 6, f"  - {filtro_limpo}", ln=True)
+    #         pdf.ln(5)
+        
+    #     # Total
+    #     pdf.set_font('Arial', 'B', 12)
+    #     pdf.cell(0, 8, f"Total de bombonas: {len(bombonas)}", ln=True)
+    #     pdf.ln(5)
+        
+    #     # Cabeçalho da tabela
+    #     pdf.set_font('Arial', 'B', 10)
+    #     pdf.cell(30, 8, 'Codigo', 1, 0, 'C')
+    #     pdf.cell(25, 8, 'Volume (L)', 1, 0, 'C')
+    #     pdf.cell(35, 8, 'Tipo Residuo', 1, 0, 'C')
+    #     pdf.cell(60, 8, 'Responsavel', 1, 0, 'C')
+    #     pdf.cell(40, 8, 'Setor', 1, 1, 'C')
+        
+    #     # Dados
+    #     pdf.set_font('Arial', '', 9)
+    #     for bombona in bombonas:
+    #         resp = bombona.get_responsavel()
+            
+    #         # Sanitizar textos
+    #         codigo_limpo = sanitizar_texto(bombona.get_codigo())
+    #         tipo_limpo = sanitizar_texto(bombona.get_tipo_residuo())
+    #         nome_resp = sanitizar_texto(resp.get_nome()) if resp else 'N/A'
+    #         setor_resp = sanitizar_texto(resp.get_setor()) if resp else 'N/A'
+            
+    #         # Truncar se necessário
+    #         nome_resp = (nome_resp[:25] + "...") if len(nome_resp) > 25 else nome_resp
+    #         setor_resp = (setor_resp[:18] + "...") if len(setor_resp) > 18 else setor_resp
+            
+    #         pdf.cell(30, 6, codigo_limpo, 1, 0, 'C')
+    #         pdf.cell(25, 6, f"{bombona.get_volume():.1f}", 1, 0, 'C')
+    #         pdf.cell(35, 6, tipo_limpo, 1, 0, 'C')
+    #         pdf.cell(60, 6, nome_resp, 1, 0, 'L')
+    #         pdf.cell(40, 6, setor_resp, 1, 1, 'L')
+            
+    #         # Nova página se necessário
+    #         if pdf.get_y() > 250:
+    #             pdf.add_page()
+    #             pdf.set_font('Arial', 'B', 10)
+    #             pdf.cell(30, 8, 'Codigo', 1, 0, 'C')
+    #             pdf.cell(25, 8, 'Volume (L)', 1, 0, 'C')
+    #             pdf.cell(35, 8, 'Tipo Residuo', 1, 0, 'C')
+    #             pdf.cell(60, 8, 'Responsavel', 1, 0, 'C')
+    #             pdf.cell(40, 8, 'Setor', 1, 1, 'C')
+    #             pdf.set_font('Arial', '', 9)
+        
+    #     # Rodapé
+    #     pdf.ln(10)
+    #     pdf.set_font('Arial', 'I', 8)
+    #     data_geracao = datetime.now().strftime("%d/%m/%Y as %H:%M:%S")
+    #     pdf.cell(0, 6, f"Relatorio gerado em {data_geracao}", ln=True, align='L')
+        
+    #     pdf.output(arquivo)
     #     return arquivo

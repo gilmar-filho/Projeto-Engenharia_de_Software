@@ -2,6 +2,8 @@
 Controller para gerenciamento de Responsáveis
 """
 import unicodedata
+import csv
+import os
 from datetime import datetime
 from typing import List, Optional
 from dao.interfaces.responsavel_dao_interface import ResponsavelDAOInterface
@@ -9,24 +11,18 @@ from dao.interfaces.bombona_dao_interface import BombonaDAOInterface
 from factory.responsavel_factory import ResponsavelFactory
 from models.responsavel import Responsavel
 
+# ADICIONAR import do FPDF:
+try:
+    from fpdf import FPDF
+except ImportError:
+    FPDF = None
+
 class ResponsavelController:
     """
     Controller responsável pela lógica de negócio relacionada aos responsáveis.
     Atua como intermediário entre a camada de apresentação e os DAOs.
     Utiliza as interfaces dos DAOs para garantir baixo acoplamento.
     """
-    
-    # def __init__(self, responsavel_dao: ResponsavelDAOInterface, bombona_dao: BombonaDAOInterface):
-    #     """
-    #     Inicializa o controller.
-        
-    #     Args:
-    #         responsavel_dao (ResponsavelDAOInterface): Interface do DAO para responsáveis
-    #         bombona_dao (BombonaDAOInterface): Interface do DAO para bombonas
-    #     """
-    #     self._responsavel_dao = responsavel_dao
-    #     self._bombona_dao = bombona_dao
-    #     self._responsavel_factory = ResponsavelFactory()
 
     def __init__(self):
         """
@@ -242,47 +238,52 @@ class ResponsavelController:
             print(f"Erro ao filtrar responsáveis por setor: {e}")
             return []
         
-    def gerar_relatorio(self, formato: str = "csv", arquivo: str = None) -> str:
+    def gerar_relatorio(self, responsaveis: List[Responsavel] = None, arquivo: str = None, formato: str = "csv") -> str:
         """
         Gera relatório dos responsáveis em formato especificado.
         
         Args:
-            formato (str): "csv" ou "pdf"
-            arquivo (str): Caminho do arquivo (obrigatório para PDF)
+            responsaveis: Lista de responsáveis (se None, usa todos)
+            arquivo: Caminho do arquivo (se None, gera em data/)
+            formato: "csv" ou "pdf"
             
         Returns:
             str: Caminho do arquivo gerado
         """
         try:
-            responsaveis = self.listar_responsaveis()
+            # Se não passou responsáveis, usa todos
+            if responsaveis is None:
+                responsaveis = self.listar_responsaveis()
 
             if formato.lower() == "csv":
-                return self._gerar_relatorio_csv(responsaveis)
+                return self._gerar_csv(responsaveis, arquivo)
             elif formato.lower() == "pdf":
                 if not arquivo:
                     raise ValueError("Caminho do arquivo é obrigatório para PDF")
-                return self.gerar_relatorio_pdf_responsaveis(responsaveis, arquivo)
+                return self._gerar_pdf(responsaveis, arquivo)
             else:
                 raise ValueError("Formatos suportados: 'csv' ou 'pdf'")
 
         except Exception as e:
             print(f"Erro ao gerar relatório: {e}")
             raise
-
-    def _gerar_relatorio_csv(self, responsaveis: List[Responsavel]) -> str:
+    
+    def _gerar_csv(self, responsaveis: List[Responsavel], arquivo: str = None) -> str:
         """
         Gera relatório CSV de responsáveis.
         
         Args:
-            responsaveis (List[Responsavel]): Lista de responsáveis
+            responsaveis: Lista de responsáveis
+            arquivo: Caminho do arquivo (se None, gera em data/)
             
         Returns:
             str: Caminho do arquivo gerado
         """
-        import csv
-        import os
+        # Define arquivo se não especificado
+        if not arquivo:
+            arquivo = "data/relatorio_responsaveis.csv"
         
-        arquivo = "data/relatorio_responsaveis.csv"
+        # Cria diretório se necessário
         os.makedirs(os.path.dirname(arquivo), exist_ok=True)
 
         with open(arquivo, 'w', newline='', encoding='utf-8') as f:
@@ -300,21 +301,19 @@ class ResponsavelController:
                 ])
 
         return arquivo
-
-    def gerar_relatorio_pdf_responsaveis(self, responsaveis: List[Responsavel], arquivo: str) -> str:
+    
+    def _gerar_pdf(self, responsaveis: List[Responsavel], arquivo: str) -> str:
         """
         Gera relatório PDF de responsáveis.
         
         Args:
-            responsaveis (List[Responsavel]): Lista de responsáveis
-            arquivo (str): Caminho do arquivo
+            responsaveis: Lista de responsáveis
+            arquivo: Caminho do arquivo
             
         Returns:
             str: Caminho do arquivo gerado
         """
-        try:
-            from fpdf import FPDF
-        except ImportError:
+        if FPDF is None:
             raise ImportError("Biblioteca FPDF não encontrada. Instale com: pip install fpdf2")
         
         def sanitizar_texto(texto):
@@ -397,6 +396,51 @@ class ResponsavelController:
     
 
 
+
+
+    # def gerar_relatorio_arquivo(self, responsaveis: List[Responsavel], arquivo: str, formato: str) -> None:
+    #     """
+    #     Gera arquivo de relatório de responsáveis no local especificado.
+        
+    #     Args:
+    #         responsaveis: Lista de responsáveis
+    #         arquivo: Caminho completo do arquivo
+    #         formato: "csv" ou "pdf"
+    #     """
+    #     try:
+    #         if formato.lower() == "csv":
+    #             self._gerar_csv_responsaveis_arquivo(responsaveis, arquivo)
+    #         elif formato.lower() == "pdf":
+    #             self.gerar_relatorio_pdf_responsaveis(responsaveis, arquivo)
+    #         else:
+    #             raise ValueError("Formato deve ser 'csv' ou 'pdf'")
+                
+    #     except Exception as e:
+    #         print(f"Erro ao gerar arquivo de relatório: {e}")
+    #         raise
+
+    # def _gerar_csv_responsaveis_arquivo(self, responsaveis: List[Responsavel], arquivo: str) -> None:
+    #     """
+    #     Gera arquivo CSV de responsáveis.
+        
+    #     Args:
+    #         responsaveis: Lista de responsáveis
+    #         arquivo: Caminho completo do arquivo
+    #     """
+    #     with open(arquivo, 'w', newline='', encoding='utf-8') as f:
+    #         writer = csv.writer(f)
+    #         writer.writerow(['Nome', 'CPF', 'Telefone', 'Setor', 'Qtd_Bombonas'])
+            
+    #         for resp in responsaveis:
+    #             bombonas = self._bombona_dao.buscar_por_responsavel(resp.get_cpf())
+    #             writer.writerow([
+    #                 resp.get_nome(),
+    #                 resp.get_cpf(),
+    #                 resp.get_telefone(),
+    #                 resp.get_setor(),
+    #                 len(bombonas)
+    #             ])
+
     # def get_responsaveis_com_bombonas(self) -> List[tuple]: # Quero ver com a Claude
     #     """
     #     Retorna lista de responsáveis com a quantidade de bombonas.
@@ -471,3 +515,168 @@ class ResponsavelController:
     #             'responsaveis_sem_bombonas': 0,
     #             'setor_com_mais_responsaveis': None
     #         }
+
+    # def __init__(self, responsavel_dao: ResponsavelDAOInterface, bombona_dao: BombonaDAOInterface):
+    #     """
+    #     Inicializa o controller.
+        
+    #     Args:
+    #         responsavel_dao (ResponsavelDAOInterface): Interface do DAO para responsáveis
+    #         bombona_dao (BombonaDAOInterface): Interface do DAO para bombonas
+    #     """
+    #     self._responsavel_dao = responsavel_dao
+    #     self._bombona_dao = bombona_dao
+    #     self._responsavel_factory = ResponsavelFactory()
+
+    # def gerar_relatorio(self, formato: str = "csv", arquivo: str = None) -> str:
+    #     """
+    #     Gera relatório dos responsáveis em formato especificado.
+        
+    #     Args:
+    #         formato (str): "csv" ou "pdf"
+    #         arquivo (str): Caminho do arquivo (obrigatório para PDF)
+            
+    #     Returns:
+    #         str: Caminho do arquivo gerado
+    #     """
+    #     try:
+    #         responsaveis = self.listar_responsaveis()
+
+    #         if formato.lower() == "csv":
+    #             return self._gerar_relatorio_csv(responsaveis)
+    #         elif formato.lower() == "pdf":
+    #             if not arquivo:
+    #                 raise ValueError("Caminho do arquivo é obrigatório para PDF")
+    #             return self.gerar_relatorio_pdf_responsaveis(responsaveis, arquivo)
+    #         else:
+    #             raise ValueError("Formatos suportados: 'csv' ou 'pdf'")
+
+    #     except Exception as e:
+    #         print(f"Erro ao gerar relatório: {e}")
+    #         raise
+
+    # def _gerar_relatorio_csv(self, responsaveis: List[Responsavel]) -> str:
+    #     """
+    #     Gera relatório CSV de responsáveis.
+        
+    #     Args:
+    #         responsaveis (List[Responsavel]): Lista de responsáveis
+            
+    #     Returns:
+    #         str: Caminho do arquivo gerado
+    #     """
+    #     import csv
+    #     import os
+        
+    #     arquivo = "data/relatorio_responsaveis.csv"
+    #     os.makedirs(os.path.dirname(arquivo), exist_ok=True)
+
+    #     with open(arquivo, 'w', newline='', encoding='utf-8') as f:
+    #         writer = csv.writer(f)
+    #         writer.writerow(['Nome', 'CPF', 'Telefone', 'Setor', 'Qtd_Bombonas'])
+            
+    #         for resp in responsaveis:
+    #             bombonas = self._bombona_dao.buscar_por_responsavel(resp.get_cpf())
+    #             writer.writerow([
+    #                 resp.get_nome(),
+    #                 resp.get_cpf(),
+    #                 resp.get_telefone(),
+    #                 resp.get_setor(),
+    #                 len(bombonas)
+    #             ])
+
+    #     return arquivo
+
+    # def gerar_relatorio_pdf_responsaveis(self, responsaveis: List[Responsavel], arquivo: str) -> str:
+    #     """
+    #     Gera relatório PDF de responsáveis.
+        
+    #     Args:
+    #         responsaveis (List[Responsavel]): Lista de responsáveis
+    #         arquivo (str): Caminho do arquivo
+            
+    #     Returns:
+    #         str: Caminho do arquivo gerado
+    #     """
+    #     try:
+    #         from fpdf import FPDF
+    #     except ImportError:
+    #         raise ImportError("Biblioteca FPDF não encontrada. Instale com: pip install fpdf2")
+        
+    #     def sanitizar_texto(texto):
+    #         if not texto:
+    #             return texto
+    #         nfd = unicodedata.normalize('NFD', texto)
+    #         return nfd.encode('ascii', 'ignore').decode('ascii')
+        
+    #     pdf = FPDF()
+    #     pdf.add_page()
+    #     pdf.set_font('Arial', 'B', 16)
+        
+    #     # Título
+    #     pdf.cell(0, 10, "RELATORIO COMPLETO DE RESPONSAVEIS", ln=True, align='C')
+    #     pdf.ln(5)
+        
+    #     # Total
+    #     pdf.set_font('Arial', 'B', 12)
+    #     pdf.cell(0, 8, f"Total de responsaveis: {len(responsaveis)}", ln=True)
+    #     pdf.ln(5)
+        
+    #     # Cabeçalho da tabela
+    #     pdf.set_font('Arial', 'B', 10)
+    #     pdf.cell(50, 8, 'Nome', 1, 0, 'C')
+    #     pdf.cell(35, 8, 'CPF', 1, 0, 'C')
+    #     pdf.cell(35, 8, 'Telefone', 1, 0, 'C')
+    #     pdf.cell(35, 8, 'Setor', 1, 0, 'C')
+    #     pdf.cell(25, 8, 'Bombonas', 1, 1, 'C')
+        
+    #     # Dados
+    #     pdf.set_font('Arial', '', 9)
+    #     for resp in responsaveis:
+    #         bombonas = self._bombona_dao.buscar_por_responsavel(resp.get_cpf())
+            
+    #         # Sanitizar textos
+    #         nome_limpo = sanitizar_texto(resp.get_nome())
+    #         setor_limpo = sanitizar_texto(resp.get_setor())
+            
+    #         # Truncar se necessário
+    #         nome_limpo = (nome_limpo[:22] + "...") if len(nome_limpo) > 22 else nome_limpo
+    #         setor_limpo = (setor_limpo[:15] + "...") if len(setor_limpo) > 15 else setor_limpo
+            
+    #         # Formatar CPF e telefone
+    #         cpf = resp.get_cpf()
+    #         cpf_formatado = f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}"
+            
+    #         telefone = resp.get_telefone()
+    #         if len(telefone) == 11:
+    #             tel_formatado = f"({telefone[:2]}) {telefone[2]} {telefone[3:7]}-{telefone[7:]}"
+    #         elif len(telefone) == 10:
+    #             tel_formatado = f"({telefone[:2]}) {telefone[2:6]}-{telefone[6:]}"
+    #         else:
+    #             tel_formatado = telefone
+            
+    #         pdf.cell(50, 6, nome_limpo, 1, 0, 'L')
+    #         pdf.cell(35, 6, cpf_formatado, 1, 0, 'C')
+    #         pdf.cell(35, 6, tel_formatado, 1, 0, 'C')
+    #         pdf.cell(35, 6, setor_limpo, 1, 0, 'L')
+    #         pdf.cell(25, 6, str(len(bombonas)), 1, 1, 'C')
+            
+    #         # Nova página se necessário
+    #         if pdf.get_y() > 250:
+    #             pdf.add_page()
+    #             pdf.set_font('Arial', 'B', 10)
+    #             pdf.cell(50, 8, 'Nome', 1, 0, 'C')
+    #             pdf.cell(35, 8, 'CPF', 1, 0, 'C')
+    #             pdf.cell(35, 8, 'Telefone', 1, 0, 'C')
+    #             pdf.cell(35, 8, 'Setor', 1, 0, 'C')
+    #             pdf.cell(25, 8, 'Bombonas', 1, 1, 'C')
+    #             pdf.set_font('Arial', '', 9)
+        
+    #     # Rodapé
+    #     pdf.ln(10)
+    #     pdf.set_font('Arial', 'I', 8)
+    #     data_geracao = datetime.now().strftime("%d/%m/%Y as %H:%M:%S")
+    #     pdf.cell(0, 6, f"Relatorio gerado em {data_geracao}", ln=True, align='L')
+        
+    #     pdf.output(arquivo)
+    #     return arquivo

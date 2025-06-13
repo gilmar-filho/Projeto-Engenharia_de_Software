@@ -4,40 +4,15 @@ Tela de relatórios - Versão Simples e Intuitiva
 
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
-import os
-import csv
-from fpdf import FPDF
+# import os
+# import csv
+# from fpdf import FPDF
 
 
 class TelaRelatorio:
     """
     Tela simples para gerar relatórios do sistema com seleção única de formato.
     """
-    
-    # def __init__(self, parent, bombona_controller, responsavel_controller):
-    #     """
-    #     Inicializa a tela de relatórios.
-        
-    #     Args:
-    #         parent: Janela pai
-    #         bombona_controller: Controller de bombonas
-    #         responsavel_controller: Controller de responsáveis
-    #     """
-    #     self.parent = parent
-    #     self.bombona_controller = bombona_controller
-    #     self.responsavel_controller = responsavel_controller
-    #     self.janela = None
-        
-    #     # Variáveis
-    #     self.var_formato_arquivo = tk.StringVar()
-    #     self.var_filtro_setor = tk.StringVar()
-    #     self.var_filtro_responsavel = tk.StringVar()
-    #     self.var_filtro_tipo_residuo = tk.StringVar()
-        
-    #     # Dados para filtros
-    #     self.responsaveis_dict = {}
-    #     self.setores_disponiveis = []
-    #     self.tipos_residuo_disponiveis = []
 
     def __init__(self, parent):
         """
@@ -322,7 +297,7 @@ class TelaRelatorio:
             
             # Gera arquivo
             formato = self.var_formato_arquivo.get().lower()
-            self._gerar_arquivo_bombonas(bombonas_filtradas, "Bombonas_Filtradas", filtros_ativos, formato)
+            self._gerar_arquivo_bombonas(bombonas_filtradas, filtros_ativos, formato)
             
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao baixar relatório filtrado:\n{str(e)}")
@@ -336,7 +311,7 @@ class TelaRelatorio:
                 return
             
             formato = self.var_formato_arquivo.get().lower()
-            self._gerar_arquivo_bombonas(bombonas, "Bombonas_Completo", [], formato)
+            self._gerar_arquivo_bombonas(bombonas, [], formato)
             
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao baixar relatório de bombonas:\n{str(e)}")
@@ -350,15 +325,15 @@ class TelaRelatorio:
                 return
             
             formato = self.var_formato_arquivo.get().lower()
-            self._gerar_arquivo_responsaveis(responsaveis, "Responsaveis_Completo", formato)
+            self._gerar_arquivo_responsaveis(responsaveis, formato)
             
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao baixar relatório de responsáveis:\n{str(e)}")
-    
-    def _gerar_arquivo_bombonas(self, bombonas, nome_base, filtros_ativos, formato):
-        """Gera arquivo de bombonas usando o controller."""
-        ext = f".{formato}"
+
+    def _gerar_arquivo_bombonas(self, bombonas, filtros_ativos, formato):
+        """Solicita geração de arquivo ao controller."""
         
+        # View só escolhe onde salvar
         if formato == "csv":
             filetypes = [("CSV files", "*.csv"), ("PDF files", "*.pdf"), ("All files", "*.*")]
         else:
@@ -366,44 +341,35 @@ class TelaRelatorio:
         
         arquivo = filedialog.asksaveasfilename(
             title="Salvar Relatório",
-            defaultextension=ext,
+            defaultextension=f".{formato}",
             filetypes=filetypes
         )
         
         if not arquivo:
             return
         
-        # try:
-        #     # ✅ NOVA LÓGICA: Chama controller em vez de método local
-        #     if formato == "csv":
-        #         arquivo_gerado = self.bombona_controller.gerar_relatorio("csv")
-        #         # Copia arquivo gerado para local escolhido pelo usuário
-        #         import shutil
-        #         shutil.copy(arquivo_gerado, arquivo)
-        #     else:  # formato == "pdf"
-        #         # Controller gera PDF diretamente no local escolhido
-        #         self.bombona_controller.gerar_relatorio_pdf_bombonas(bombonas, arquivo, filtros_ativos)
-
         try:
-            if formato == "csv":
-                # ✅ CORREÇÃO SIMPLES: Usar método CSV existente do controller mas com bombonas filtradas
-                # Temporariamente criar arquivo CSV com bombonas filtradas
-                self._criar_csv_bombonas(arquivo, bombonas, filtros_ativos)
-            else:  # formato == "pdf"
-                self.bombona_controller.gerar_relatorio_pdf_bombonas(bombonas, arquivo, filtros_ativos)
-
-            messagebox.showinfo("Sucesso", f"Relatório salvo com sucesso!\n\nLocal: {arquivo}")
+            # ✅ NOVO: Usa método unificado do controller
+            arquivo_gerado = self.bombona_controller.gerar_relatorio(
+                bombonas_filtradas=bombonas,
+                arquivo=arquivo,
+                filtros_ativos=filtros_ativos,
+                formato=formato
+            )
+            
+            messagebox.showinfo("Sucesso", f"Relatório salvo com sucesso!\n\nLocal: {arquivo_gerado}")
             
             if messagebox.askyesno("Abrir Arquivo", "Deseja abrir o relatório agora?"):
-                os.startfile(arquivo)
+                import os
+                os.startfile(arquivo_gerado)
                 
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao gerar relatório:\n{str(e)}")
     
-    def _gerar_arquivo_responsaveis(self, responsaveis, nome_base, formato):
-        """Gera arquivo de responsáveis usando o controller."""
-        ext = f".{formato}"
+    def _gerar_arquivo_responsaveis(self, responsaveis, formato):
+        """Solicita geração de arquivo de responsáveis ao controller."""
         
+        # View só escolhe onde salvar
         if formato == "csv":
             filetypes = [("CSV files", "*.csv"), ("PDF files", "*.pdf"), ("All files", "*.*")]
         else:
@@ -411,7 +377,7 @@ class TelaRelatorio:
         
         arquivo = filedialog.asksaveasfilename(
             title="Salvar Relatório",
-            defaultextension=ext,
+            defaultextension=f".{formato}",
             filetypes=filetypes
         )
         
@@ -419,64 +385,83 @@ class TelaRelatorio:
             return
         
         try:
-            # ✅ NOVA LÓGICA: Chama controller em vez de método local
-            if formato == "csv":
-                arquivo_gerado = self.responsavel_controller.gerar_relatorio("csv")
-                # Copia arquivo gerado para local escolhido pelo usuário
-                import shutil
-                shutil.copy(arquivo_gerado, arquivo)
-            else:  # formato == "pdf"
-                # Controller gera PDF diretamente no local escolhido
-                self.responsavel_controller.gerar_relatorio_pdf_responsaveis(responsaveis, arquivo)
+            # ✅ NOVO: Usa método unificado do controller
+            arquivo_gerado = self.responsavel_controller.gerar_relatorio(
+                responsaveis=responsaveis,
+                arquivo=arquivo,
+                formato=formato
+            )
             
-            messagebox.showinfo("Sucesso", f"Relatório salvo com sucesso!\n\nLocal: {arquivo}")
+            messagebox.showinfo("Sucesso", f"Relatório salvo com sucesso!\n\nLocal: {arquivo_gerado}")
             
             if messagebox.askyesno("Abrir Arquivo", "Deseja abrir o relatório agora?"):
-                os.startfile(arquivo)
+                import os
+                os.startfile(arquivo_gerado)
                 
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao gerar relatório:\n{str(e)}")
     
-    def _criar_csv_bombonas(self, arquivo, bombonas, filtros_ativos):
-        """Cria arquivo CSV de bombonas."""
-        with open(arquivo, 'w', newline='', encoding='utf-8') as f:
-            writer = csv.writer(f)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # def _criar_csv_bombonas(self, arquivo, bombonas, filtros_ativos):
+    #     """Cria arquivo CSV de bombonas."""
+    #     with open(arquivo, 'w', newline='', encoding='utf-8') as f:
+    #         writer = csv.writer(f)
             
-            # Cabeçalho com filtros se houver
-            if filtros_ativos:
-                writer.writerow([f'# Filtros aplicados: {"; ".join(filtros_ativos)}'])
-                writer.writerow([f'# Total de bombonas encontradas: {len(bombonas)}'])
-                writer.writerow([])  # Linha vazia
+    #         # Cabeçalho com filtros se houver
+    #         if filtros_ativos:
+    #             writer.writerow([f'# Filtros aplicados: {"; ".join(filtros_ativos)}'])
+    #             writer.writerow([f'# Total de bombonas encontradas: {len(bombonas)}'])
+    #             writer.writerow([])  # Linha vazia
             
-            # Cabeçalho da tabela
-            writer.writerow(['Código', 'Volume', 'Tipo', 'Responsável', 'Setor'])
+    #         # Cabeçalho da tabela
+    #         writer.writerow(['Código', 'Volume', 'Tipo', 'Responsável', 'Setor'])
             
-            # Dados
-            for bombona in bombonas:
-                resp = bombona.get_responsavel()
-                writer.writerow([
-                    bombona.get_codigo(),
-                    bombona.get_volume(),
-                    bombona.get_tipo_residuo(),
-                    resp.get_nome() if resp else 'N/A',
-                    resp.get_setor() if resp else 'N/A'
-                ])
+    #         # Dados
+    #         for bombona in bombonas:
+    #             resp = bombona.get_responsavel()
+    #             writer.writerow([
+    #                 bombona.get_codigo(),
+    #                 bombona.get_volume(),
+    #                 bombona.get_tipo_residuo(),
+    #                 resp.get_nome() if resp else 'N/A',
+    #                 resp.get_setor() if resp else 'N/A'
+    #             ])
     
-    def _criar_csv_responsaveis(self, arquivo, responsaveis):
-        """Cria arquivo CSV de responsáveis."""
-        with open(arquivo, 'w', newline='', encoding='utf-8') as f:
-            writer = csv.writer(f)
-            writer.writerow(['Nome', 'CPF', 'Telefone', 'Setor', 'Qtd_Bombonas'])
+    # def _criar_csv_responsaveis(self, arquivo, responsaveis):
+    #     """Cria arquivo CSV de responsáveis."""
+    #     with open(arquivo, 'w', newline='', encoding='utf-8') as f:
+    #         writer = csv.writer(f)
+    #         writer.writerow(['Nome', 'CPF', 'Telefone', 'Setor', 'Qtd_Bombonas'])
             
-            for resp in responsaveis:
-                bombonas = self.bombona_controller.buscar_bombonas_por_cpf_responsavel(resp.get_cpf())
-                writer.writerow([
-                    resp.get_nome(),
-                    resp.get_cpf(),
-                    resp.get_telefone(),
-                    resp.get_setor(),
-                    len(bombonas)
-                ])
+    #         for resp in responsaveis:
+    #             bombonas = self.bombona_controller.buscar_bombonas_por_cpf_responsavel(resp.get_cpf())
+    #             writer.writerow([
+    #                 resp.get_nome(),
+    #                 resp.get_cpf(),
+    #                 resp.get_telefone(),
+    #                 resp.get_setor(),
+    #                 len(bombonas)
+    #             ])
     
     """
     Métodos PDF para adicionar ao arquivo tela_relatorio.py
@@ -643,3 +628,177 @@ class TelaRelatorio:
             
     #     except Exception as e:
     #         ttk.Label(stats_frame, text=f"Erro: {str(e)}", foreground="red").pack()
+
+
+    # def _gerar_arquivo_bombonas(self, bombonas, nome_base, filtros_ativos, formato):
+    #     """Gera arquivo de bombonas usando o controller."""
+    #     ext = f".{formato}"
+        
+    #     if formato == "csv":
+    #         filetypes = [("CSV files", "*.csv"), ("PDF files", "*.pdf"), ("All files", "*.*")]
+    #     else:
+    #         filetypes = [("PDF files", "*.pdf"), ("CSV files", "*.csv"), ("All files", "*.*")]
+        
+    #     arquivo = filedialog.asksaveasfilename(
+    #         title="Salvar Relatório",
+    #         defaultextension=ext,
+    #         filetypes=filetypes
+    #     )
+        
+    #     if not arquivo:
+    #         return
+        
+    #     # try:
+    #     #     # ✅ NOVA LÓGICA: Chama controller em vez de método local
+    #     #     if formato == "csv":
+    #     #         arquivo_gerado = self.bombona_controller.gerar_relatorio("csv")
+    #     #         # Copia arquivo gerado para local escolhido pelo usuário
+    #     #         import shutil
+    #     #         shutil.copy(arquivo_gerado, arquivo)
+    #     #     else:  # formato == "pdf"
+    #     #         # Controller gera PDF diretamente no local escolhido
+    #     #         self.bombona_controller.gerar_relatorio_pdf_bombonas(bombonas, arquivo, filtros_ativos)
+
+    #     try:
+    #         if formato == "csv":
+    #             # ✅ CORREÇÃO SIMPLES: Usar método CSV existente do controller mas com bombonas filtradas
+    #             # Temporariamente criar arquivo CSV com bombonas filtradas
+    #             self._criar_csv_bombonas(arquivo, bombonas, filtros_ativos)
+    #         else:  # formato == "pdf"
+    #             self.bombona_controller.gerar_relatorio_pdf_bombonas(bombonas, arquivo, filtros_ativos)
+
+    #         messagebox.showinfo("Sucesso", f"Relatório salvo com sucesso!\n\nLocal: {arquivo}")
+            
+    #         if messagebox.askyesno("Abrir Arquivo", "Deseja abrir o relatório agora?"):
+    #             os.startfile(arquivo)
+                
+    #     except Exception as e:
+    #         messagebox.showerror("Erro", f"Erro ao gerar relatório:\n{str(e)}")
+
+    # def _gerar_arquivo_bombonas(self, bombonas, nome_base, filtros_ativos, formato):
+    #     """Solicita geração de arquivo ao controller (View apenas coordena)."""
+        
+    #     # View só escolhe onde salvar
+    #     if formato == "csv":
+    #         filetypes = [("CSV files", "*.csv"), ("PDF files", "*.pdf"), ("All files", "*.*")]
+    #     else:
+    #         filetypes = [("PDF files", "*.pdf"), ("CSV files", "*.csv"), ("All files", "*.*")]
+        
+    #     arquivo = filedialog.asksaveasfilename(
+    #         title="Salvar Relatório",
+    #         defaultextension=f".{formato}",
+    #         filetypes=filetypes
+    #     )
+        
+    #     if not arquivo:
+    #         return
+        
+    #     try:
+    #         # ✅ View delega TODA a geração para o controller
+    #         self.bombona_controller.gerar_relatorio_filtrado_arquivo(
+    #             bombonas, arquivo, filtros_ativos, formato
+    #         )
+            
+    #         messagebox.showinfo("Sucesso", f"Relatório salvo com sucesso!\n\nLocal: {arquivo}")
+            
+    #         if messagebox.askyesno("Abrir Arquivo", "Deseja abrir o relatório agora?"):
+    #             import os
+    #             os.startfile(arquivo)
+                
+    #     except Exception as e:
+    #         messagebox.showerror("Erro", f"Erro ao gerar relatório:\n{str(e)}")
+
+# def _gerar_arquivo_responsaveis(self, responsaveis, nome_base, formato):
+    #     """Gera arquivo de responsáveis usando o controller."""
+    #     ext = f".{formato}"
+        
+    #     if formato == "csv":
+    #         filetypes = [("CSV files", "*.csv"), ("PDF files", "*.pdf"), ("All files", "*.*")]
+    #     else:
+    #         filetypes = [("PDF files", "*.pdf"), ("CSV files", "*.csv"), ("All files", "*.*")]
+        
+    #     arquivo = filedialog.asksaveasfilename(
+    #         title="Salvar Relatório",
+    #         defaultextension=ext,
+    #         filetypes=filetypes
+    #     )
+        
+    #     if not arquivo:
+    #         return
+        
+    #     try:
+    #         # ✅ NOVA LÓGICA: Chama controller em vez de método local
+    #         if formato == "csv":
+    #             arquivo_gerado = self.responsavel_controller.gerar_relatorio("csv")
+    #             # Copia arquivo gerado para local escolhido pelo usuário
+    #             import shutil
+    #             shutil.copy(arquivo_gerado, arquivo)
+    #         else:  # formato == "pdf"
+    #             # Controller gera PDF diretamente no local escolhido
+    #             self.responsavel_controller.gerar_relatorio_pdf_responsaveis(responsaveis, arquivo)
+            
+    #         messagebox.showinfo("Sucesso", f"Relatório salvo com sucesso!\n\nLocal: {arquivo}")
+            
+    #         if messagebox.askyesno("Abrir Arquivo", "Deseja abrir o relatório agora?"):
+    #             os.startfile(arquivo)
+                
+    #     except Exception as e:
+    #         messagebox.showerror("Erro", f"Erro ao gerar relatório:\n{str(e)}")
+
+    # def _gerar_arquivo_responsaveis(self, responsaveis, nome_base, formato):
+    #     """Solicita geração de arquivo de responsáveis ao controller."""
+        
+    #     # View só escolhe onde salvar
+    #     if formato == "csv":
+    #         filetypes = [("CSV files", "*.csv"), ("PDF files", "*.pdf"), ("All files", "*.*")]
+    #     else:
+    #         filetypes = [("PDF files", "*.pdf"), ("CSV files", "*.csv"), ("All files", "*.*")]
+        
+    #     arquivo = filedialog.asksaveasfilename(
+    #         title="Salvar Relatório",
+    #         defaultextension=f".{formato}",
+    #         filetypes=filetypes
+    #     )
+        
+    #     if not arquivo:
+    #         return
+        
+    #     try:
+    #         # ✅ View delega TODA a geração para o controller
+    #         self.responsavel_controller.gerar_relatorio_arquivo(
+    #             responsaveis, arquivo, formato
+    #         )
+            
+    #         messagebox.showinfo("Sucesso", f"Relatório salvo com sucesso!\n\nLocal: {arquivo}")
+            
+    #         if messagebox.askyesno("Abrir Arquivo", "Deseja abrir o relatório agora?"):
+    #             import os
+    #             os.startfile(arquivo)
+                
+    #     except Exception as e:
+    #         messagebox.showerror("Erro", f"Erro ao gerar relatório:\n{str(e)}")
+
+    # def __init__(self, parent, bombona_controller, responsavel_controller):
+    #     """
+    #     Inicializa a tela de relatórios.
+        
+    #     Args:
+    #         parent: Janela pai
+    #         bombona_controller: Controller de bombonas
+    #         responsavel_controller: Controller de responsáveis
+    #     """
+    #     self.parent = parent
+    #     self.bombona_controller = bombona_controller
+    #     self.responsavel_controller = responsavel_controller
+    #     self.janela = None
+        
+    #     # Variáveis
+    #     self.var_formato_arquivo = tk.StringVar()
+    #     self.var_filtro_setor = tk.StringVar()
+    #     self.var_filtro_responsavel = tk.StringVar()
+    #     self.var_filtro_tipo_residuo = tk.StringVar()
+        
+    #     # Dados para filtros
+    #     self.responsaveis_dict = {}
+    #     self.setores_disponiveis = []
+    #     self.tipos_residuo_disponiveis = []
