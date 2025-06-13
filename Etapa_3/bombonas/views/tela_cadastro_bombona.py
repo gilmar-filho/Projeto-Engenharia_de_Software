@@ -5,28 +5,50 @@ Tela de cadastro de bombona - Versão Simplificada
 import tkinter as tk
 from tkinter import ttk, messagebox
 
-# root = tk.Tk()
-# style = ttk.Style()
-# style.theme_use('alt')
-
 class TelaCadastroBombona:
     """
     Tela simplificada para cadastrar novas bombonas.
     """
     
-    def __init__(self, parent, bombona_controller, responsavel_controller):
+    # def __init__(self, parent, bombona_controller, responsavel_controller):
+    #     """
+    #     Inicializa a tela de cadastro.
+        
+    #     Args:
+    #         parent: Janela pai
+    #         bombona_controller: Controller de bombonas
+    #         responsavel_controller: Controller de responsáveis
+    #     """
+    #     self.parent = parent
+    #     self.bombona_controller = bombona_controller
+    #     self.responsavel_controller = responsavel_controller
+    #     self.janela = None
+        
+    #     # Variáveis dos campos
+    #     self.var_codigo = tk.StringVar()
+    #     self.var_volume = tk.StringVar()
+    #     self.var_tipo_residuo = tk.StringVar()
+    #     self.var_responsavel = tk.StringVar()
+        
+    #     # Lista de responsáveis
+    #     self.responsaveis_dict = {}
+
+    def __init__(self, parent):
         """
         Inicializa a tela de cadastro.
         
         Args:
             parent: Janela pai
-            bombona_controller: Controller de bombonas
-            responsavel_controller: Controller de responsáveis
         """
         self.parent = parent
-        self.bombona_controller = bombona_controller
-        self.responsavel_controller = responsavel_controller
         self.janela = None
+        
+        # View cria seus próprios controllers (autonomia)
+        from controllers.bombona_controller import BombonaController
+        from controllers.responsavel_controller import ResponsavelController
+        
+        self.bombona_controller = BombonaController()
+        self.responsavel_controller = ResponsavelController()
         
         # Variáveis dos campos
         self.var_codigo = tk.StringVar()
@@ -201,8 +223,8 @@ class TelaCadastroBombona:
         self.btn_cancelar.pack(side=tk.LEFT)
         
         # Configurar Enter para cadastrar
-        self.janela.bind('<Return>', lambda e: self._cadastrar_bombona())
-        self.janela.bind('<Escape>', lambda e: self.janela.destroy())
+        self.janela.bind('<Return>', lambda _: self._cadastrar_bombona())
+        self.janela.bind('<Escape>', lambda _: self.janela.destroy())
     
     def _validar_formulario(self):
         """Valida o formulário antes do cadastro."""
@@ -284,16 +306,16 @@ class TelaCadastroBombona:
                 if resposta:
                     self._limpar_formulario()
                 else:
-                    # ✅ CORREÇÃO: Verifica se janela existe antes de destruir
+                    # Verifica se janela existe antes de destruir
                     if hasattr(self, 'janela') and self.janela.winfo_exists():
                         self.janela.destroy()
-                    return  # ← Sai da função para não tentar reabilitar botão
+                    return  # Sai da função para não tentar reabilitar botão
             
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao cadastrar bombona:\n{str(e)}")
         
         finally:
-            # ✅ CORREÇÃO: Só reabilita botão se widget ainda existir
+            # Só reabilita botão se widget ainda existir
             try:
                 if hasattr(self, 'btn_cadastrar') and hasattr(self, 'janela'):
                     if self.janela.winfo_exists():

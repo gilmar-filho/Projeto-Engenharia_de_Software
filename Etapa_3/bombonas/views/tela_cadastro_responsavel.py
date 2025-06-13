@@ -11,17 +11,37 @@ class TelaCadastroResponsavel:
     Tela simplificada para cadastrar novos responsáveis.
     """
     
-    def __init__(self, parent, responsavel_controller):
+    # def __init__(self, parent, responsavel_controller):
+    #     """
+    #     Inicializa a tela de cadastro.
+        
+    #     Args:
+    #         parent: Janela pai
+    #         responsavel_controller: Controller de responsáveis
+    #     """
+    #     self.parent = parent
+    #     self.responsavel_controller = responsavel_controller
+    #     self.janela = None
+        
+    #     # Variáveis dos campos
+    #     self.var_cpf = tk.StringVar()
+    #     self.var_nome = tk.StringVar()
+    #     self.var_telefone = tk.StringVar()
+    #     self.var_setor = tk.StringVar()
+
+    def __init__(self, parent):
         """
         Inicializa a tela de cadastro.
         
         Args:
             parent: Janela pai
-            responsavel_controller: Controller de responsáveis
         """
         self.parent = parent
-        self.responsavel_controller = responsavel_controller
         self.janela = None
+        
+        # View cria seu próprio controller (autonomia)
+        from controllers.responsavel_controller import ResponsavelController
+        self.responsavel_controller = ResponsavelController()
         
         # Variáveis dos campos
         self.var_cpf = tk.StringVar()
@@ -144,8 +164,8 @@ class TelaCadastroResponsavel:
         self.btn_cancelar.pack(side=tk.LEFT)
         
         # Configurar Enter para cadastrar
-        self.janela.bind('<Return>', lambda e: self._cadastrar_responsavel())
-        self.janela.bind('<Escape>', lambda e: self.janela.destroy())
+        self.janela.bind('<Return>', lambda _: self._cadastrar_responsavel())
+        self.janela.bind('<Escape>', lambda _: self.janela.destroy())
     
     def _validar_formulario(self):
         """Valida o formulário antes do cadastro."""
@@ -205,16 +225,16 @@ class TelaCadastroResponsavel:
                 if resposta:
                     self._limpar_formulario()
                 else:
-                    # ✅ CORREÇÃO: Verifica se janela existe antes de destruir
+                    # Verifica se janela existe antes de destruir
                     if hasattr(self, 'janela') and self.janela.winfo_exists():
                         self.janela.destroy()
-                    return  # ← Sai da função para não tentar reabilitar botão
+                    return  # Sai da função para não tentar reabilitar botão
             
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao cadastrar responsável:\n{str(e)}")
         
         finally:
-            # ✅ CORREÇÃO: Só reabilita botão se widget ainda existir
+            # Só reabilita botão se widget ainda existir
             try:
                 if hasattr(self, 'btn_cadastrar') and hasattr(self, 'janela'):
                     if self.janela.winfo_exists():

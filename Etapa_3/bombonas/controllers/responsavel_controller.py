@@ -16,16 +16,30 @@ class ResponsavelController:
     Utiliza as interfaces dos DAOs para garantir baixo acoplamento.
     """
     
-    def __init__(self, responsavel_dao: ResponsavelDAOInterface, bombona_dao: BombonaDAOInterface):
-        """
-        Inicializa o controller.
+    # def __init__(self, responsavel_dao: ResponsavelDAOInterface, bombona_dao: BombonaDAOInterface):
+    #     """
+    #     Inicializa o controller.
         
-        Args:
-            responsavel_dao (ResponsavelDAOInterface): Interface do DAO para responsáveis
-            bombona_dao (BombonaDAOInterface): Interface do DAO para bombonas
+    #     Args:
+    #         responsavel_dao (ResponsavelDAOInterface): Interface do DAO para responsáveis
+    #         bombona_dao (BombonaDAOInterface): Interface do DAO para bombonas
+    #     """
+    #     self._responsavel_dao = responsavel_dao
+    #     self._bombona_dao = bombona_dao
+    #     self._responsavel_factory = ResponsavelFactory()
+
+    def __init__(self):
         """
-        self._responsavel_dao = responsavel_dao
-        self._bombona_dao = bombona_dao
+        Inicializa o controller com suas próprias dependências.
+        O controller é autônomo e trabalha apenas com interfaces.
+        """
+        # Import dinâmico das implementações (mantém baixo acoplamento)
+        from dao.responsavel_dao import ResponsavelDAO
+        from dao.bombona_dao import BombonaDAO
+        
+        # Atribui às interfaces (polimorfismo)
+        self._responsavel_dao: ResponsavelDAOInterface = ResponsavelDAO()
+        self._bombona_dao: BombonaDAOInterface = BombonaDAO()
         self._responsavel_factory = ResponsavelFactory()
     
     def cadastrar_responsavel(self, cpf: str, nome: str, telefone: str, setor: str) -> bool:

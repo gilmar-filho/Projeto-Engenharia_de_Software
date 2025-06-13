@@ -20,16 +20,30 @@ class BombonaController:
     Utiliza as interfaces dos DAOs para garantir baixo acoplamento.
     """
 
-    def __init__(self, bombona_dao: BombonaDAOInterface, responsavel_dao: ResponsavelDAOInterface):
-        """
-        Inicializa o controller.
+    # def __init__(self, bombona_dao: BombonaDAOInterface, responsavel_dao: ResponsavelDAOInterface):
+    #     """
+    #     Inicializa o controller.
 
-        Args:
-            bombona_dao (BombonaDAOInterface): Interface do DAO para bombonas
-            responsavel_dao (ResponsavelDAOInterface): Interface do DAO para responsáveis
+    #     Args:
+    #         bombona_dao (BombonaDAOInterface): Interface do DAO para bombonas
+    #         responsavel_dao (ResponsavelDAOInterface): Interface do DAO para responsáveis
+    #     """
+    #     self._bombona_dao = bombona_dao
+    #     self._responsavel_dao = responsavel_dao
+    #     self._bombona_factory = BombonaFactory()
+
+    def __init__(self):
         """
-        self._bombona_dao = bombona_dao
-        self._responsavel_dao = responsavel_dao
+        Inicializa o controller com suas próprias dependências.
+        O controller é autônomo e trabalha apenas com interfaces.
+        """
+        # Import dinâmico das implementações (mantém baixo acoplamento)
+        from dao.bombona_dao import BombonaDAO
+        from dao.responsavel_dao import ResponsavelDAO
+        
+        # Atribui às interfaces (polimorfismo)
+        self._bombona_dao: BombonaDAOInterface = BombonaDAO()
+        self._responsavel_dao: ResponsavelDAOInterface = ResponsavelDAO()
         self._bombona_factory = BombonaFactory()
 
     def cadastrar_bombona(self, codigo: str, volume: float, tipo_residuo: str, cpf: str) -> bool:

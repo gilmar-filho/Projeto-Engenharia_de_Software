@@ -14,19 +14,47 @@ class TelaRelatorio:
     Tela simples para gerar relatórios do sistema com seleção única de formato.
     """
     
-    def __init__(self, parent, bombona_controller, responsavel_controller):
+    # def __init__(self, parent, bombona_controller, responsavel_controller):
+    #     """
+    #     Inicializa a tela de relatórios.
+        
+    #     Args:
+    #         parent: Janela pai
+    #         bombona_controller: Controller de bombonas
+    #         responsavel_controller: Controller de responsáveis
+    #     """
+    #     self.parent = parent
+    #     self.bombona_controller = bombona_controller
+    #     self.responsavel_controller = responsavel_controller
+    #     self.janela = None
+        
+    #     # Variáveis
+    #     self.var_formato_arquivo = tk.StringVar()
+    #     self.var_filtro_setor = tk.StringVar()
+    #     self.var_filtro_responsavel = tk.StringVar()
+    #     self.var_filtro_tipo_residuo = tk.StringVar()
+        
+    #     # Dados para filtros
+    #     self.responsaveis_dict = {}
+    #     self.setores_disponiveis = []
+    #     self.tipos_residuo_disponiveis = []
+
+    def __init__(self, parent):
         """
         Inicializa a tela de relatórios.
         
         Args:
             parent: Janela pai
-            bombona_controller: Controller de bombonas
-            responsavel_controller: Controller de responsáveis
         """
         self.parent = parent
-        self.bombona_controller = bombona_controller
-        self.responsavel_controller = responsavel_controller
         self.janela = None
+        
+        # View cria seus próprios controllers (autonomia)
+        from controllers.bombona_controller import BombonaController
+        from controllers.responsavel_controller import ResponsavelController
+        
+        self.bombona_controller = BombonaController()
+        self.responsavel_controller = ResponsavelController()
         
         # Variáveis
         self.var_formato_arquivo = tk.StringVar()
@@ -110,25 +138,6 @@ class TelaRelatorio:
         
         # Botão fechar
         ttk.Button(main_frame, text="Fechar", command=self.janela.destroy, width=15).pack(pady=(20, 0))
-    
-    # def _criar_estatisticas(self, parent):
-    #     """Cria a seção de estatísticas rápidas."""
-        
-    #     stats_frame = ttk.LabelFrame(parent, text="Estatísticas", padding="15")
-    #     stats_frame.pack(fill=tk.X, pady=(0, 15))
-        
-    #     try:
-    #         responsaveis = self.responsavel_controller.listar_responsaveis()
-    #         bombonas = self.bombona_controller.listar_bombonas()
-            
-    #         total_responsaveis = len(responsaveis)
-    #         total_bombonas = len(bombonas)
-            
-    #         ttk.Label(stats_frame, text=f"Responsáveis: {total_responsaveis}").pack(anchor=tk.W)
-    #         ttk.Label(stats_frame, text=f"Bombonas: {total_bombonas}").pack(anchor=tk.W)
-            
-    #     except Exception as e:
-    #         ttk.Label(stats_frame, text=f"Erro: {str(e)}", foreground="red").pack()
     
     def _criar_selecao_formato(self, parent):
         """Cria a seção de seleção do formato de arquivo."""
@@ -615,3 +624,22 @@ class TelaRelatorio:
     #     pdf.cell(0, 6, f"Relatório gerado em {data_geracao}", ln=True, align='L')
         
     #     pdf.output(arquivo)
+
+    # def _criar_estatisticas(self, parent):
+    #     """Cria a seção de estatísticas rápidas."""
+        
+    #     stats_frame = ttk.LabelFrame(parent, text="Estatísticas", padding="15")
+    #     stats_frame.pack(fill=tk.X, pady=(0, 15))
+        
+    #     try:
+    #         responsaveis = self.responsavel_controller.listar_responsaveis()
+    #         bombonas = self.bombona_controller.listar_bombonas()
+            
+    #         total_responsaveis = len(responsaveis)
+    #         total_bombonas = len(bombonas)
+            
+    #         ttk.Label(stats_frame, text=f"Responsáveis: {total_responsaveis}").pack(anchor=tk.W)
+    #         ttk.Label(stats_frame, text=f"Bombonas: {total_bombonas}").pack(anchor=tk.W)
+            
+    #     except Exception as e:
+    #         ttk.Label(stats_frame, text=f"Erro: {str(e)}", foreground="red").pack()

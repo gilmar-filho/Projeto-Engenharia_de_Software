@@ -11,20 +11,38 @@ class TelaListagemBombonas:
     Tela simplificada para listar e gerenciar bombonas.
     """
     
-    def __init__(self, parent, bombona_controller, responsavel_controller):
+    # def __init__(self, parent, bombona_controller, responsavel_controller):
+    #     """
+    #     Inicializa a tela de listagem.
+        
+    #     Args:
+    #         parent: Janela pai
+    #         bombona_controller: Controller de bombonas
+    #         responsavel_controller: Controller de responsáveis
+    #     """
+    #     self.parent = parent
+    #     self.bombona_controller = bombona_controller
+    #     self.responsavel_controller = responsavel_controller
+    #     self.janela = None
+    #     self.tree = None
+
+    def __init__(self, parent):
         """
         Inicializa a tela de listagem.
         
         Args:
             parent: Janela pai
-            bombona_controller: Controller de bombonas
-            responsavel_controller: Controller de responsáveis
         """
         self.parent = parent
-        self.bombona_controller = bombona_controller
-        self.responsavel_controller = responsavel_controller
         self.janela = None
         self.tree = None
+        
+        # View cria seus próprios controllers (autonomia)
+        from controllers.bombona_controller import BombonaController
+        from controllers.responsavel_controller import ResponsavelController
+        
+        self.bombona_controller = BombonaController()
+        self.responsavel_controller = ResponsavelController()
     
     def exibir_lista(self):
         """Exibe a tela de listagem."""
@@ -97,7 +115,8 @@ class TelaListagemBombonas:
         scrollbar_v.pack(side=tk.RIGHT, fill=tk.Y)
         
         # Bind para duplo clique
-        self.tree.bind('<Double-1>', self._on_duplo_clique)
+        # self.tree.bind('<Double-1>', self._on_duplo_clique)
+        self.tree.bind('<Double-1>', lambda _: self._editar_bombona())
         
         # Frame dos botões
         button_frame = ttk.Frame(main_frame)
@@ -127,7 +146,7 @@ class TelaListagemBombonas:
         ).pack(side=tk.RIGHT)
         
         # Bind para teclas
-        self.janela.bind('<Delete>', lambda e: self._excluir_bombona())
+        self.janela.bind('<Delete>', lambda _: self._excluir_bombona())
     
     def _carregar_bombonas(self):
         """Carrega a lista de bombonas."""
@@ -190,9 +209,9 @@ class TelaListagemBombonas:
         
         return None
     
-    def _on_duplo_clique(self, event):
-        """Ação de duplo clique na tabela."""
-        self._editar_bombona()
+    # def _on_duplo_clique(self, event):
+    #     """Ação de duplo clique na tabela."""
+    #     self._editar_bombona()
     
     def _editar_bombona(self):
         """Edita a bombona selecionada."""
@@ -419,8 +438,8 @@ class TelaListagemBombonas:
         entry_volume.focus()
         
         # Configurar Enter para salvar
-        janela_edicao.bind('<Return>', lambda e: salvar_edicao())
-        janela_edicao.bind('<Escape>', lambda e: janela_edicao.destroy())
+        janela_edicao.bind('<Return>', lambda _: salvar_edicao())
+        janela_edicao.bind('<Escape>', lambda _: janela_edicao.destroy())
     
     def _excluir_bombona(self):
         """Exclui a bombona selecionada."""

@@ -34,45 +34,17 @@ class SistemaBombonas:
     def __init__(self):
         """Inicializa o sistema."""
         self.root = None
-        self.responsavel_dao = None
-        self.bombona_dao = None
-        self.responsavel_controller = None
-        self.bombona_controller = None
         self.janela_login = None
 
-        self._inicializar_sistema()
-
     def _inicializar_sistema(self):
-        """Inicializa os componentes do sistema."""
+        """Inicializa os componentes básicos do sistema."""
         try:
-            # Cria todos os DAOs de uma vez
-            daos = DAOFactory.criar_todos_daos()
-            self.responsavel_dao = daos['responsavel_dao']
-            self.bombona_dao = daos['bombona_dao']
-            
-            # Controllers
-            self.responsavel_controller = ResponsavelController(
-                self.responsavel_dao, 
-                self.bombona_dao
-            )
-            self.bombona_controller = BombonaController(
-                self.bombona_dao, 
-                self.responsavel_dao
-            )
-            
             print("Sistema inicializado com sucesso!")
             
         except Exception as e:
             print(f"Erro ao inicializar sistema: {e}")
             messagebox.showerror("Erro de Inicialização", 
                 f"Não foi possível inicializar o sistema:\n{e}")
-            sys.exit(1)
-
-        except Exception as e:
-            print(f"Erro ao inicializar sistema: {e}")
-            messagebox.showerror("Erro de Inicialização",
-                f"Não foi possível inicializar o sistema:\n{e}\n\n"
-                "Verifique se todos os componentes estão implementados corretamente.")
             sys.exit(1)
 
     def _iniciar_sistema_principal(self):
@@ -241,17 +213,14 @@ class SistemaBombonas:
             width=20
         ).pack(pady=(30, 0))
 
-    # Métodos para abrir as diferentes telas
     def _abrir_cadastro_responsavel(self):
         """Abre a tela de cadastro de responsável."""
         try:
             from views.tela_cadastro_responsavel import TelaCadastroResponsavel
-            tela = TelaCadastroResponsavel(self.root, self.responsavel_controller)
+            tela = TelaCadastroResponsavel(self.root)
             tela.exibir_formulario()
-            # Atualiza estatísticas após fechar a tela
-            # self.root.after(1000, self._atualizar_estatisticas)
         except ImportError:
-            messagebox.showerror("Erro", "Módulo tela_cadastro_responsavel não encontrado.\nVerifique se o arquivo está no diretório views/")
+            messagebox.showerror("Erro", "Módulo tela_cadastro_responsavel não encontrado.")
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao abrir tela de cadastro de responsável:\n{e}")
 
@@ -259,10 +228,10 @@ class SistemaBombonas:
         """Abre a tela de listagem de responsáveis."""
         try:
             from views.tela_listagem_responsaveis import TelaListagemResponsaveis
-            tela = TelaListagemResponsaveis(self.root, self.responsavel_controller)
+            tela = TelaListagemResponsaveis(self.root)
             tela.exibir_lista()
         except ImportError:
-            messagebox.showerror("Erro", "Módulo tela_listagem_responsaveis não encontrado.\nVerifique se o arquivo está no diretório views/")
+            messagebox.showerror("Erro", "Módulo tela_listagem_responsaveis não encontrado.")
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao abrir tela de listagem de responsáveis:\n{e}")
 
@@ -270,16 +239,10 @@ class SistemaBombonas:
         """Abre a tela de cadastro de bombona."""
         try:
             from views.tela_cadastro_bombona import TelaCadastroBombona
-            tela = TelaCadastroBombona(
-                self.root,
-                self.bombona_controller,
-                self.responsavel_controller
-            )
+            tela = TelaCadastroBombona(self.root)
             tela.exibir_formulario()
-            # Atualiza estatísticas após fechar a tela
-            # self.root.after(1000, self._atualizar_estatisticas)
         except ImportError:
-            messagebox.showerror("Erro", "Módulo tela_cadastro_bombona não encontrado.\nVerifique se o arquivo está no diretório views/")
+            messagebox.showerror("Erro", "Módulo tela_cadastro_bombona não encontrado.")
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao abrir tela de cadastro de bombona:\n{e}")
 
@@ -287,54 +250,21 @@ class SistemaBombonas:
         """Abre a tela de listagem de bombonas."""
         try:
             from views.tela_listagem_bombonas import TelaListagemBombonas
-            tela = TelaListagemBombonas(
-                self.root,
-                self.bombona_controller,
-                self.responsavel_controller  # Passa o ResponsavelController
-            )
+            tela = TelaListagemBombonas(self.root)
             tela.exibir_lista()
         except ImportError:
-            messagebox.showerror("Erro", "Módulo tela_listagem_bombonas não encontrado.\nVerifique se o arquivo está no diretório views/")
+            messagebox.showerror("Erro", "Módulo tela_listagem_bombonas não encontrado.")
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao abrir tela de listagem de bombonas:\n{e}")
-
-    """
-    Alterações simples no main.py para integrar a nova tela de relatórios
-    Substituir apenas o método _abrir_relatorios() no arquivo main.py existente
-    """
-
-    # Substituir este método na classe SistemaBombonas:
 
     def _abrir_relatorios(self):
         """Abre a tela de relatórios."""
         try:
-            # Verifica se há dados mínimos
-            responsaveis = self.responsavel_controller.listar_responsaveis()
-            bombonas = self.bombona_controller.listar_bombonas()
-
-            if not responsaveis and not bombonas:
-                messagebox.showwarning(
-                    "Aviso",
-                    "Não há dados para gerar relatórios.\n"
-                    "Cadastre pelo menos alguns responsáveis e bombonas primeiro."
-                )
-                return
-
-            # Importa e abre a tela de relatórios
             from views.tela_relatorio import TelaRelatorio
-            tela = TelaRelatorio(
-                self.root,
-                self.bombona_controller,
-                self.responsavel_controller
-            )
+            tela = TelaRelatorio(self.root)
             tela.exibir_tela()
-
         except ImportError:
-            messagebox.showerror(
-                "Erro",
-                "Módulo tela_relatorio não encontrado.\n"
-                "Verifique se o arquivo está no diretório views/"
-            )
+            messagebox.showerror("Erro", "Módulo tela_relatorio não encontrado.")
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao abrir tela de relatórios:\n{e}")
 
@@ -764,3 +694,141 @@ if __name__ == "__main__":
 
 #         except Exception as e:
 #             messagebox.showerror("Erro", f"Erro ao atualizar estatísticas: {e}")
+
+########### ALTERAÇÃO NO MVC ###################
+
+    # # Métodos para abrir as diferentes telas
+    # def _abrir_cadastro_responsavel(self):
+    #     """Abre a tela de cadastro de responsável."""
+    #     try:
+    #         from views.tela_cadastro_responsavel import TelaCadastroResponsavel
+    #         tela = TelaCadastroResponsavel(self.root, self.responsavel_controller)
+    #         tela.exibir_formulario()
+    #         # Atualiza estatísticas após fechar a tela
+    #         # self.root.after(1000, self._atualizar_estatisticas)
+    #     except ImportError:
+    #         messagebox.showerror("Erro", "Módulo tela_cadastro_responsavel não encontrado.\nVerifique se o arquivo está no diretório views/")
+    #     except Exception as e:
+    #         messagebox.showerror("Erro", f"Erro ao abrir tela de cadastro de responsável:\n{e}")
+
+    # def _abrir_listagem_responsaveis(self):
+    #     """Abre a tela de listagem de responsáveis."""
+    #     try:
+    #         from views.tela_listagem_responsaveis import TelaListagemResponsaveis
+    #         tela = TelaListagemResponsaveis(self.root, self.responsavel_controller)
+    #         tela.exibir_lista()
+    #     except ImportError:
+    #         messagebox.showerror("Erro", "Módulo tela_listagem_responsaveis não encontrado.\nVerifique se o arquivo está no diretório views/")
+    #     except Exception as e:
+    #         messagebox.showerror("Erro", f"Erro ao abrir tela de listagem de responsáveis:\n{e}")
+
+    # def _abrir_cadastro_bombona(self):
+    #     """Abre a tela de cadastro de bombona."""
+    #     try:
+    #         from views.tela_cadastro_bombona import TelaCadastroBombona
+    #         tela = TelaCadastroBombona(
+    #             self.root,
+    #             self.bombona_controller,
+    #             self.responsavel_controller
+    #         )
+    #         tela.exibir_formulario()
+    #         # Atualiza estatísticas após fechar a tela
+    #         # self.root.after(1000, self._atualizar_estatisticas)
+    #     except ImportError:
+    #         messagebox.showerror("Erro", "Módulo tela_cadastro_bombona não encontrado.\nVerifique se o arquivo está no diretório views/")
+    #     except Exception as e:
+    #         messagebox.showerror("Erro", f"Erro ao abrir tela de cadastro de bombona:\n{e}")
+
+    # def _abrir_listagem_bombonas(self):
+    #     """Abre a tela de listagem de bombonas."""
+    #     try:
+    #         from views.tela_listagem_bombonas import TelaListagemBombonas
+    #         tela = TelaListagemBombonas(
+    #             self.root,
+    #             self.bombona_controller,
+    #             self.responsavel_controller  # Passa o ResponsavelController
+    #         )
+    #         tela.exibir_lista()
+    #     except ImportError:
+    #         messagebox.showerror("Erro", "Módulo tela_listagem_bombonas não encontrado.\nVerifique se o arquivo está no diretório views/")
+    #     except Exception as e:
+    #         messagebox.showerror("Erro", f"Erro ao abrir tela de listagem de bombonas:\n{e}")
+
+    # def _abrir_relatorios(self):
+    #     """Abre a tela de relatórios."""
+    #     try:
+    #         # Verifica se há dados mínimos
+    #         responsaveis = self.responsavel_controller.listar_responsaveis()
+    #         bombonas = self.bombona_controller.listar_bombonas()
+
+    #         if not responsaveis and not bombonas:
+    #             messagebox.showwarning(
+    #                 "Aviso",
+    #                 "Não há dados para gerar relatórios.\n"
+    #                 "Cadastre pelo menos alguns responsáveis e bombonas primeiro."
+    #             )
+    #             return
+
+    #         # Importa e abre a tela de relatórios
+    #         from views.tela_relatorio import TelaRelatorio
+    #         tela = TelaRelatorio(
+    #             self.root,
+    #             self.bombona_controller,
+    #             self.responsavel_controller
+    #         )
+    #         tela.exibir_tela()
+
+    #     except ImportError:
+    #         messagebox.showerror(
+    #             "Erro",
+    #             "Módulo tela_relatorio não encontrado.\n"
+    #             "Verifique se o arquivo está no diretório views/"
+    #         )
+    #     except Exception as e:
+    #         messagebox.showerror("Erro", f"Erro ao abrir tela de relatórios:\n{e}")
+
+    ########### FIM - ALTERAÇÃO NO MVC ###################
+
+    # def _inicializar_sistema(self):
+    #     """Inicializa os componentes do sistema."""
+    #     try:
+    #         # Cria todos os DAOs de uma vez
+    #         daos = DAOFactory.criar_todos_daos()
+    #         self.responsavel_dao = daos['responsavel_dao']
+    #         self.bombona_dao = daos['bombona_dao']
+            
+    #         # Controllers
+    #         self.responsavel_controller = ResponsavelController(
+    #             self.responsavel_dao, 
+    #             self.bombona_dao
+    #         )
+    #         self.bombona_controller = BombonaController(
+    #             self.bombona_dao, 
+    #             self.responsavel_dao
+    #         )
+            
+    #         print("Sistema inicializado com sucesso!")
+            
+    #     except Exception as e:
+    #         print(f"Erro ao inicializar sistema: {e}")
+    #         messagebox.showerror("Erro de Inicialização", 
+    #             f"Não foi possível inicializar o sistema:\n{e}")
+    #         sys.exit(1)
+
+    #     except Exception as e:
+    #         print(f"Erro ao inicializar sistema: {e}")
+    #         messagebox.showerror("Erro de Inicialização",
+    #             f"Não foi possível inicializar o sistema:\n{e}\n\n"
+    #             "Verifique se todos os componentes estão implementados corretamente.")
+    #         sys.exit(1)
+
+    # def __init__(self):
+    #     """Inicializa o sistema."""
+    #     self.root = None
+    #     self.responsavel_dao = None
+    #     self.bombona_dao = None
+    #     self.responsavel_controller = None
+    #     self.bombona_controller = None
+    #     self.janela_login = None
+
+    #     self._inicializar_sistema()

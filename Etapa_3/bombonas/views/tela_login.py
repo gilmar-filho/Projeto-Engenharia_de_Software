@@ -7,10 +7,25 @@ from tkinter import ttk, messagebox
 
 
 class TelaLogin:
+    
+    # def __init__(self, callback_sucesso, login="admin", senha="123456"):
+    #     self.callback_sucesso = callback_sucesso
+    #     self.login_correto = login
+    #     self.senha_correta = senha
+
     def __init__(self, callback_sucesso, login="admin", senha="123456"):
+        """
+        Inicializa a tela de login.
+        
+        Args:
+            callback_sucesso: Função a ser chamada após login bem-sucedido
+            login: Login válido do sistema
+            senha: Senha válida do sistema
+        """
         self.callback_sucesso = callback_sucesso
         self.login_correto = login
         self.senha_correta = senha
+        self.janela = None
     
     def exibir_login(self):
         # Cria janela
@@ -44,8 +59,8 @@ class TelaLogin:
         ttk.Button(frame, text="Sair", command=self._sair, width=15).pack()
         
         # Eventos
-        self.janela.bind('<Return>', lambda e: self._login())
-        self.janela.bind('<Escape>', lambda e: self._sair())
+        self.janela.bind('<Return>', lambda _: self._login())
+        self.janela.bind('<Escape>', lambda _: self._sair())
         self.janela.protocol("WM_DELETE_WINDOW", self._sair)
         
         self.entry_login.focus()

@@ -11,18 +11,33 @@ class TelaListagemResponsaveis:
     Tela simplificada para listar e gerenciar responsáveis.
     """
     
-    def __init__(self, parent, responsavel_controller):
+    # def __init__(self, parent, responsavel_controller):
+    #     """
+    #     Inicializa a tela de listagem.
+        
+    #     Args:
+    #         parent: Janela pai
+    #         responsavel_controller: Controller de responsáveis
+    #     """
+    #     self.parent = parent
+    #     self.responsavel_controller = responsavel_controller
+    #     self.janela = None
+    #     self.tree = None
+
+    def __init__(self, parent):
         """
         Inicializa a tela de listagem.
         
         Args:
             parent: Janela pai
-            responsavel_controller: Controller de responsáveis
         """
         self.parent = parent
-        self.responsavel_controller = responsavel_controller
         self.janela = None
         self.tree = None
+        
+        # View cria seu próprio controller (autonomia)
+        from controllers.responsavel_controller import ResponsavelController
+        self.responsavel_controller = ResponsavelController()
     
     def exibir_lista(self):
         """Exibe a tela de listagem."""
@@ -93,7 +108,8 @@ class TelaListagemResponsaveis:
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         
         # Bind para duplo clique
-        self.tree.bind('<Double-1>', self._on_duplo_clique)
+        # self.tree.bind('<Double-1>', self._on_duplo_clique)
+        self.tree.bind('<Double-1>', lambda _: self._editar_responsavel())
         
         # Frame dos botões
         button_frame = ttk.Frame(main_frame)
@@ -123,7 +139,7 @@ class TelaListagemResponsaveis:
         ).pack(side=tk.RIGHT)
         
         # Bind para teclas (removido F5 para atualizar)
-        self.janela.bind('<Delete>', lambda e: self._excluir_responsavel())
+        self.janela.bind('<Delete>', lambda _: self._excluir_responsavel())
     
     def _carregar_responsaveis(self):
         """Carrega a lista de responsáveis."""
@@ -171,9 +187,9 @@ class TelaListagemResponsaveis:
         
         return responsavel
     
-    def _on_duplo_clique(self, event):
-        """Ação de duplo clique na tabela."""
-        self._editar_responsavel()
+    # def _on_duplo_clique(self, event):
+    #     """Ação de duplo clique na tabela."""
+    #     self._editar_responsavel()
     
     def _editar_responsavel(self):
         """Edita o responsável selecionado."""
@@ -339,8 +355,8 @@ class TelaListagemResponsaveis:
         entry_nome.focus()
         
         # Configurar Enter para salvar
-        janela_edicao.bind('<Return>', lambda e: salvar_edicao())
-        janela_edicao.bind('<Escape>', lambda e: janela_edicao.destroy())
+        janela_edicao.bind('<Return>', lambda _: salvar_edicao())
+        janela_edicao.bind('<Escape>', lambda _: janela_edicao.destroy())
     
     def _excluir_responsavel(self):
         """Exclui o responsável selecionado."""
