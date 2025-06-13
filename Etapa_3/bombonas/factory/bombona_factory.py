@@ -19,22 +19,8 @@ class BombonaFactory:
     
     @classmethod
     def criar_bombona(cls, codigo: str, volume: float, tipo_residuo: str) -> Bombona:
-        """
-        Cria uma nova instância de Bombona com validação dos dados próprios.
-        
-        MUDANÇA: Responsável não é mais passado aqui - será vinculado pelo Controller.
-        
-        Args:
-            codigo (str): Código da bombona
-            volume (float): Volume em litros
-            tipo_residuo (str): Tipo de resíduo
-            
-        Returns:
-            Bombona: Nova instância validada de Bombona (SEM responsável)
-            
-        Raises:
-            ValueError: Se algum parâmetro for inválido
-        """
+        """ Cria uma nova instância de Bombona com validação dos dados próprios. """
+
         # Valida e formata apenas os dados da bombona
         codigo_formatado = cls._validar_e_formatar_codigo(codigo)
         volume_validado = cls._validar_volume(volume)
@@ -48,16 +34,8 @@ class BombonaFactory:
         """
         Valida e formata o código da bombona no formato 'LLL-111' (3 letras + 3 números).
         O usuário pode digitar sem o hífen e em qualquer case.
-        
-        Args:
-            codigo (str): Código a ser validado (ex: 'abc123', 'ABC-123', 'abc-123')
-            
-        Returns:
-            str: Código formatado no padrão 'LLL-111' (ex: 'ABC-123')
-            
-        Raises:
-            ValueError: Se o código for inválido
         """
+
         if not codigo or not isinstance(codigo, str):
             raise ValueError("Código da bombona não pode ser vazio")
         
@@ -86,18 +64,8 @@ class BombonaFactory:
     
     @classmethod
     def _validar_volume(cls, volume: float) -> float:
-        """
-        Valida o volume da bombona.
-        
-        Args:
-            volume (float): Volume a ser validado
-            
-        Returns:
-            float: Volume validado
-            
-        Raises:
-            ValueError: Se o volume for inválido
-        """
+        """ Valida o volume da bombona. """
+
         if not isinstance(volume, (int, float)):
             try:
                 volume = float(volume)
@@ -115,18 +83,8 @@ class BombonaFactory:
     
     @classmethod
     def _validar_e_formatar_tipo_residuo(cls, tipo_residuo: str) -> str:
-        """
-        Valida e formata o tipo de resíduo.
-        
-        Args:
-            tipo_residuo (str): Tipo de resíduo a ser validado
-            
-        Returns:
-            str: Tipo de resíduo formatado (maiúsculas)
-            
-        Raises:
-            ValueError: Se o tipo de resíduo for inválido
-        """
+        """ Valida e formata o tipo de resíduo. """
+
         if not tipo_residuo or not isinstance(tipo_residuo, str):
             raise ValueError("Tipo de resíduo não pode ser vazio")
         
@@ -138,80 +96,8 @@ class BombonaFactory:
         
         return tipo_residuo
     
-    # @classmethod
-    # def _validar_responsavel(cls, responsavel: Responsavel) -> bool:
-    #     """
-    #     Valida o responsável.
-        
-    #     Args:
-    #         responsavel (Responsavel): Responsável a ser validado
-            
-    #     Returns:
-    #         bool: True se válido
-            
-    #     Raises:
-    #         ValueError: Se o responsável for inválido
-    #     """
-    #     if not responsavel:
-    #         raise ValueError("Responsável é obrigatório")
-        
-    #     if not isinstance(responsavel, Responsavel):
-    #         raise ValueError("Responsável deve ser uma instância válida da classe Responsavel")
-        
-    #     # Verifica se o responsável tem os dados básicos
-    #     if not responsavel.get_cpf():
-    #         raise ValueError("Responsável deve ter CPF válido")
-        
-    #     if not responsavel.get_nome():
-    #         raise ValueError("Responsável deve ter nome válido")
-        
-    #     return True
-    
     @classmethod
     def get_tipos_residuos_validos(cls) -> list:
-        """
-        Retorna a lista de tipos de resíduos válidos.
-        
-        Returns:
-            list: Lista de tipos válidos
-        """
+        """ Retorna a lista de tipos de resíduos válidos. """
+
         return cls.TIPOS_RESIDUOS_VALIDOS.copy()
-    
-    # @classmethod
-    # def validar_codigo_formato(cls, codigo: str) -> bool:
-    #     """
-    #     Valida apenas o formato do código sem lançar exceção.
-    #     Útil para validações em tempo real na interface.
-        
-    #     Args:
-    #         codigo (str): Código a ser validado (formato: LLL-111 ou LLL111)
-            
-    #     Returns:
-    #         bool: True se o formato está correto
-    #     """
-    #     if not codigo or not isinstance(codigo, str):
-    #         return False
-        
-    #     try:
-    #         cls._validar_e_formatar_codigo(codigo)
-    #         return True
-    #     except ValueError:
-    #         return False
-    
-    # @classmethod
-    # def validar_volume_formato(cls, volume) -> bool:
-    #     """
-    #     Valida apenas o formato do volume sem lançar exceção.
-    #     Útil para validações em tempo real na interface.
-        
-    #     Args:
-    #         volume: Volume a ser validado
-            
-    #     Returns:
-    #         bool: True se o formato está correto
-    #     """
-    #     try:
-    #         cls._validar_volume(volume)
-    #         return True
-    #     except ValueError:
-    #         return False

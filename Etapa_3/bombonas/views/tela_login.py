@@ -8,23 +8,11 @@ from tkinter import ttk, messagebox
 
 class TelaLogin:
     
-    # def __init__(self, callback_sucesso, login="admin", senha="123456"):
-    #     self.callback_sucesso = callback_sucesso
-    #     self.login_correto = login
-    #     self.senha_correta = senha
-
-    def __init__(self, callback_sucesso, login="admin", senha="123456"):
-        """
-        Inicializa a tela de login.
-        
-        Args:
-            callback_sucesso: Função a ser chamada após login bem-sucedido
-            login: Login válido do sistema
-            senha: Senha válida do sistema
-        """
+    def __init__(self, callback_sucesso):
+        # Inicializa a tela de login.
         self.callback_sucesso = callback_sucesso
-        self.login_correto = login
-        self.senha_correta = senha
+        self.login_correto = "admin"
+        self.senha_correta = "123456"
         self.janela = None
     
     def exibir_login(self):
@@ -67,6 +55,7 @@ class TelaLogin:
         self.janela.mainloop()
     
     def _login(self):
+        # Realiza a autenticação do usuário
         login = self.entry_login.get().strip()
         senha = self.entry_senha.get().strip()
         

@@ -15,21 +15,8 @@ class ResponsavelFactory:
     
     @classmethod
     def criar_responsavel(cls, cpf: str, nome: str, telefone: str, setor: str) -> Responsavel:
-        """
-        Cria uma nova instância de Responsavel com validação.
-        
-        Args:
-            cpf (str): CPF do responsável
-            nome (str): Nome completo
-            telefone (str): Telefone de contato
-            setor (str): Setor de trabalho
-            
-        Returns:
-            Responsavel: Nova instância validada de Responsavel
-            
-        Raises:
-            ValueError: Se algum parâmetro for inválido
-        """
+        """ Cria uma nova instância de Responsavel com validação. """
+
         # Valida e formata todos os parâmetros
         cpf_formatado = cls._validar_e_formatar_cpf(cpf)
         nome_formatado = cls._validar_e_formatar_nome(nome)
@@ -41,18 +28,8 @@ class ResponsavelFactory:
     
     @classmethod
     def _validar_e_formatar_cpf(cls, cpf: str) -> str:
-        """
-        Valida e formata o CPF.
-        
-        Args:
-            cpf (str): CPF a ser validado
-            
-        Returns:
-            str: CPF formatado (apenas números)
-            
-        Raises:
-            ValueError: Se o CPF for inválido
-        """
+        """ Valida e formata o CPF. """
+
         if not cpf or not isinstance(cpf, str):
             raise ValueError("CPF não pode ser vazio")
         
@@ -74,15 +51,8 @@ class ResponsavelFactory:
     
     @classmethod
     def _validar_digitos_cpf(cls, cpf: str) -> bool:
-        """
-        Valida os dígitos verificadores do CPF.
-        
-        Args:
-            cpf (str): CPF apenas com números
-            
-        Returns:
-            bool: True se os dígitos verificadores estão corretos
-        """
+        """ Valida os dígitos verificadores do CPF. """
+
         # Cálculo do primeiro dígito verificador
         soma = sum(int(cpf[i]) * (10 - i) for i in range(9))
         resto = soma % 11
@@ -100,18 +70,8 @@ class ResponsavelFactory:
     
     @classmethod
     def _validar_e_formatar_nome(cls, nome: str) -> str:
-        """
-        Valida e formata o nome do responsável.
-        
-        Args:
-            nome (str): Nome a ser validado
-            
-        Returns:
-            str: Nome formatado (Title Case)
-            
-        Raises:
-            ValueError: Se o nome for inválido
-        """
+        """ Valida e formata o nome do responsável. """
+
         if not nome or not isinstance(nome, str):
             raise ValueError("Nome não pode ser vazio")
         
@@ -137,18 +97,8 @@ class ResponsavelFactory:
     
     @classmethod
     def _validar_e_formatar_telefone(cls, telefone: str) -> str:
-        """
-        Valida e formata o telefone.
-        
-        Args:
-            telefone (str): Telefone a ser validado
-            
-        Returns:
-            str: Telefone formatado (apenas números)
-            
-        Raises:
-            ValueError: Se o telefone for inválido
-        """
+        """ Valida e formata o telefone. """
+
         if not telefone or not isinstance(telefone, str):
             raise ValueError("Telefone não pode ser vazio")
         
@@ -172,16 +122,8 @@ class ResponsavelFactory:
         """
         Valida e formata o setor.
         O usuário tem liberdade para inserir qualquer setor.
-        
-        Args:
-            setor (str): Setor a ser validado
-            
-        Returns:
-            str: Setor formatado (maiúsculas)
-            
-        Raises:
-            ValueError: Se o setor for inválido
         """
+        
         if not setor or not isinstance(setor, str):
             raise ValueError("Setor não pode ser vazio")
         

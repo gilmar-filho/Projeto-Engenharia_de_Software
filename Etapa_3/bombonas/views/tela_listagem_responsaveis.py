@@ -10,37 +10,21 @@ class TelaListagemResponsaveis:
     """
     Tela simplificada para listar e gerenciar responsáveis.
     """
-    
-    # def __init__(self, parent, responsavel_controller):
-    #     """
-    #     Inicializa a tela de listagem.
-        
-    #     Args:
-    #         parent: Janela pai
-    #         responsavel_controller: Controller de responsáveis
-    #     """
-    #     self.parent = parent
-    #     self.responsavel_controller = responsavel_controller
-    #     self.janela = None
-    #     self.tree = None
 
     def __init__(self, parent):
         """
         Inicializa a tela de listagem.
-        
-        Args:
-            parent: Janela pai
         """
         self.parent = parent
         self.janela = None
         self.tree = None
         
-        # View cria seu próprio controller (autonomia)
+        # Cria seu controller
         from controllers.responsavel_controller import ResponsavelController
         self.responsavel_controller = ResponsavelController()
     
     def exibir_lista(self):
-        """Exibe a tela de listagem."""
+        """ Exibe a tela de listagem. """
         
         # Cria nova janela
         self.janela = tk.Toplevel(self.parent)
@@ -58,14 +42,14 @@ class TelaListagemResponsaveis:
         self._carregar_responsaveis()
     
     def _centralizar_janela(self):
-        """Centraliza a janela na tela."""
+        """ Centraliza a janela na tela. """
         self.janela.update_idletasks()
         x = (self.janela.winfo_screenwidth() // 2) - (800 // 2)
         y = (self.janela.winfo_screenheight() // 2) - (500 // 2)
         self.janela.geometry(f"800x500+{x}+{y}")
     
     def _criar_interface(self):
-        """Cria a interface da listagem."""
+        """ Cria a interface da listagem. """
         
         # Frame principal
         main_frame = ttk.Frame(self.janela, padding="10")
@@ -108,7 +92,6 @@ class TelaListagemResponsaveis:
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         
         # Bind para duplo clique
-        # self.tree.bind('<Double-1>', self._on_duplo_clique)
         self.tree.bind('<Double-1>', lambda _: self._editar_responsavel())
         
         # Frame dos botões
@@ -138,11 +121,11 @@ class TelaListagemResponsaveis:
             width=15
         ).pack(side=tk.RIGHT)
         
-        # Bind para teclas (removido F5 para atualizar)
+        # Bind para teclas
         self.janela.bind('<Delete>', lambda _: self._excluir_responsavel())
     
     def _carregar_responsaveis(self):
-        """Carrega a lista de responsáveis."""
+        """ Carrega a lista de responsáveis. """
         
         try:
             # Limpa a tabela
@@ -165,7 +148,7 @@ class TelaListagemResponsaveis:
             messagebox.showerror("Erro", f"Erro ao carregar responsáveis:\n{str(e)}")
     
     def _obter_responsavel_selecionado(self):
-        """Obtém o responsável selecionado na tabela."""
+        """ Obtém o responsável selecionado na tabela. """
         
         selecao = self.tree.selection()
         if not selecao:
@@ -186,13 +169,9 @@ class TelaListagemResponsaveis:
         responsavel = self.responsavel_controller.buscar_responsavel(cpf)
         
         return responsavel
-    
-    # def _on_duplo_clique(self, event):
-    #     """Ação de duplo clique na tabela."""
-    #     self._editar_responsavel()
-    
+        
     def _editar_responsavel(self):
-        """Edita o responsável selecionado."""
+        """ Edita o responsável selecionado. """
         
         responsavel = self._obter_responsavel_selecionado()
         if not responsavel:
@@ -202,7 +181,7 @@ class TelaListagemResponsaveis:
         self._abrir_janela_edicao(responsavel)
     
     def _abrir_janela_edicao(self, responsavel):
-        """Abre janela para edição do responsável."""
+        """ Abre janela para edição do responsável. """
         
         # Cria nova janela
         janela_edicao = tk.Toplevel(self.janela)
@@ -359,7 +338,7 @@ class TelaListagemResponsaveis:
         janela_edicao.bind('<Escape>', lambda _: janela_edicao.destroy())
     
     def _excluir_responsavel(self):
-        """Exclui o responsável selecionado."""
+        """ Exclui o responsável selecionado. """
         
         responsavel = self._obter_responsavel_selecionado()
         if not responsavel:

@@ -10,34 +10,14 @@ class TelaListagemBombonas:
     """
     Tela simplificada para listar e gerenciar bombonas.
     """
-    
-    # def __init__(self, parent, bombona_controller, responsavel_controller):
-    #     """
-    #     Inicializa a tela de listagem.
-        
-    #     Args:
-    #         parent: Janela pai
-    #         bombona_controller: Controller de bombonas
-    #         responsavel_controller: Controller de responsáveis
-    #     """
-    #     self.parent = parent
-    #     self.bombona_controller = bombona_controller
-    #     self.responsavel_controller = responsavel_controller
-    #     self.janela = None
-    #     self.tree = None
 
     def __init__(self, parent):
-        """
-        Inicializa a tela de listagem.
-        
-        Args:
-            parent: Janela pai
-        """
+        """ Inicializa a tela de listagem. """
         self.parent = parent
         self.janela = None
         self.tree = None
         
-        # View cria seus próprios controllers (autonomia)
+        # Cria seus controllers
         from controllers.bombona_controller import BombonaController
         from controllers.responsavel_controller import ResponsavelController
         
@@ -45,7 +25,7 @@ class TelaListagemBombonas:
         self.responsavel_controller = ResponsavelController()
     
     def exibir_lista(self):
-        """Exibe a tela de listagem."""
+        """ Exibe a tela de listagem. """
         
         # Cria nova janela
         self.janela = tk.Toplevel(self.parent)
@@ -63,14 +43,14 @@ class TelaListagemBombonas:
         self._carregar_bombonas()
     
     def _centralizar_janela(self):
-        """Centraliza a janela na tela."""
+        """ Centraliza a janela na tela. """
         self.janela.update_idletasks()
         x = (self.janela.winfo_screenwidth() // 2) - (900 // 2)
         y = (self.janela.winfo_screenheight() // 2) - (500 // 2)
         self.janela.geometry(f"900x500+{x}+{y}")
     
     def _criar_interface(self):
-        """Cria a interface da listagem."""
+        """ Cria a interface da listagem. """
         
         # Frame principal
         main_frame = ttk.Frame(self.janela, padding="10")
@@ -106,7 +86,7 @@ class TelaListagemBombonas:
         self.tree.column('Responsável', width=200, anchor=tk.W)
         self.tree.column('CPF', width=130, anchor=tk.CENTER)
         
-        # APENAS scrollbar vertical
+        # Scrollbar vertical
         scrollbar_v = ttk.Scrollbar(table_frame, orient=tk.VERTICAL, command=self.tree.yview)
         self.tree.configure(yscrollcommand=scrollbar_v.set)
         
@@ -115,7 +95,6 @@ class TelaListagemBombonas:
         scrollbar_v.pack(side=tk.RIGHT, fill=tk.Y)
         
         # Bind para duplo clique
-        # self.tree.bind('<Double-1>', self._on_duplo_clique)
         self.tree.bind('<Double-1>', lambda _: self._editar_bombona())
         
         # Frame dos botões
@@ -149,7 +128,7 @@ class TelaListagemBombonas:
         self.janela.bind('<Delete>', lambda _: self._excluir_bombona())
     
     def _carregar_bombonas(self):
-        """Carrega a lista de bombonas."""
+        """ Carrega a lista de bombonas. """
         
         try:
             # Limpa a tabela
@@ -158,7 +137,6 @@ class TelaListagemBombonas:
             
             # Busca as bombonas
             bombonas = self.bombona_controller.listar_bombonas()
-            # print(bombonas)
             
             # Popula a tabela
             for bombona in bombonas:
@@ -184,7 +162,7 @@ class TelaListagemBombonas:
             messagebox.showerror("Erro", f"Erro ao carregar bombonas:\n{str(e)}")
     
     def _obter_bombona_selecionada(self):
-        """Obtém a bombona selecionada na tabela."""
+        """ Obtém a bombona selecionada na tabela. """
         
         selecao = self.tree.selection()
         if not selecao:
@@ -208,13 +186,9 @@ class TelaListagemBombonas:
                 return bombona
         
         return None
-    
-    # def _on_duplo_clique(self, event):
-    #     """Ação de duplo clique na tabela."""
-    #     self._editar_bombona()
-    
+        
     def _editar_bombona(self):
-        """Edita a bombona selecionada."""
+        """ Edita a bombona selecionada. """
         
         bombona = self._obter_bombona_selecionada()
         if not bombona:
@@ -224,7 +198,7 @@ class TelaListagemBombonas:
         self._abrir_janela_edicao(bombona)
     
     def _abrir_janela_edicao(self, bombona):
-        """Abre janela para edição da bombona."""
+        """ Abre janela para edição da bombona. """
         
         # Cria nova janela
         janela_edicao = tk.Toplevel(self.janela)
@@ -280,7 +254,7 @@ class TelaListagemBombonas:
         try:
             tipos_residuo = self.bombona_controller.get_tipos_residuos_validos()
         except:
-            tipos_residuo = ["Químico", "Biológico"]
+            tipos_residuo = ["QUÍMICO", "BIOLÓGICO"]
             
         combo_tipo_residuo = ttk.Combobox(
             main_frame,
@@ -407,7 +381,7 @@ class TelaListagemBombonas:
             var_responsavel.set("")
             entry_volume.focus()
         
-        # Botão Salvar (equivalente ao Cadastrar)
+        # Botão Salvar
         btn_salvar = ttk.Button(
             button_frame,
             text="Salvar",
@@ -442,7 +416,7 @@ class TelaListagemBombonas:
         janela_edicao.bind('<Escape>', lambda _: janela_edicao.destroy())
     
     def _excluir_bombona(self):
-        """Exclui a bombona selecionada."""
+        """ Exclui a bombona selecionada. """
         
         bombona = self._obter_bombona_selecionada()
         if not bombona:

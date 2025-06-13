@@ -11,35 +11,12 @@ class TelaCadastroResponsavel:
     Tela simplificada para cadastrar novos responsáveis.
     """
     
-    # def __init__(self, parent, responsavel_controller):
-    #     """
-    #     Inicializa a tela de cadastro.
-        
-    #     Args:
-    #         parent: Janela pai
-    #         responsavel_controller: Controller de responsáveis
-    #     """
-    #     self.parent = parent
-    #     self.responsavel_controller = responsavel_controller
-    #     self.janela = None
-        
-    #     # Variáveis dos campos
-    #     self.var_cpf = tk.StringVar()
-    #     self.var_nome = tk.StringVar()
-    #     self.var_telefone = tk.StringVar()
-    #     self.var_setor = tk.StringVar()
-
     def __init__(self, parent):
-        """
-        Inicializa a tela de cadastro.
-        
-        Args:
-            parent: Janela pai
-        """
+        """ Inicializa a tela de cadastro. """
         self.parent = parent
         self.janela = None
         
-        # View cria seu próprio controller (autonomia)
+        # Cria seu controller
         from controllers.responsavel_controller import ResponsavelController
         self.responsavel_controller = ResponsavelController()
         
@@ -50,7 +27,7 @@ class TelaCadastroResponsavel:
         self.var_setor = tk.StringVar()
     
     def exibir_formulario(self):
-        """Exibe a tela de cadastro."""
+        """ Exibe a tela de cadastro. """
         
         # Cria nova janela
         self.janela = tk.Toplevel(self.parent)
@@ -68,14 +45,14 @@ class TelaCadastroResponsavel:
         self.entry_cpf.focus()
     
     def _centralizar_janela(self):
-        """Centraliza a janela na tela."""
+        """ Centraliza a janela na tela. """
         self.janela.update_idletasks()
         x = (self.janela.winfo_screenwidth() // 2) - (450 // 2)
         y = (self.janela.winfo_screenheight() // 2) - (400 // 2)
         self.janela.geometry(f"450x400+{x}+{y}")
     
     def _criar_formulario(self):
-        """Cria o formulário de cadastro."""
+        """ Cria o formulário de cadastro. """
         
         # Frame principal
         main_frame = ttk.Frame(self.janela, padding="20")
@@ -168,7 +145,7 @@ class TelaCadastroResponsavel:
         self.janela.bind('<Escape>', lambda _: self.janela.destroy())
     
     def _validar_formulario(self):
-        """Valida o formulário antes do cadastro."""
+        """ Valida o formulário antes do cadastro. """
         
         if not self.var_cpf.get().strip():
             messagebox.showerror("Erro", "CPF é obrigatório!")
@@ -193,7 +170,7 @@ class TelaCadastroResponsavel:
         return True
     
     def _cadastrar_responsavel(self):
-        """Cadastra o responsável - VERSÃO CORRIGIDA."""
+        """ Cadastra o responsável. """
         
         if not self._validar_formulario():
             return
@@ -244,7 +221,7 @@ class TelaCadastroResponsavel:
                 pass
     
     def _limpar_formulario(self):
-        """Limpa todos os campos do formulário."""
+        """ Limpa todos os campos do formulário. """
         self.var_cpf.set("")
         self.var_nome.set("")
         self.var_telefone.set("")
@@ -252,3 +229,4 @@ class TelaCadastroResponsavel:
         
         # Foca no primeiro campo
         self.entry_cpf.focus()
+    

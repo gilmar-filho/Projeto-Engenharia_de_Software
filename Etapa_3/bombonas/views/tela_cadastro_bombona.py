@@ -9,37 +9,9 @@ class TelaCadastroBombona:
     """
     Tela simplificada para cadastrar novas bombonas.
     """
-    
-    # def __init__(self, parent, bombona_controller, responsavel_controller):
-    #     """
-    #     Inicializa a tela de cadastro.
-        
-    #     Args:
-    #         parent: Janela pai
-    #         bombona_controller: Controller de bombonas
-    #         responsavel_controller: Controller de responsáveis
-    #     """
-    #     self.parent = parent
-    #     self.bombona_controller = bombona_controller
-    #     self.responsavel_controller = responsavel_controller
-    #     self.janela = None
-        
-    #     # Variáveis dos campos
-    #     self.var_codigo = tk.StringVar()
-    #     self.var_volume = tk.StringVar()
-    #     self.var_tipo_residuo = tk.StringVar()
-    #     self.var_responsavel = tk.StringVar()
-        
-    #     # Lista de responsáveis
-    #     self.responsaveis_dict = {}
 
     def __init__(self, parent):
-        """
-        Inicializa a tela de cadastro.
-        
-        Args:
-            parent: Janela pai
-        """
+        """ Inicializa a tela de cadastro. """
         self.parent = parent
         self.janela = None
         
@@ -60,7 +32,7 @@ class TelaCadastroBombona:
         self.responsaveis_dict = {}
     
     def exibir_formulario(self):
-        """Exibe a tela de cadastro."""
+        """ Exibe a tela de cadastro. """
         
         # Cria nova janela
         self.janela = tk.Toplevel(self.parent)
@@ -82,14 +54,14 @@ class TelaCadastroBombona:
         self.entry_codigo.focus()
     
     def _centralizar_janela(self):
-        """Centraliza a janela na tela."""
+        """ Centraliza a janela na tela. """
         self.janela.update_idletasks()
         x = (self.janela.winfo_screenwidth() // 2) - (450 // 2)
         y = (self.janela.winfo_screenheight() // 2) - (400 // 2)
         self.janela.geometry(f"450x400+{x}+{y}")
     
     def _carregar_responsaveis(self):
-        """Carrega a lista de responsáveis."""
+        """ Carrega a lista de responsáveis. """
         
         try:
             responsaveis = self.responsavel_controller.listar_responsaveis()
@@ -121,7 +93,7 @@ class TelaCadastroBombona:
             return False
     
     def _criar_formulario(self):
-        """Cria o formulário de cadastro."""
+        """ Cria o formulário de cadastro. """
         
         # Frame principal
         main_frame = ttk.Frame(self.janela, padding="20")
@@ -161,7 +133,7 @@ class TelaCadastroBombona:
             tipos_residuo = self.bombona_controller.get_tipos_residuos_validos()
         except:
             # Fallback - apenas os tipos disponíveis no sistema
-            tipos_residuo = ["Químico", "Biológico"]
+            tipos_residuo = ["QUÍMICO", "BIOLÓGICO"]
             
         self.combo_tipo_residuo = ttk.Combobox(
             main_frame,
@@ -200,7 +172,6 @@ class TelaCadastroBombona:
             text="Cadastrar",
             command=self._cadastrar_bombona,
             width=15,
-            # padding=(5, 5)
         )
         self.btn_cadastrar.pack(side=tk.LEFT, padx=(0, 10))
         
@@ -222,12 +193,12 @@ class TelaCadastroBombona:
         )
         self.btn_cancelar.pack(side=tk.LEFT)
         
-        # Configurar Enter para cadastrar
+        # Enter para cadastrar
         self.janela.bind('<Return>', lambda _: self._cadastrar_bombona())
         self.janela.bind('<Escape>', lambda _: self.janela.destroy())
     
     def _validar_formulario(self):
-        """Valida o formulário antes do cadastro."""
+        """ Valida o formulário antes do cadastro. """
         
         if not self.var_codigo.get().strip():
             messagebox.showerror("Erro", "Código é obrigatório!")
@@ -263,7 +234,7 @@ class TelaCadastroBombona:
         return True
     
     def _cadastrar_bombona(self):
-        """Cadastra a bombona - VERSÃO CORRIGIDA."""
+        """ Cadastra a bombona. """
         
         if not self._validar_formulario():
             return
@@ -325,7 +296,7 @@ class TelaCadastroBombona:
                 pass
     
     def _limpar_formulario(self):
-        """Limpa todos os campos do formulário."""
+        """ Limpa todos os campos do formulário. """
         self.var_codigo.set("")
         self.var_volume.set("")
         self.var_tipo_residuo.set("")

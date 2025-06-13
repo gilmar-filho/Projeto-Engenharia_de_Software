@@ -15,17 +15,14 @@ class BombonaDAO(BombonaDAOInterface):
     """
     
     def __init__(self, arquivo_csv: str = "data/bombonas.csv"):
-        """
-        Inicializa o DAO da Bombona.
-        
-        Args:
-            arquivo_csv (str): Caminho para o arquivo CSV
-        """
+        """ Inicializa o DAO da Bombona. """
+
         self.arquivo_csv = arquivo_csv
         self._criar_arquivo_se_nao_existir()
     
     def _criar_arquivo_se_nao_existir(self) -> None:
-        """Cria o arquivo CSV se ele não existir."""
+        """ Cria o arquivo CSV se ele não existir. """
+
         if not os.path.exists(self.arquivo_csv):
             # Cria o diretório se não existir
             os.makedirs(os.path.dirname(self.arquivo_csv), exist_ok=True)
@@ -41,10 +38,8 @@ class BombonaDAO(BombonaDAOInterface):
         
         IMPORTANTE: Esta função carrega apenas os dados básicos das bombonas.
         A referência ao objeto Responsavel deve ser resolvida pelo Controller.
-        
-        Returns:
-            List[Bombona]: Lista de bombonas com responsavel=None
         """
+
         bombonas = []
         
         try:
@@ -72,12 +67,8 @@ class BombonaDAO(BombonaDAOInterface):
         return bombonas
     
     def _salvar_bombonas(self, bombonas: List[Bombona]) -> None:
-        """
-        Salva todas as bombonas no arquivo CSV.
-        
-        Args:
-            bombonas (List[Bombona]): Lista de bombonas a serem salvas
-        """
+        """ Salva todas as bombonas no arquivo CSV. """
+
         try:
             with open(self.arquivo_csv, 'w', newline='', encoding='utf-8') as arquivo:
                 writer = csv.writer(arquivo)
@@ -102,15 +93,8 @@ class BombonaDAO(BombonaDAOInterface):
             raise
     
     def salvar(self, bombona: Bombona) -> None:
-        """
-        Salva uma bombona no repositório.
-        
-        Args:
-            bombona (Bombona): Bombona a ser salva
-            
-        Raises:
-            ValueError: Se já existe uma bombona com o mesmo código
-        """
+        """ Salva uma bombona no repositório. """
+
         # Carrega bombonas existentes
         bombonas_existentes = self._carregar_bombonas()
         
@@ -124,24 +108,13 @@ class BombonaDAO(BombonaDAOInterface):
         self._salvar_bombonas(bombonas_existentes)
     
     def listar_todas(self) -> List[Bombona]:
-        """
-        Lista todas as bombonas.
-        
-        Returns:
-            List[Bombona]: Lista com todas as bombonas
-        """
+        """ Lista todas as bombonas. """
+
         return self._carregar_bombonas()
     
     def buscar_por_codigo(self, codigo: str) -> Optional[Bombona]:
-        """
-        Busca uma bombona pelo código.
-        
-        Args:
-            codigo (str): Código da bombona
-            
-        Returns:
-            Optional[Bombona]: Bombona encontrada ou None
-        """
+        """ Busca uma bombona pelo código. """
+
         bombonas = self._carregar_bombonas()
         for bombona in bombonas:
             if bombona.get_codigo() == codigo:
@@ -149,15 +122,8 @@ class BombonaDAO(BombonaDAOInterface):
         return None
     
     def buscar_por_responsavel(self, cpf: str) -> List[Bombona]:
-        """
-        Busca bombonas por CPF do responsável.
-        
-        Args:
-            cpf (str): CPF do responsável
-            
-        Returns:
-            List[Bombona]: Lista de bombonas do responsável
-        """
+        """ Busca bombonas por CPF do responsável. """
+
         bombonas = self._carregar_bombonas()
         bombonas_responsavel = []
         
@@ -175,26 +141,15 @@ class BombonaDAO(BombonaDAOInterface):
         return bombonas_responsavel
     
     def remover(self, bombona: Bombona) -> None:
-        """
-        Remove uma bombona do repositório.
-        
-        Args:
-            bombona (Bombona): Bombona a ser removida
-        """
+        """ Remove uma bombona do repositório. """
+
         bombonas = self._carregar_bombonas()
         bombonas_filtradas = [b for b in bombonas if b.get_codigo() != bombona.get_codigo()]
         self._salvar_bombonas(bombonas_filtradas)
     
     def atualizar(self, bombona: Bombona) -> None:
-        """
-        Atualiza os dados de uma bombona.
-        
-        Args:
-            bombona (Bombona): Bombona com dados atualizados
-            
-        Raises:
-            ValueError: Se a bombona não for encontrada
-        """
+        """ Atualiza os dados de uma bombona. """
+
         bombonas = self._carregar_bombonas()
         for i, b in enumerate(bombonas):
             if b.get_codigo() == bombona.get_codigo():
@@ -204,13 +159,6 @@ class BombonaDAO(BombonaDAOInterface):
         raise ValueError(f"Bombona com código {bombona.get_codigo()} não encontrada")
     
     def existe_codigo(self, codigo: str) -> bool:
-        """
-        Verifica se existe uma bombona com o código informado.
+        """ Verifica se existe uma bombona com o código informado. """
         
-        Args:
-            codigo (str): Código a ser verificado
-            
-        Returns:
-            bool: True se existe, False caso contrário
-        """
         return self.buscar_por_codigo(codigo) is not None

@@ -24,75 +24,36 @@ class ResponsavelDAOInterface(ABC):
     
     @abstractmethod
     def salvar(self, responsavel: Responsavel) -> None:
-        """
-        Salva um responsável no repositório de dados.
-        
-        Args:
-            responsavel (Responsavel): Responsável a ser salvo
-            
-        Raises:
-            ValueError: Se já existe um responsável com o mesmo CPF
-        """
+        """ Salva um responsável no repositório de dados. """
+
         pass
     
     @abstractmethod
     def listar_todos(self) -> List[Responsavel]:
-        """
-        Lista todos os responsáveis do repositório.
-        
-        Returns:
-            List[Responsavel]: Lista com todos os responsáveis cadastrados
-        """
+        """ Lista todos os responsáveis do repositório. """
+
         pass
     
     @abstractmethod
     def buscar_por_cpf(self, cpf: str) -> Optional[Responsavel]:
-        """
-        Busca um responsável pelo CPF.
-        
-        Args:
-            cpf (str): CPF do responsável (formato: apenas números)
-            
-        Returns:
-            Optional[Responsavel]: Responsável encontrado ou None se não existir
-        """
+        """ Busca um responsável pelo CPF. """
+
         pass
     
     @abstractmethod
     def remover(self, responsavel: Responsavel) -> None:
-        """
-        Remove um responsável do repositório.
-        
-        Args:
-            responsavel (Responsavel): Responsável a ser removido
-            
-        Raises:
-            ValueError: Se o responsável não existir no repositório
-        """
+        """ Remove um responsável do repositório. """
+
         pass
     
     @abstractmethod
     def atualizar(self, responsavel: Responsavel) -> None:
-        """
-        Atualiza os dados de um responsável existente.
-        
-        Args:
-            responsavel (Responsavel): Responsável com dados atualizados
-            
-        Raises:
-            ValueError: Se o responsável não for encontrado para atualização
-        """
+        """ Atualiza os dados de um responsável existente. """
+
         pass
     
     @abstractmethod
     def existe_cpf(self, cpf: str) -> bool:
-        """
-        Verifica se existe um responsável com o CPF informado.
+        """ Verifica se existe um responsável com o CPF informado. """
         
-        Args:
-            cpf (str): CPF a ser verificado (formato: apenas números)
-            
-        Returns:
-            bool: True se existe um responsável com esse CPF, False caso contrário
-        """
         pass

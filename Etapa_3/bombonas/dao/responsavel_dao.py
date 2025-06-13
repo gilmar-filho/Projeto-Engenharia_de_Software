@@ -15,17 +15,14 @@ class ResponsavelDAO(ResponsavelDAOInterface):
     """
     
     def __init__(self, arquivo_csv: str = "data/responsaveis.csv"):
-        """
-        Inicializa o DAO do Responsável.
-        
-        Args:
-            arquivo_csv (str): Caminho para o arquivo CSV
-        """
+        """ Inicializa o DAO do Responsável. """
+
         self.arquivo_csv = arquivo_csv
         self._criar_arquivo_se_nao_existir()
     
     def _criar_arquivo_se_nao_existir(self) -> None:
-        """Cria o arquivo CSV se ele não existir."""
+        """ Cria o arquivo CSV se ele não existir. """
+
         if not os.path.exists(self.arquivo_csv):
             # Cria o diretório se não existir
             os.makedirs(os.path.dirname(self.arquivo_csv), exist_ok=True)
@@ -36,12 +33,8 @@ class ResponsavelDAO(ResponsavelDAOInterface):
                 writer.writerow(['cpf', 'nome', 'telefone', 'setor'])
     
     def _carregar_responsaveis(self) -> List[Responsavel]:
-        """
-        Carrega os responsáveis do arquivo CSV.
-        
-        Returns:
-            List[Responsavel]: Lista de responsáveis carregados
-        """
+        """ Carrega os responsáveis do arquivo CSV. """
+
         responsaveis = []
         
         try:
@@ -65,12 +58,8 @@ class ResponsavelDAO(ResponsavelDAOInterface):
         return responsaveis
     
     def _salvar_responsaveis(self, responsaveis: List[Responsavel]) -> None:
-        """
-        Salva todos os responsáveis no arquivo CSV.
-        
-        Args:
-            responsaveis (List[Responsavel]): Lista de responsáveis a serem salvos
-        """
+        """ Salva todos os responsáveis no arquivo CSV. """
+
         try:
             with open(self.arquivo_csv, 'w', newline='', encoding='utf-8') as arquivo:
                 writer = csv.writer(arquivo)
@@ -88,15 +77,8 @@ class ResponsavelDAO(ResponsavelDAOInterface):
             raise
     
     def salvar(self, responsavel: Responsavel) -> None:
-        """
-        Salva um responsável no repositório.
-        
-        Args:
-            responsavel (Responsavel): Responsável a ser salvo
-            
-        Raises:
-            ValueError: Se já existe um responsável com o mesmo CPF
-        """
+        """ Salva um responsável no repositório. """
+
         # Carrega responsáveis existentes
         responsaveis_existentes = self._carregar_responsaveis()
         
@@ -110,24 +92,13 @@ class ResponsavelDAO(ResponsavelDAOInterface):
         self._salvar_responsaveis(responsaveis_existentes)
     
     def listar_todos(self) -> List[Responsavel]:
-        """
-        Lista todos os responsáveis.
-        
-        Returns:
-            List[Responsavel]: Lista com todos os responsáveis
-        """
+        """ Lista todos os responsáveis. """
+
         return self._carregar_responsaveis()
     
     def buscar_por_cpf(self, cpf: str) -> Optional[Responsavel]:
-        """
-        Busca um responsável pelo CPF.
-        
-        Args:
-            cpf (str): CPF do responsável
-            
-        Returns:
-            Optional[Responsavel]: Responsável encontrado ou None
-        """
+        """ Busca um responsável pelo CPF. """
+
         responsaveis = self._carregar_responsaveis()
         for responsavel in responsaveis:
             if responsavel.get_cpf() == cpf:
@@ -135,26 +106,15 @@ class ResponsavelDAO(ResponsavelDAOInterface):
         return None
     
     def remover(self, responsavel: Responsavel) -> None:
-        """
-        Remove um responsável do repositório.
-        
-        Args:
-            responsavel (Responsavel): Responsável a ser removido
-        """
+        """ Remove um responsável do repositório. """
+
         responsaveis = self._carregar_responsaveis()
         responsaveis_filtrados = [r for r in responsaveis if r.get_cpf() != responsavel.get_cpf()]
         self._salvar_responsaveis(responsaveis_filtrados)
     
     def atualizar(self, responsavel: Responsavel) -> None:
-        """
-        Atualiza os dados de um responsável.
-        
-        Args:
-            responsavel (Responsavel): Responsável com dados atualizados
-            
-        Raises:
-            ValueError: Se o responsável não for encontrado
-        """
+        """ Atualiza os dados de um responsável. """
+
         responsaveis = self._carregar_responsaveis()
         for i, r in enumerate(responsaveis):
             if r.get_cpf() == responsavel.get_cpf():
@@ -164,13 +124,6 @@ class ResponsavelDAO(ResponsavelDAOInterface):
         raise ValueError(f"Responsável com CPF {responsavel.get_cpf()} não encontrado")
     
     def existe_cpf(self, cpf: str) -> bool:
-        """
-        Verifica se existe um responsável com o CPF informado.
+        """ Verifica se existe um responsável com o CPF informado. """
         
-        Args:
-            cpf (str): CPF a ser verificado
-            
-        Returns:
-            bool: True se existe, False caso contrário
-        """
         return self.buscar_por_cpf(cpf) is not None
