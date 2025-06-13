@@ -21,17 +21,6 @@ class SistemaBombonas:
         self.root = None
         self.janela_login = None
 
-    def _inicializar_sistema(self): ### Parece não estar sendo usada ###
-        """Inicializa os componentes básicos do sistema."""
-        try:
-            print("Sistema inicializado com sucesso!")
-            
-        except Exception as e:
-            print(f"Erro ao inicializar sistema: {e}")
-            messagebox.showerror("Erro de Inicialização", 
-                f"Não foi possível inicializar o sistema:\n{e}")
-            sys.exit(1)
-
     def _iniciar_sistema_principal(self):
         """Inicia o sistema principal após login bem-sucedido."""
         try:
@@ -312,24 +301,11 @@ class SistemaBombonas:
         except Exception as e:
             messagebox.showerror("Erro Fatal", f"Erro ao executar sistema: {e}")
 
-def verificar_estrutura_projeto():
-    """Verifica se a estrutura básica do projeto existe."""
-    diretorios_necessarios = ['dao', 'controllers', 'views', 'models']
-
-    for diretorio in diretorios_necessarios:
-        if not os.path.exists(diretorio):
-            print(f"Aviso: Diretório '{diretorio}' não encontrado.")
-            print(f"Crie o diretório ou verifique a estrutura do projeto.")
-
-
 def main():
     """Função principal."""
     try:
         print("Iniciando Sistema de Gerenciamento de Bombonas...")
         print("Verificando estrutura do projeto...")
-
-        # Verifica estrutura básica
-        verificar_estrutura_projeto()
 
         print("Criando instância do sistema...")
 

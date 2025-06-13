@@ -15,7 +15,7 @@ class ResponsavelDAOInterface(ABC):
     
     Conforme o diagrama de classes, deve implementar:
     - salvar(r: Responsavel): void
-    - listarTodos(): List<Responsavel>
+    - listar_todos(): List<Responsavel>
     - buscarPorCPF(cpf: String): Responsavel
     - remover(r: Responsavel): void
     - atualizar(r: Responsavel): void

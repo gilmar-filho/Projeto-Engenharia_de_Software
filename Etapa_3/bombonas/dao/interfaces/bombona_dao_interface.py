@@ -15,7 +15,7 @@ class BombonaDAOInterface(ABC):
     
     Conforme o diagrama de classes, deve implementar:
     - salvar(b: Bombona): void
-    - listarTodas(): List<Bombona>
+    - listar_todas(): List<Bombona>
     - buscarPorCodigo(codigo: String): Bombona
     - buscarPorResponsavel(cpf: String): List<Bombona>
     - remover(b: Bombona): void

@@ -4,9 +4,6 @@ Tela de relatórios - Versão Simples e Intuitiva
 
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
-# import os
-# import csv
-# from fpdf import FPDF
 
 
 class TelaRelatorio:
