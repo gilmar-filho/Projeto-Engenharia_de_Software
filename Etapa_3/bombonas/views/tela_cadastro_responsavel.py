@@ -209,6 +209,7 @@ class TelaCadastroResponsavel:
             
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao cadastrar responsável:\n{str(e)}")
+            self.janela.focus()
         
         finally:
             # Só reabilita botão se widget ainda existir

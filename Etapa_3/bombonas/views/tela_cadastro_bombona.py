@@ -88,6 +88,7 @@ class TelaCadastroBombona:
             
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao carregar responsáveis:\n{str(e)}")
+            self.janela.focus()
             if self.janela:
                 self.janela.destroy()
             return False
@@ -249,6 +250,7 @@ class TelaCadastroBombona:
             
             if not cpf_responsavel:
                 messagebox.showerror("Erro", "Responsável selecionado é inválido!")
+                self.janela.focus()
                 return
             
             # Converte volume
@@ -284,6 +286,7 @@ class TelaCadastroBombona:
             
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao cadastrar bombona:\n{str(e)}")
+            self.janela.focus()
         
         finally:
             # Só reabilita botão se widget ainda existir

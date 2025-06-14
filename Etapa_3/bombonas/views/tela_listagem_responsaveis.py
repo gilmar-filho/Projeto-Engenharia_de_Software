@@ -146,6 +146,7 @@ class TelaListagemResponsaveis:
             
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao carregar responsáveis:\n{str(e)}")
+            self.janela.focus()
     
     def _obter_responsavel_selecionado(self):
         """ Obtém o responsável selecionado na tabela. """
@@ -153,6 +154,7 @@ class TelaListagemResponsaveis:
         selecao = self.tree.selection()
         if not selecao:
             messagebox.showwarning("Aviso", "Selecione um responsável na lista.")
+            self.janela.focus()
             return None
         
         # Pega os valores da linha selecionada
@@ -292,9 +294,11 @@ class TelaListagemResponsaveis:
                     janela_edicao.destroy()
                     # Recarrega a lista
                     self._carregar_responsaveis()
+                    self.janela.focus()
                 
             except Exception as e:
                 messagebox.showerror("Erro", f"Erro ao editar responsável:\n{str(e)}")
+                self.janela.focus()
         
         # Função para limpar campos (exceto CPF)
         def limpar_campos():
@@ -365,7 +369,10 @@ class TelaListagemResponsaveis:
                 messagebox.showinfo("Sucesso", "Responsável excluído com sucesso!")
                 # Recarrega a lista
                 self._carregar_responsaveis()
+                self.janela.focus()
+
             
         except Exception as e:
             # O controller já trata casos como responsável com bombonas
             messagebox.showerror("Erro", f"Erro ao excluir responsável:\n{str(e)}")
+            self.janela.focus()

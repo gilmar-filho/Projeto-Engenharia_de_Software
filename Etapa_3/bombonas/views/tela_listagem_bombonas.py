@@ -160,6 +160,7 @@ class TelaListagemBombonas:
             
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao carregar bombonas:\n{str(e)}")
+            self.janela.focus()
     
     def _obter_bombona_selecionada(self):
         """ Obtém a bombona selecionada na tabela. """
@@ -167,6 +168,7 @@ class TelaListagemBombonas:
         selecao = self.tree.selection()
         if not selecao:
             messagebox.showwarning("Aviso", "Selecione uma bombona na lista.")
+            self.janela.focus()
             return None
         
         # Pega os valores da linha selecionada
@@ -298,6 +300,7 @@ class TelaListagemBombonas:
             responsaveis_opcoes = []
             responsaveis_dict = {}
             messagebox.showerror("Erro", f"Erro ao carregar responsáveis: {e}")
+            self.janela.focus()
         
         combo_responsavel = ttk.Combobox(
             main_frame,
@@ -355,6 +358,7 @@ class TelaListagemBombonas:
                 
                 if not cpf_responsavel:
                     messagebox.showerror("Erro", "Responsável selecionado é inválido!")
+                    self.janela.focus()
                     return
                 
                 # Chama o controller para editar
@@ -370,9 +374,13 @@ class TelaListagemBombonas:
                     janela_edicao.destroy()
                     # Recarrega a lista
                     self._carregar_bombonas()
+                    self.janela.focus()
+
                 
             except Exception as e:
                 messagebox.showerror("Erro", f"Erro ao editar bombona:\n{str(e)}")
+                self.janela.focus()
+
         
         # Função para limpar campos (exceto código)
         def limpar_campos():
@@ -443,6 +451,10 @@ class TelaListagemBombonas:
                 messagebox.showinfo("Sucesso", "Bombona excluída com sucesso!")
                 # Recarrega a lista
                 self._carregar_bombonas()
+                self.janela.focus()
+
             
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao excluir bombona:\n{str(e)}")
+            self.janela.focus()
+

@@ -83,6 +83,7 @@ class TelaRelatorio:
             
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao carregar dados: {str(e)}")
+            self.janela.focus()
     
     def _criar_interface(self):
         """ Cria a interface da tela de relatórios. """
@@ -252,6 +253,8 @@ class TelaRelatorio:
             
         except Exception as e:
             print(f"Erro ao aplicar filtros: {e}")
+            self.janela.focus()
+
             return []
     
     def _verificar_filtros_ativos(self):
@@ -276,6 +279,7 @@ class TelaRelatorio:
             filtros_ativos = self._verificar_filtros_ativos()
             if not filtros_ativos:
                 messagebox.showwarning("Aviso", "Aplique pelo menos um filtro antes de baixar.")
+                self.janela.focus()
                 return
             
             # Aplica filtros
@@ -284,6 +288,8 @@ class TelaRelatorio:
             
             if not bombonas_filtradas:
                 messagebox.showwarning("Aviso", "Nenhuma bombona encontrada com os filtros aplicados.")
+                self.janela.focus()
+
                 return
             
             # Gera arquivo
@@ -292,6 +298,7 @@ class TelaRelatorio:
             
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao baixar relatório filtrado:\n{str(e)}")
+            self.janela.focus()
     
     def _baixar_bombonas_completo(self):
         """ Baixa relatório completo de bombonas. """
@@ -299,6 +306,8 @@ class TelaRelatorio:
             bombonas = self.bombona_controller.listar_bombonas()
             if not bombonas:
                 messagebox.showwarning("Aviso", "Nenhuma bombona cadastrada.")
+                self.janela.focus()
+
                 return
             
             formato = self.var_formato_arquivo.get().lower()
@@ -306,6 +315,7 @@ class TelaRelatorio:
             
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao baixar relatório de bombonas:\n{str(e)}")
+            self.janela.focus()
     
     def _baixar_responsaveis_completo(self):
         """ Baixa relatório completo de responsáveis. """
@@ -320,6 +330,7 @@ class TelaRelatorio:
             
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao baixar relatório de responsáveis:\n{str(e)}")
+            self.janela.focus()
 
     def _gerar_arquivo_bombonas(self, bombonas, filtros_ativos, formato):
         """ Solicita geração de arquivo ao controller. """
@@ -348,6 +359,7 @@ class TelaRelatorio:
             )
             
             messagebox.showinfo("Sucesso", f"Relatório salvo com sucesso!\n\nLocal: {arquivo_gerado}")
+            self.janela.focus()
             
             if messagebox.askyesno("Abrir Arquivo", "Deseja abrir o relatório agora?"):
                 import os
@@ -355,6 +367,7 @@ class TelaRelatorio:
                 
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao gerar relatório:\n{str(e)}")
+            self.janela.focus()
     
     def _gerar_arquivo_responsaveis(self, responsaveis, formato):
         """ Solicita geração de arquivo de responsáveis ao controller. """
@@ -382,6 +395,7 @@ class TelaRelatorio:
             )
             
             messagebox.showinfo("Sucesso", f"Relatório salvo com sucesso!\n\nLocal: {arquivo_gerado}")
+            self.janela.focus()
             
             if messagebox.askyesno("Abrir Arquivo", "Deseja abrir o relatório agora?"):
                 import os
@@ -389,4 +403,5 @@ class TelaRelatorio:
                 
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao gerar relatório:\n{str(e)}")
+            self.janela.focus()
     
