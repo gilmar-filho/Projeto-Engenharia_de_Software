@@ -349,37 +349,3 @@ class BombonaController:
             print(f"Erro ao filtrar bombonas por tipo: {e}")
             return []
         
-
-
-
-    # def _resolver_referencias_responsaveis(self, bombonas: List[Bombona]) -> List[Bombona]:
-    #     """ Resolve as referências aos responsáveis para uma lista de bombonas. """
-
-    #     bombonas_resolvidas = []
-
-    #     for bombona in bombonas:
-    #         # Se a bombona já tem o responsável carregado, mantém
-    #         if bombona.get_responsavel():
-    #             bombonas_resolvidas.append(bombona)
-    #             continue
-
-    #         # Se tem o CPF armazenado temporariamente, resolve a referência
-    #         if hasattr(bombona, '_cpf_responsavel') and bombona._cpf_responsavel:
-    #             responsavel = self._responsavel_dao.buscar_por_cpf(bombona._cpf_responsavel)
-    #             if responsavel:
-    #                 # Cria uma nova bombona com o responsável resolvido
-    #                 bombona_resolvida = Bombona(
-    #                     codigo=bombona.get_codigo(),
-    #                     volume=bombona.get_volume(),
-    #                     tipo_residuo=bombona.get_tipo_residuo(),
-    #                     responsavel=responsavel
-    #                 )
-    #                 bombonas_resolvidas.append(bombona_resolvida)
-    #             else:
-    #                 # Mantém a bombona original se não encontrar o responsável
-    #                 bombonas_resolvidas.append(bombona)
-    #         else:
-    #             # Mantém a bombona original se não tem CPF
-    #             bombonas_resolvidas.append(bombona)
-
-    #     return bombonas_resolvidas
