@@ -359,6 +359,7 @@ class TelaListagemResponsaveis:
         )
         
         if not resposta:
+            self.janela.focus()
             return
         
         try:

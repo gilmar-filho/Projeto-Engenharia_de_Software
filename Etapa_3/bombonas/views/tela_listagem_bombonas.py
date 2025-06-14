@@ -441,6 +441,7 @@ class TelaListagemBombonas:
         )
         
         if not resposta:
+            self.janela.focus()
             return
         
         try:
