@@ -52,22 +52,24 @@ class BombonaController:
             bombona_temp = self._bombona_factory.criar_bombona(codigo, volume, tipo_residuo)
 
             # Controller valida e busca responsável (acesso ao BD)
-            cpf_formatado = self._validar_e_formatar_cpf(cpf)
+            cpf_formatado = self._normalizar_cpf(cpf)
             responsavel = self._responsavel_dao.buscar_por_cpf(cpf_formatado)
             
             if not responsavel:
                 raise ValueError(f"Responsável com CPF {cpf} não encontrado")
 
             # Controller cria bombona final com responsável vinculado
-            bombona_final = Bombona(
-                codigo=bombona_temp.get_codigo(),
-                volume=bombona_temp.get_volume(),
-                tipo_residuo=bombona_temp.get_tipo_residuo(),
-                responsavel=responsavel
-            )
+            # bombona_final = Bombona(
+            #     codigo=bombona_temp.get_codigo(),
+            #     volume=bombona_temp.get_volume(),
+            #     tipo_residuo=bombona_temp.get_tipo_residuo(),
+            #     responsavel=responsavel
+            # )
+
+            bombona_temp.set_responsavel(responsavel)
 
             # Salva a bombona com responsável vinculado
-            self._bombona_dao.salvar(bombona_final)
+            self._bombona_dao.salvar(bombona_temp)
 
             return True
 
@@ -79,8 +81,9 @@ class BombonaController:
         """ Lista todas as bombonas cadastradas com as referências aos responsáveis resolvidas. """
 
         try:
-            bombonas = self._bombona_dao.listar_todas()
-            return self._resolver_referencias_responsaveis(bombonas)
+            # bombonas = self._bombona_dao.listar_todas()
+            # return self._resolver_referencias_responsaveis(bombonas)
+            return self._bombona_dao.listar_todas()
         except Exception as e:
             print(f"Erro ao listar bombonas: {e}")
             return []
@@ -113,7 +116,7 @@ class BombonaController:
             bombona_temp = self._bombona_factory.criar_bombona(codigo, novo_volume, novo_tipo_residuo)
 
             # Controller valida e busca responsável
-            cpf_formatado = self._validar_e_formatar_cpf(cpf_responsavel)
+            cpf_formatado = self._normalizar_cpf(cpf_responsavel)
             responsavel = self._responsavel_dao.buscar_por_cpf(cpf_formatado)
             
             if not responsavel:
@@ -140,9 +143,10 @@ class BombonaController:
         """ Busca bombonas por CPF do responsável com as referências resolvidas. """
 
         try:
-            cpf_formatado = self._validar_e_formatar_cpf(cpf)
-            bombonas = self._bombona_dao.buscar_por_responsavel(cpf_formatado)
-            return self._resolver_referencias_responsaveis(bombonas)
+            cpf_formatado = self._normalizar_cpf(cpf)
+            # bombonas = self._bombona_dao.buscar_por_responsavel(cpf_formatado)
+            # return self._resolver_referencias_responsaveis(bombonas)
+            return self._bombona_dao.buscar_por_responsavel(cpf_formatado)
         except Exception as e:
             print(f"Erro ao buscar bombonas por responsável: {e}")
             return []
@@ -290,39 +294,7 @@ class BombonaController:
         pdf.output(arquivo)
         return arquivo
 
-    def _resolver_referencias_responsaveis(self, bombonas: List[Bombona]) -> List[Bombona]:
-        """ Resolve as referências aos responsáveis para uma lista de bombonas. """
-
-        bombonas_resolvidas = []
-
-        for bombona in bombonas:
-            # Se a bombona já tem o responsável carregado, mantém
-            if bombona.get_responsavel():
-                bombonas_resolvidas.append(bombona)
-                continue
-
-            # Se tem o CPF armazenado temporariamente, resolve a referência
-            if hasattr(bombona, '_cpf_responsavel') and bombona._cpf_responsavel:
-                responsavel = self._responsavel_dao.buscar_por_cpf(bombona._cpf_responsavel)
-                if responsavel:
-                    # Cria uma nova bombona com o responsável resolvido
-                    bombona_resolvida = Bombona(
-                        codigo=bombona.get_codigo(),
-                        volume=bombona.get_volume(),
-                        tipo_residuo=bombona.get_tipo_residuo(),
-                        responsavel=responsavel
-                    )
-                    bombonas_resolvidas.append(bombona_resolvida)
-                else:
-                    # Mantém a bombona original se não encontrar o responsável
-                    bombonas_resolvidas.append(bombona)
-            else:
-                # Mantém a bombona original se não tem CPF
-                bombonas_resolvidas.append(bombona)
-
-        return bombonas_resolvidas
-
-    def _validar_e_formatar_cpf(self, cpf: str) -> str:
+    def _normalizar_cpf(self, cpf: str) -> str:
         """ Valida e formata o CPF removendo caracteres não numéricos. """
 
         import re
@@ -377,3 +349,37 @@ class BombonaController:
             print(f"Erro ao filtrar bombonas por tipo: {e}")
             return []
         
+
+
+
+    # def _resolver_referencias_responsaveis(self, bombonas: List[Bombona]) -> List[Bombona]:
+    #     """ Resolve as referências aos responsáveis para uma lista de bombonas. """
+
+    #     bombonas_resolvidas = []
+
+    #     for bombona in bombonas:
+    #         # Se a bombona já tem o responsável carregado, mantém
+    #         if bombona.get_responsavel():
+    #             bombonas_resolvidas.append(bombona)
+    #             continue
+
+    #         # Se tem o CPF armazenado temporariamente, resolve a referência
+    #         if hasattr(bombona, '_cpf_responsavel') and bombona._cpf_responsavel:
+    #             responsavel = self._responsavel_dao.buscar_por_cpf(bombona._cpf_responsavel)
+    #             if responsavel:
+    #                 # Cria uma nova bombona com o responsável resolvido
+    #                 bombona_resolvida = Bombona(
+    #                     codigo=bombona.get_codigo(),
+    #                     volume=bombona.get_volume(),
+    #                     tipo_residuo=bombona.get_tipo_residuo(),
+    #                     responsavel=responsavel
+    #                 )
+    #                 bombonas_resolvidas.append(bombona_resolvida)
+    #             else:
+    #                 # Mantém a bombona original se não encontrar o responsável
+    #                 bombonas_resolvidas.append(bombona)
+    #         else:
+    #             # Mantém a bombona original se não tem CPF
+    #             bombonas_resolvidas.append(bombona)
+
+    #     return bombonas_resolvidas

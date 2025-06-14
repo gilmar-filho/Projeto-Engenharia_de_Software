@@ -305,8 +305,6 @@ def main():
     """Função principal."""
     try:
         print("Iniciando Sistema de Gerenciamento de Bombonas...")
-        print("Verificando estrutura do projeto...")
-
         print("Criando instância do sistema...")
 
         # Cria e executa o sistema

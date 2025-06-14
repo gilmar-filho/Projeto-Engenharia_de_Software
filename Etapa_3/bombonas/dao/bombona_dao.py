@@ -33,36 +33,36 @@ class BombonaDAO(BombonaDAOInterface):
                 writer.writerow(['codigo', 'volume', 'tipo_residuo', 'cpf_responsavel'])
     
     def _carregar_bombonas(self) -> List[Bombona]:
-        """
-        Carrega as bombonas do arquivo CSV.
+        # Importação temporária de ResponsavelDAO para resolver a referência de CPFs no .csv
+        from dao.responsavel_dao import ResponsavelDAO
+        responsavel_dao = ResponsavelDAO()
         
-        IMPORTANTE: Esta função carrega apenas os dados básicos das bombonas.
-        A referência ao objeto Responsavel deve ser resolvida pelo Controller.
-        """
-
         bombonas = []
         
         try:
             with open(self.arquivo_csv, 'r', encoding='utf-8') as arquivo:
                 reader = csv.DictReader(arquivo)
                 for linha in reader:
-                    if linha['codigo']:  # Pula linhas vazias
-                        # Cria uma bombona temporária apenas com os dados básicos
-                        # O Controller será responsável por resolver a referência do responsável
+                    if linha['codigo']:
+                        # Como cadastro sempre vincula responsável, 
+                        # CPF sempre existirá e será válido
+                        responsavel = responsavel_dao.buscar_por_cpf(linha['cpf_responsavel'])
+                        
+                        # Se responsável não existir, é erro de dados
+                        if not responsavel:
+                            print(f"ERRO: Responsável {linha['cpf_responsavel']} não encontrado para bombona {linha['codigo']}")
+                            continue  # Pula esta bombona
+                        
                         bombona = Bombona(
                             codigo=linha['codigo'],
                             volume=float(linha['volume']),
                             tipo_residuo=linha['tipo_residuo'],
-                            responsavel=None  # Será resolvido pelo Controller
+                            responsavel=responsavel  # Sempre terá responsável
                         )
-                        # Armazena o CPF para que o Controller possa resolver a referência
-                        bombona._cpf_responsavel = linha['cpf_responsavel']
                         bombonas.append(bombona)
-        except FileNotFoundError:
-            bombonas = []
         except Exception as e:
             print(f"Erro ao carregar bombonas: {e}")
-            bombonas = []
+            return []
         
         return bombonas
     
@@ -162,3 +162,40 @@ class BombonaDAO(BombonaDAOInterface):
         """ Verifica se existe uma bombona com o código informado. """
         
         return self.buscar_por_codigo(codigo) is not None
+    
+
+
+
+    # def _carregar_bombonas(self) -> List[Bombona]:
+    #     """
+    #     Carrega as bombonas do arquivo CSV.
+        
+    #     IMPORTANTE: Esta função carrega apenas os dados básicos das bombonas.
+    #     A referência ao objeto Responsavel deve ser resolvida pelo Controller.
+    #     """
+
+    #     bombonas = []
+        
+    #     try:
+    #         with open(self.arquivo_csv, 'r', encoding='utf-8') as arquivo:
+    #             reader = csv.DictReader(arquivo)
+    #             for linha in reader:
+    #                 if linha['codigo']:  # Pula linhas vazias
+    #                     # Cria uma bombona temporária apenas com os dados básicos
+    #                     # O Controller será responsável por resolver a referência do responsável
+    #                     bombona = Bombona(
+    #                         codigo=linha['codigo'],
+    #                         volume=float(linha['volume']),
+    #                         tipo_residuo=linha['tipo_residuo'],
+    #                         responsavel=None  # Será resolvido pelo Controller
+    #                     )
+    #                     # Armazena o CPF para que o Controller possa resolver a referência
+    #                     bombona._cpf_responsavel = linha['cpf_responsavel']
+    #                     bombonas.append(bombona)
+    #     except FileNotFoundError:
+    #         bombonas = []
+    #     except Exception as e:
+    #         print(f"Erro ao carregar bombonas: {e}")
+    #         bombonas = []
+        
+    #     return bombonas
