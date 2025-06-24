@@ -58,14 +58,6 @@ class BombonaController:
             if not responsavel:
                 raise ValueError(f"Responsável com CPF {cpf} não encontrado")
 
-            # Controller cria bombona final com responsável vinculado
-            # bombona_final = Bombona(
-            #     codigo=bombona_temp.get_codigo(),
-            #     volume=bombona_temp.get_volume(),
-            #     tipo_residuo=bombona_temp.get_tipo_residuo(),
-            #     responsavel=responsavel
-            # )
-
             bombona_temp.set_responsavel(responsavel)
 
             # Salva a bombona com responsável vinculado
@@ -81,8 +73,6 @@ class BombonaController:
         """ Lista todas as bombonas cadastradas com as referências aos responsáveis resolvidas. """
 
         try:
-            # bombonas = self._bombona_dao.listar_todas()
-            # return self._resolver_referencias_responsaveis(bombonas)
             return self._bombona_dao.listar_todas()
         except Exception as e:
             print(f"Erro ao listar bombonas: {e}")
@@ -123,15 +113,10 @@ class BombonaController:
                 raise ValueError(f"Responsável com CPF {cpf_responsavel} não encontrado")
 
             # Controller cria bombona final com responsável vinculado
-            bombona_atualizada = Bombona(
-                codigo=bombona_temp.get_codigo(),
-                volume=bombona_temp.get_volume(),
-                tipo_residuo=bombona_temp.get_tipo_residuo(),
-                responsavel=responsavel
-            )
+            bombona_temp.set_responsavel(responsavel)
 
             # Atualiza a bombona
-            self._bombona_dao.atualizar(bombona_atualizada)
+            self._bombona_dao.atualizar(bombona_temp)
 
             return True
 
@@ -144,8 +129,6 @@ class BombonaController:
 
         try:
             cpf_formatado = self._normalizar_cpf(cpf)
-            # bombonas = self._bombona_dao.buscar_por_responsavel(cpf_formatado)
-            # return self._resolver_referencias_responsaveis(bombonas)
             return self._bombona_dao.buscar_por_responsavel(cpf_formatado)
         except Exception as e:
             print(f"Erro ao buscar bombonas por responsável: {e}")

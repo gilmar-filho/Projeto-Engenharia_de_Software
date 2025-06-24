@@ -95,11 +95,7 @@ class SistemaBombonas:
         menubar = tk.Menu(self.root)
         self.root.config(menu=menubar)
 
-        # Adiciona espaços vazios para empurrar o menu Ajuda para a direita
-        # Isso é uma técnica simples para alinhar à direita
-        menubar.add_command(label="", state="disabled")  # Espaço invisível
-
-        # Menu Ajuda (alinhado à direita)
+        # Menu Ajuda
         menu_ajuda = tk.Menu(menubar, tearoff=0)
         menubar.add_cascade(label="Ajuda", menu=menu_ajuda)
         menu_ajuda.add_command(label="Sobre", command=self._mostrar_sobre)

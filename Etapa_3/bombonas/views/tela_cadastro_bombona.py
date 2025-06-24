@@ -71,8 +71,11 @@ class TelaCadastroBombona:
             
             for resp in responsaveis:
                 opcao = f"{resp.get_nome()} - CPF: {resp.get_cpf()}"
+                       # "João da Silva - CPF: 12345678910"
                 self.responsaveis_opcoes.append(opcao)
                 self.responsaveis_dict[opcao] = resp.get_cpf()
+                       # "João da Silva - CPF: 12345678910": "12345678910",
+                       # ...
             
             if not self.responsaveis_opcoes:
                 messagebox.showwarning(
