@@ -1,0 +1,645 @@
+======================================================================
+RELATÓRIO DE TESTES E2E - SISTEMA DE BOMBONAS
+======================================================================
+Data/Hora: 25/06/2025 11:01:54
+Simulando comportamento do Cypress para Tkinter
+======================================================================
+
+
+======================================================================
+EXECUTANDO CLASSE: TestesLogin
+======================================================================
+
+============================================================
+TESTE: Exibir tela de login
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+[PASSOU] Exibir tela de login
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+============================================================
+TESTE: Rejeitar login com campos vazios
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Pressionando: enter
+Imagem visível: login_screen.png
+[PASSOU] Rejeitar login com campos vazios
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+============================================================
+TESTE: Login com credenciais válidas
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Imagem encontrada: main_interface.png
+[PASSOU] Login com credenciais válidas
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+============================================================
+TESTE: Rejeitar credenciais inválidas
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: usuario_errado
+Pressionando: tab
+Digitando: senha_errada
+Pressionando: enter
+Imagem visível: login_screen.png
+[PASSOU] Rejeitar credenciais inválidas
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+======================================================================
+EXECUTANDO CLASSE: TestesResponsavel
+======================================================================
+
+============================================================
+TESTE: Criar responsável válido
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Imagem encontrada: main_interface.png
+Procurando por: btn_cadastrar_responsavel.png
+Clicou em: btn_cadastrar_responsavel.png
+Digitando: 12345678909
+Pressionando: tab
+Digitando: João Silva Teste
+Pressionando: tab
+Digitando: 11999887766
+Pressionando: tab
+Digitando: LABORATORIO
+Pressionando: enter
+Imagem visível: success_message.png
+[PASSOU] Criar responsável com dados válidos
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+============================================================
+TESTE: Editar responsável
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Imagem encontrada: main_interface.png
+Procurando por: btn_cadastrar_responsavel.png
+Clicou em: btn_cadastrar_responsavel.png
+Digitando: 98765432100
+Pressionando: tab
+Digitando: Maria Santos Original
+Pressionando: tab
+Digitando: 11988776655
+Pressionando: tab
+Digitando: FINANCEIRO
+Pressionando: enter
+Fechando possíveis diálogos...
+Pressionando: enter
+Pressionando: escape
+Procurando por: btn_listar_responsaveis.png
+Clicou em: btn_listar_responsaveis.png
+Procurando por: first_list_item.png
+Imagem não encontrada após 5s: first_list_item.png
+[FALHOU] Editar responsável
+         Erro: Não encontrou item na lista para editar
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+============================================================
+TESTE: Rejeitar campos vazios no cadastro de responsável
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Imagem encontrada: main_interface.png
+Procurando por: btn_cadastrar_responsavel.png
+Clicou em: btn_cadastrar_responsavel.png
+Pressionando: enter
+Erro ao verificar imagem: 
+Erro ao verificar imagem: 
+[PASSOU] Rejeitar cadastro com campos vazios
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+============================================================
+TESTE: Rejeitar CPF inválido
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Imagem encontrada: main_interface.png
+Procurando por: btn_cadastrar_responsavel.png
+Clicou em: btn_cadastrar_responsavel.png
+Digitando: 11111111111
+Pressionando: tab
+Digitando: Nome Teste
+Pressionando: tab
+Digitando: 11999887766
+Pressionando: tab
+Digitando: SETOR
+Pressionando: enter
+Imagem visível: error_message.png
+[PASSOU] Rejeitar CPF inválido (dígitos iguais)
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+============================================================
+TESTE: Rejeitar CPF com tamanho incorreto
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Imagem encontrada: main_interface.png
+Procurando por: btn_cadastrar_responsavel.png
+Clicou em: btn_cadastrar_responsavel.png
+Digitando: 123456789
+Pressionando: tab
+Digitando: Nome Teste
+Pressionando: tab
+Digitando: 11999887766
+Pressionando: tab
+Digitando: SETOR
+Pressionando: enter
+Erro ao verificar imagem: 
+Erro ao verificar imagem: 
+[PASSOU] Rejeitar CPF com menos de 11 dígitos
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+============================================================
+TESTE: Remover responsável sem bombonas
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Imagem encontrada: main_interface.png
+Procurando por: btn_cadastrar_responsavel.png
+Clicou em: btn_cadastrar_responsavel.png
+Digitando: 55544433322
+Pressionando: tab
+Digitando: Teste Remocao
+Pressionando: tab
+Digitando: 11977665544
+Pressionando: tab
+Digitando: TEMPORARIO
+Pressionando: enter
+Fechando possíveis diálogos...
+Pressionando: enter
+Pressionando: escape
+Procurando por: btn_listar_responsaveis.png
+Clicou em: btn_listar_responsaveis.png
+Procurando por: first_list_item.png
+Imagem não encontrada após 5s: first_list_item.png
+[FALHOU] Remover responsável sem bombonas
+         Erro: Não encontrou item na lista para remover
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+======================================================================
+EXECUTANDO CLASSE: TestesBombona
+======================================================================
+
+============================================================
+TESTE: Criar bombona válida
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Imagem encontrada: main_interface.png
+Procurando por: btn_cadastrar_responsavel.png
+Clicou em: btn_cadastrar_responsavel.png
+Digitando: 11122233344
+Pressionando: tab
+Digitando: Responsavel Bombona
+Pressionando: tab
+Digitando: 11966554433
+Pressionando: tab
+Digitando: QUIMICA
+Pressionando: enter
+Fechando possíveis diálogos...
+Pressionando: enter
+Pressionando: escape
+Procurando por: btn_cadastrar_bombona.png
+Clicou em: btn_cadastrar_bombona.png
+Digitando: LAB-001
+Pressionando: tab
+Digitando: 50.5
+Pressionando: tab
+Pressionando: down
+Pressionando: tab
+Pressionando: down
+Pressionando: enter
+Erro ao verificar imagem: 
+[FALHOU] Criar bombona com dados válidos
+         Erro: Não conseguiu criar bombona
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+============================================================
+TESTE: Editar bombona
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Imagem encontrada: main_interface.png
+Procurando por: btn_listar_bombonas.png
+Clicou em: btn_listar_bombonas.png
+Procurando por: first_list_item.png
+Imagem não encontrada após 5s: first_list_item.png
+[FALHOU] Editar bombona
+         Erro: Não encontrou bombona na lista para editar
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+============================================================
+TESTE: Rejeitar campos vazios no cadastro de bombona
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Imagem encontrada: main_interface.png
+Procurando por: btn_cadastrar_bombona.png
+Clicou em: btn_cadastrar_bombona.png
+Pressionando: enter
+Erro ao verificar imagem: 
+Erro ao verificar imagem: 
+[PASSOU] Rejeitar cadastro de bombona sem dados
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+============================================================
+TESTE: Rejeitar código de bombona inválido
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Imagem encontrada: main_interface.png
+Procurando por: btn_cadastrar_bombona.png
+Clicou em: btn_cadastrar_bombona.png
+Digitando: 12345
+Pressionando: tab
+Digitando: 30
+Pressionando: tab
+Pressionando: down
+Pressionando: tab
+Pressionando: down
+Pressionando: enter
+Erro ao verificar imagem: 
+Erro ao verificar imagem: 
+[PASSOU] Rejeitar código de bombona inválido
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+============================================================
+TESTE: Rejeitar volume com letras
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Imagem encontrada: main_interface.png
+Procurando por: btn_cadastrar_bombona.png
+Clicou em: btn_cadastrar_bombona.png
+Digitando: ABC-123
+Pressionando: tab
+Digitando: ABC
+Pressionando: tab
+Pressionando: down
+Pressionando: tab
+Pressionando: down
+Pressionando: enter
+Erro ao verificar imagem: 
+Erro ao verificar imagem: 
+[PASSOU] Rejeitar volume com letras
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+============================================================
+TESTE: Remover bombona
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Imagem encontrada: main_interface.png
+Procurando por: btn_listar_bombonas.png
+Clicou em: btn_listar_bombonas.png
+Procurando por: first_list_item.png
+Imagem não encontrada após 5s: first_list_item.png
+[FALHOU] Remover bombona
+         Erro: Não encontrou bombona na lista para remover
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+======================================================================
+EXECUTANDO CLASSE: TestesIntegracao
+======================================================================
+
+============================================================
+TESTE: Impedir remoção de responsável com bombonas
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Imagem encontrada: main_interface.png
+Procurando por: btn_cadastrar_responsavel.png
+Clicou em: btn_cadastrar_responsavel.png
+Digitando: 77788899900
+Pressionando: tab
+Digitando: Responsavel Com Bombona
+Pressionando: tab
+Digitando: 11955443322
+Pressionando: tab
+Digitando: PRODUCAO
+Pressionando: enter
+Fechando possíveis diálogos...
+Pressionando: enter
+Pressionando: escape
+Procurando por: btn_cadastrar_bombona.png
+Clicou em: btn_cadastrar_bombona.png
+Digitando: PRD-100
+Pressionando: tab
+Digitando: 100
+Pressionando: tab
+Pressionando: down
+Pressionando: tab
+Pressionando: down
+Pressionando: down
+Pressionando: down
+Pressionando: down
+Pressionando: down
+Pressionando: down
+Pressionando: down
+Pressionando: down
+Pressionando: down
+Pressionando: down
+Pressionando: enter
+Fechando possíveis diálogos...
+Pressionando: enter
+Pressionando: escape
+Procurando por: btn_listar_responsaveis.png
+Clicou em: btn_listar_responsaveis.png
+Procurando por: last_list_item.png
+Imagem não encontrada após 5s: last_list_item.png
+[FALHOU] Impedir remoção de responsável com bombonas
+         Erro: Não encontrou responsável na lista
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+============================================================
+TESTE: Validar campos na edição de bombona
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Imagem encontrada: main_interface.png
+Procurando por: btn_listar_bombonas.png
+Clicou em: btn_listar_bombonas.png
+Procurando por: first_list_item.png
+Imagem não encontrada após 5s: first_list_item.png
+[FALHOU] Validar volume negativo na edição
+         Erro: Não encontrou bombona para editar
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+============================================================
+TESTE: Validar campos na edição de responsável
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Imagem encontrada: main_interface.png
+Procurando por: btn_listar_responsaveis.png
+Clicou em: btn_listar_responsaveis.png
+Procurando por: first_list_item.png
+Imagem não encontrada após 5s: first_list_item.png
+[FALHOU] Validar nome vazio na edição
+         Erro: Não encontrou item para editar
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+======================================================================
+EXECUTANDO CLASSE: TestesNavegacao
+======================================================================
+
+============================================================
+TESTE: Gerar relatório CSV
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Imagem encontrada: main_interface.png
+Procurando por: btn_relatorios.png
+Clicou em: btn_relatorios.png
+Procurando por: combo_formato.png
+Imagem não encontrada após 5s: combo_formato.png
+Procurando por: opcao_csv.png
+Imagem não encontrada após 5s: opcao_csv.png
+Procurando por: btn_relatorio_bombonas.png
+Clicou em: btn_relatorio_bombonas.png
+Aguardando: save_dialog.png (timeout: 5s)
+Imagem encontrada: save_dialog.png
+Pressionando: escape
+[PASSOU] Gerar relatório CSV
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+============================================================
+TESTE: Navegação entre telas
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Imagem encontrada: main_interface.png
+Testando navegação: Cadastrar Responsável
+Procurando por: btn_cadastrar_responsavel.png
+Clicou em: btn_cadastrar_responsavel.png
+Pressionando: escape
+[PASSOU] Navegação para Cadastrar Responsável
+Testando navegação: Listar Responsáveis
+Procurando por: btn_listar_responsaveis.png
+Clicou em: btn_listar_responsaveis.png
+Pressionando: escape
+[PASSOU] Navegação para Listar Responsáveis
+Testando navegação: Cadastrar Bombona
+Procurando por: btn_cadastrar_bombona.png
+Clicou em: btn_cadastrar_bombona.png
+Pressionando: escape
+[PASSOU] Navegação para Cadastrar Bombona
+Testando navegação: Listar Bombonas
+Procurando por: btn_listar_bombonas.png
+Clicou em: btn_listar_bombonas.png
+Pressionando: escape
+[PASSOU] Navegação para Listar Bombonas
+Testando navegação: Relatórios
+Procurando por: btn_relatorios.png
+Imagem não encontrada após 5s: btn_relatorios.png
+[FALHOU] Navegação para Relatórios
+         Erro: Botão não encontrado
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+======================================================================
+RESUMO FINAL DOS TESTES
+======================================================================
+Total de testes executados: 25
+Testes aprovados: 16
+Testes reprovados: 9
+Taxa de sucesso: 64.0%
+======================================================================
