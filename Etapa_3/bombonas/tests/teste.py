@@ -558,7 +558,7 @@ class TestesResponsavel:
                 time.sleep(1)
                 
                 # Limpa e edita o nome
-                pressionar_tecla("tab")  # Pula CPF (não editável)
+                # pressionar_tecla("tab")  # Pula CPF (não editável)
                 pyautogui.hotkey('ctrl', 'a')
                 digitar_texto("Maria Santos Editada")
                 
@@ -596,7 +596,7 @@ class TestesResponsavel:
             clicar_imagem("btn_cadastrar_responsavel.png")
             time.sleep(1)
             
-            digitar_texto("55544433322")
+            digitar_texto("50572033044")
             pressionar_tecla("tab")
             digitar_texto("Teste Remocao")
             pressionar_tecla("tab")
@@ -607,13 +607,17 @@ class TestesResponsavel:
             pressionar_tecla("enter")
             time.sleep(2)
             fechar_dialogos()
+
+            # Recusa cadastrar outro responsável
+            pressionar_tecla("tab")
+            pressionar_tecla("enter")
             
             # Lista e remove
             clicar_imagem("btn_listar_responsaveis.png")
             time.sleep(2)
             
             # ALTERAÇÃO AQUI: Usa a nova função de navegação e exclusão
-            if navegar_e_selecionar_item_lista(posicao='primeiro', acao='excluir'):
+            if navegar_e_selecionar_item_lista(posicao='ultimo', acao='excluir'):
                 time.sleep(1)
                 
                 # Confirma exclusão (geralmente um pop-up de confirmação)
