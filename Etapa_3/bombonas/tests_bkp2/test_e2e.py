@@ -237,48 +237,6 @@ def limpar_campos_formulario(quantidade_tabs):
         pressionar_tecla('delete')
         pressionar_tecla('tab')
 
-# ADICIONE ESTA FUNÇÃO JUNTO COM OS OUTROS UTILITÁRIOS BÁSICOS
-
-def navegar_e_selecionar_item_lista(posicao='primeiro', acao=None):
-    """
-    Clica no centro da tela para focar a lista, navega para um item e, 
-    opcionalmente, clica em um botão de ação.
-
-    Args:
-        posicao (str): 'primeiro' para selecionar o primeiro item (usando 'down'),
-                       'ultimo' para selecionar o último (usando 'up').
-        acao (str): 'editar' ou 'excluir'. Requer imagens 'btn_editar.png' 
-                    e 'btn_excluir.png' na pasta de screenshots.
-
-    Returns:
-        bool: True se a navegação foi bem-sucedida e a ação (se houver) foi executada.
-              False se o botão de ação não for encontrado.
-    """
-    escrever_relatorio("Focando na lista ao clicar no centro da tela...")
-    largura, altura = pyautogui.size()
-    pyautogui.click(largura / 2, altura / 2)  # Clica no centro da tela para garantir o foco
-    time.sleep(0.5)
-
-    if posicao == 'primeiro':
-        escrever_relatorio("Selecionando o primeiro item da lista (pressionando 'up')...")
-        for i in range(10) :
-            pressionar_tecla('up')
-    elif posicao == 'ultimo':
-        escrever_relatorio("Selecionando o último item da lista (pressionando 'down')...")
-        for i in range(10) :
-            pressionar_tecla('down')
-    
-    time.sleep(0.5)
-
-    if acao:
-        nome_botao = f"btn_{acao}.png"
-        escrever_relatorio(f"Tentando clicar no botão de '{acao}'...")
-        if not clicar_imagem(nome_botao, timeout=5):
-            registrar_teste(f"Ação '{acao}' na lista", False, f"Botão '{nome_botao}' não encontrado.")
-            return False
-    
-    return True
-
 # ==================== TESTES DE LOGIN ====================
 
 class TestesLogin:
@@ -400,7 +358,7 @@ class TestesResponsavel:
             # Dados válidos
             digitar_texto("12345678909")  # CPF válido
             pressionar_tecla("tab")
-            digitar_texto("Joao Silva Teste")
+            digitar_texto("João Silva Teste")
             pressionar_tecla("tab")
             digitar_texto("11999887766")
             pressionar_tecla("tab")
@@ -553,8 +511,10 @@ class TestesResponsavel:
             clicar_imagem("btn_listar_responsaveis.png")
             time.sleep(2)
             
-            # ALTERAÇÃO AQUI: Usa a nova função de navegação e edição
-            if navegar_e_selecionar_item_lista(posicao='primeiro', acao='editar'):
+            # Duplo clique no primeiro item da lista
+            if clicar_imagem("first_list_item.png", confianca=0.7):
+                time.sleep(0.5)
+                clicar_imagem("first_list_item.png", confianca=0.7)
                 time.sleep(1)
                 
                 # Limpa e edita o nome
@@ -575,7 +535,7 @@ class TestesResponsavel:
                 registrar_teste(
                     "Editar responsável",
                     False,
-                    "Não conseguiu selecionar o item ou clicar no botão de edição."
+                    "Não encontrou item na lista para editar"
                 )
             
         finally:
@@ -612,11 +572,12 @@ class TestesResponsavel:
             clicar_imagem("btn_listar_responsaveis.png")
             time.sleep(2)
             
-            # ALTERAÇÃO AQUI: Usa a nova função de navegação e exclusão
-            if navegar_e_selecionar_item_lista(posicao='primeiro', acao='excluir'):
+            if clicar_imagem("first_list_item.png", confianca=0.7):
+                time.sleep(0.5)
+                pressionar_tecla("delete")
                 time.sleep(1)
                 
-                # Confirma exclusão (geralmente um pop-up de confirmação)
+                # Confirma exclusão
                 pressionar_tecla("enter")
                 time.sleep(2)
                 
@@ -630,7 +591,7 @@ class TestesResponsavel:
                 registrar_teste(
                     "Remover responsável sem bombonas",
                     False,
-                    "Não conseguiu selecionar o item ou clicar no botão de exclusão."
+                    "Não encontrou item na lista para remover"
                 )
             
         finally:
@@ -810,8 +771,10 @@ class TestesBombona:
             clicar_imagem("btn_listar_bombonas.png")
             time.sleep(2)
             
-            # ALTERAÇÃO AQUI: Usa a nova função de navegação e edição
-            if navegar_e_selecionar_item_lista(posicao='primeiro', acao='editar'):
+            # Duplo clique no primeiro item
+            if clicar_imagem("first_list_item.png", confianca=0.7):
+                time.sleep(0.5)
+                clicar_imagem("first_list_item.png", confianca=0.7)
                 time.sleep(1)
                 
                 # Edita o volume
@@ -832,7 +795,7 @@ class TestesBombona:
                 registrar_teste(
                     "Editar bombona",
                     False,
-                    "Não conseguiu selecionar a bombona para editar."
+                    "Não encontrou bombona na lista para editar"
                 )
             
         finally:
@@ -853,8 +816,9 @@ class TestesBombona:
             clicar_imagem("btn_listar_bombonas.png")
             time.sleep(2)
             
-            # ALTERAÇÃO AQUI: Usa a nova função de navegação e exclusão
-            if navegar_e_selecionar_item_lista(posicao='primeiro', acao='excluir'):
+            if clicar_imagem("first_list_item.png", confianca=0.7):
+                time.sleep(0.5)
+                pressionar_tecla("delete")
                 time.sleep(1)
                 
                 # Confirma exclusão
@@ -871,7 +835,7 @@ class TestesBombona:
                 registrar_teste(
                     "Remover bombona",
                     False,
-                    "Não conseguiu selecionar a bombona para remover."
+                    "Não encontrou bombona na lista para remover"
                 )
             
         finally:
@@ -897,7 +861,7 @@ class TestesIntegracao:
             clicar_imagem("btn_cadastrar_responsavel.png")
             time.sleep(1)
             
-            digitar_texto("29286344015")
+            digitar_texto("77788899900")
             pressionar_tecla("tab")
             digitar_texto("Responsavel Com Bombona")
             pressionar_tecla("tab")
@@ -905,7 +869,6 @@ class TestesIntegracao:
             pressionar_tecla("tab")
             digitar_texto("PRODUCAO")
             
-            pressionar_tecla("enter")
             pressionar_tecla("enter")
             time.sleep(2)
             fechar_dialogos()
@@ -922,11 +885,9 @@ class TestesIntegracao:
             pressionar_tecla("tab")
             
             # Seleciona o responsável criado (último da lista)
-            for i in range(10):
+            for i in range(10):  # Navega até o final da lista
                 pressionar_tecla("down")
             
-            pressionar_tecla("enter")
-            pressionar_tecla("enter")
             pressionar_tecla("enter")
             time.sleep(2)
             fechar_dialogos()
@@ -935,10 +896,11 @@ class TestesIntegracao:
             clicar_imagem("btn_listar_responsaveis.png")
             time.sleep(2)
             
-            # ALTERAÇÃO AQUI: Usa 'up' para selecionar o último item adicionado
-            if navegar_e_selecionar_item_lista(posicao='ultimo', acao='excluir'):
+            if clicar_imagem("last_list_item.png", confianca=0.7):
+                time.sleep(0.5)
+                pressionar_tecla("delete")
                 time.sleep(1)
-                pressionar_tecla("enter") # Confirma a tentativa de exclusão
+                pressionar_tecla("enter")
                 time.sleep(2)
                 
                 # Deve mostrar erro, não sucesso
@@ -952,7 +914,7 @@ class TestesIntegracao:
                 registrar_teste(
                     "Impedir remoção de responsável com bombonas",
                     False,
-                    "Não encontrou ou não conseguiu clicar no botão de exclusão para o responsável."
+                    "Não encontrou responsável na lista"
                 )
             
         finally:
@@ -973,8 +935,10 @@ class TestesIntegracao:
             clicar_imagem("btn_listar_responsaveis.png")
             time.sleep(2)
             
-            # ALTERAÇÃO AQUI: Usa a nova função de navegação e edição
-            if navegar_e_selecionar_item_lista(posicao='primeiro', acao='editar'):
+            # Duplo clique para editar
+            if clicar_imagem("first_list_item.png", confianca=0.7):
+                time.sleep(0.5)
+                clicar_imagem("first_list_item.png", confianca=0.7)
                 time.sleep(1)
                 
                 # Tenta deixar o nome vazio
@@ -1017,11 +981,14 @@ class TestesIntegracao:
             clicar_imagem("btn_listar_bombonas.png")
             time.sleep(2)
             
-            # ALTERAÇÃO AQUI: Usa a nova função de navegação e edição
-            if navegar_e_selecionar_item_lista(posicao='primeiro', acao='editar'):
+            # Duplo clique para editar
+            if clicar_imagem("first_list_item.png", confianca=0.7):
+                time.sleep(0.5)
+                clicar_imagem("first_list_item.png", confianca=0.7)
                 time.sleep(1)
                 
                 # Tenta colocar volume negativo
+                pressionar_tecla("tab")  # Pula código
                 pyautogui.hotkey('ctrl', 'a')
                 digitar_texto("-50")
                 
@@ -1127,26 +1094,23 @@ class TestesNavegacao:
 
 # ==================== EXECUÇÃO DOS TESTES ====================
 
-# NOVO: Função para zerar os contadores antes de cada execução do menu
-def resetar_contadores_globais():
-    """Reseta os contadores de resultado dos testes."""
-    global total_testes, testes_passaram, testes_falharam
-    total_testes = 0
-    testes_passaram = 0
-    testes_falharam = 0
-
-# MODIFICADO: A função original foi adaptada para aceitar uma lista de suítes de teste
-def executar_suites_de_teste(classes_de_teste_instanciadas):
-    """Executa uma lista de suítes de teste e gera relatório"""
-    
-    # NOVO: Garante que os contadores estão zerados para esta execução
-    resetar_contadores_globais()
+def executar_todos_testes():
+    """Executa todos os testes e gera relatório"""
     
     # Inicia relatório
     nome_arquivo_relatorio = iniciar_relatorio()
     
+    # Lista de classes de teste
+    classes_teste = [
+        TestesLogin(),
+        TestesResponsavel(),
+        TestesBombona(),
+        TestesIntegracao(),
+        TestesNavegacao()
+    ]
+    
     # Executa cada classe de teste
-    for classe_teste in classes_de_teste_instanciadas:
+    for classe_teste in classes_teste:
         nome_classe = classe_teste.__class__.__name__
         escrever_relatorio(f"\n{'=' * 70}")
         escrever_relatorio(f"EXECUTANDO CLASSE: {nome_classe}")
@@ -1171,25 +1135,33 @@ def executar_suites_de_teste(classes_de_teste_instanciadas):
     fechar_relatorio()
     
     # Retorna informações sobre o relatório
-    sucesso_geral = testes_passaram == total_testes if total_testes > 0 else True
-    return nome_arquivo_relatorio, sucesso_geral
+    return nome_arquivo_relatorio, testes_passaram == total_testes
 
 # ==================== PONTO DE ENTRADA ====================
 
-# MODIFICADO: Bloco principal reescrito para apresentar o menu de execução
 if __name__ == "__main__":
-    # Verifica se pasta de screenshots existe (lógica original mantida)
+    # Verifica se pasta de screenshots existe
     if not DIRETORIO_SCREENSHOTS.exists():
         print(f"Criando pasta de screenshots em: {DIRETORIO_SCREENSHOTS}")
         DIRETORIO_SCREENSHOTS.mkdir()
     
-    # Lista imagens necessárias (lógica original mantida)
+    # Lista imagens necessárias
     imagens_necessarias = [
-        "login_screen.png", "main_interface.png", "btn_cadastrar_responsavel.png",
-        "btn_listar_responsaveis.png", "btn_cadastrar_bombona.png", "btn_listar_bombonas.png",
-        "btn_relatorios.png", "success_message.png", "error_message.png",
-        "first_list_item.png", "last_list_item.png", "save_dialog.png",
-        "combo_formato.png", "opcao_csv.png", "btn_relatorio_bombonas.png"
+        "login_screen.png",
+        "main_interface.png",
+        "btn_cadastrar_responsavel.png",
+        "btn_listar_responsaveis.png",
+        "btn_cadastrar_bombona.png",
+        "btn_listar_bombonas.png",
+        "btn_relatorios.png",
+        "success_message.png",
+        "error_message.png",
+        "first_list_item.png",
+        "last_list_item.png",
+        "save_dialog.png",
+        "combo_formato.png",
+        "opcao_csv.png",
+        "btn_relatorio_bombonas.png"
     ]
     
     imagens_faltando = [img for img in imagens_necessarias if not (DIRETORIO_SCREENSHOTS / img).exists()]
@@ -1201,59 +1173,11 @@ if __name__ == "__main__":
         print("\nExecute a aplicação manualmente e capture estas telas.")
         print("Use: pyautogui.screenshot('caminho/para/imagem.png')")
         print("\nExecute este script novamente após capturar as imagens.")
-        sys.exit(1) # Sai se as imagens não existirem
-
-    # --- NOVO: Lógica do Menu ---
-
-    # Dicionário mapeando opções do menu para as classes de teste
-    suites_disponiveis = {
-        '1': ("Testes de Login", [TestesLogin()]),
-        '2': ("Testes de Responsável", [TestesResponsavel()]),
-        '3': ("Testes de Bombona", [TestesBombona()]),
-        '4': ("Testes de Integração", [TestesIntegracao()]),
-        '5': ("Testes de Navegação", [TestesNavegacao()]),
-    }
-    # Lista com todas as suítes para a opção "Executar Todos"
-    todas_as_suites = [
-        TestesLogin(), TestesResponsavel(), TestesBombona(), 
-        TestesIntegracao(), TestesNavegacao()
-    ]
-
-    # MODO NÃO-INTERATIVO (para automação/CI/CD, mantém comportamento original)
-    if "--all" in sys.argv:
-        print("MODO NÃO-INTERATIVO: Executando todos os testes...")
-        arquivo_relatorio, todos_passaram = executar_suites_de_teste(todas_as_suites)
-        print(f"\nRelatório salvo em: {arquivo_relatorio}")
-        sys.exit(0 if todos_passaram else 1)
-    
-    # MODO INTERATIVO (com menu)
-    while True:
-        print("\n" + "="*40)
-        print("   MENU DE EXECUÇÃO DE TESTES E2E")
-        print("="*40)
-        for key, (nome, _) in suites_disponiveis.items():
-            print(f"  {key} - {nome}")
-        print("-" * 40)
-        print("  6 - EXECUTAR TODOS OS TESTES")
-        print("  0 - Sair")
-        print("="*40)
+    else:
+        # Executa os testes
+        arquivo_relatorio, todos_passaram = executar_todos_testes()
         
-        escolha = input("Digite o número da suíte de testes que deseja executar: ")
-
-        if escolha == '0':
-            print("Saindo do script de testes.")
-            break
-        elif escolha == '6':
-            print("\nExecutando TODAS as suítes de teste...")
-            arquivo_rel, sucesso = executar_suites_de_teste(todas_as_suites)
-            print(f"\nExecução concluída. Relatório salvo em: {arquivo_rel}")
-            input("Pressione Enter para voltar ao menu...")
-        elif escolha in suites_disponiveis:
-            nome_suite, suite_para_executar = suites_disponiveis[escolha]
-            print(f"\nExecutando: {nome_suite}...")
-            arquivo_rel, sucesso = executar_suites_de_teste(suite_para_executar)
-            print(f"\nExecução concluída. Relatório salvo em: {arquivo_rel}")
-            input("Pressione Enter para voltar ao menu...")
-        else:
-            print("\nOpção inválida! Por favor, escolha um número do menu.")
-            time.sleep(2)
+        print(f"\nRelatório salvo em: {arquivo_relatorio}")
+        
+        # Exit code para integração com CI/CD
+        sys.exit(0 if todos_passaram else 1)
