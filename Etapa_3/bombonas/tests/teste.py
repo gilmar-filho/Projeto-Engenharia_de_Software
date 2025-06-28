@@ -558,7 +558,6 @@ class TestesResponsavel:
                 time.sleep(1)
                 
                 # Limpa e edita o nome
-                # pressionar_tecla("tab")  # Pula CPF (não editável)
                 pyautogui.hotkey('ctrl', 'a')
                 digitar_texto("Maria Santos Editada")
                 
@@ -603,14 +602,11 @@ class TestesResponsavel:
             digitar_texto("11977665544")
             pressionar_tecla("tab")
             digitar_texto("TEMPORARIO")
+            pressionar_tecla("enter")
             
             pressionar_tecla("enter")
             time.sleep(2)
             fechar_dialogos()
-
-            # Recusa cadastrar outro responsável
-            pressionar_tecla("tab")
-            pressionar_tecla("enter")
             
             # Lista e remove
             clicar_imagem("btn_listar_responsaveis.png")
@@ -660,13 +656,14 @@ class TestesBombona:
             clicar_imagem("btn_cadastrar_responsavel.png")
             time.sleep(1)
             
-            digitar_texto("11122233344")
+            digitar_texto("17076053004")
             pressionar_tecla("tab")
             digitar_texto("Responsavel Bombona")
             pressionar_tecla("tab")
             digitar_texto("11966554433")
             pressionar_tecla("tab")
             digitar_texto("QUIMICA")
+            pressionar_tecla("enter")
             
             pressionar_tecla("enter")
             time.sleep(2)
@@ -682,7 +679,11 @@ class TestesBombona:
             pressionar_tecla("tab")
             pressionar_tecla("down")  # Seleciona tipo
             pressionar_tecla("tab")
-            pressionar_tecla("down")  # Seleciona responsável
+            
+            # Seleciona o responsável criado (último da lista)
+            for i in range(10):
+                pressionar_tecla("down")
+            pressionar_tecla("enter")
             
             pressionar_tecla("enter")
             time.sleep(2)
@@ -719,6 +720,7 @@ class TestesBombona:
             pressionar_tecla("down")
             pressionar_tecla("tab")
             pressionar_tecla("down")
+            pressionar_tecla("enter")
             
             pressionar_tecla("enter")
             time.sleep(2)
@@ -755,6 +757,7 @@ class TestesBombona:
             pressionar_tecla("down")
             pressionar_tecla("tab")
             pressionar_tecla("down")
+            pressionar_tecla("enter")
             
             pressionar_tecla("enter")
             time.sleep(2)
@@ -819,7 +822,6 @@ class TestesBombona:
                 time.sleep(1)
                 
                 # Edita o volume
-                pressionar_tecla("tab")  # Pula código (não editável)
                 pyautogui.hotkey('ctrl', 'a')
                 digitar_texto("75.5")
                 
@@ -1067,7 +1069,7 @@ class TestesNavegacao:
             
             telas_para_testar = [
                 ("btn_cadastrar_responsavel.png", "Cadastrar Responsável"),
-                ("btn_listar_responsaveis.png", "Listar Responsáveis"),
+                ("btn_listar_responsaveis.png", "Listar Responsáveis"),6
                 ("btn_cadastrar_bombona.png", "Cadastrar Bombona"),
                 ("btn_listar_bombonas.png", "Listar Bombonas"),
                 ("btn_relatorios.png", "Relatórios")
@@ -1078,7 +1080,10 @@ class TestesNavegacao:
                 
                 if clicar_imagem(botao):
                     time.sleep(1)
-                    pressionar_tecla("escape")
+                    if nome_tela == "Listar Responsáveis" or nome_tela == "Listar Bombonas":
+                        clicar_imagem("btn_fechar.png")
+                    else:    
+                        pressionar_tecla("escape")
                     time.sleep(1)
                     registrar_teste(f"Navegação para {nome_tela}", True)
                 else:
@@ -1104,8 +1109,9 @@ class TestesNavegacao:
                 # Seleciona CSV se necessário
                 clicar_imagem("combo_formato.png", confianca=0.7)
                 time.sleep(0.5)
-                clicar_imagem("opcao_csv.png", confianca=0.7)
-                time.sleep(0.5)
+                pressionar_tecla("enter")
+                # clicar_imagem("opcao_csv.png", confianca=0.7)
+                # time.sleep(0.5)
                 
                 # Clica em gerar relatório de bombonas
                 if clicar_imagem("btn_relatorio_bombonas.png"):
