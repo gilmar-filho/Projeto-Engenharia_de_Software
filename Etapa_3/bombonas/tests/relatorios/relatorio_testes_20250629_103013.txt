@@ -1,0 +1,24 @@
+======================================================================
+RELATÓRIO DE TESTES E2E - SISTEMA DE BOMBONAS
+======================================================================
+Data/Hora: 29/06/2025 10:30:13
+Simulando comportamento do Cypress para Tkinter
+======================================================================
+
+
+======================================================================
+EXECUTANDO CLASSE: TestesResponsavel
+======================================================================
+
+============================================================
+TESTE: Criar responsável válido
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Parando aplicação...
+Aplicação parada

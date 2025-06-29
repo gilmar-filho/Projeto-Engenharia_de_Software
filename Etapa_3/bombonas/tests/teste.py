@@ -237,22 +237,10 @@ def limpar_campos_formulario(quantidade_tabs):
         pressionar_tecla('delete')
         pressionar_tecla('tab')
 
-# ADICIONE ESTA FUNÇÃO JUNTO COM OS OUTROS UTILITÁRIOS BÁSICOS
-
 def navegar_e_selecionar_item_lista(posicao='primeiro', acao=None):
     """
     Clica no centro da tela para focar a lista, navega para um item e, 
     opcionalmente, clica em um botão de ação.
-
-    Args:
-        posicao (str): 'primeiro' para selecionar o primeiro item (usando 'down'),
-                       'ultimo' para selecionar o último (usando 'up').
-        acao (str): 'editar' ou 'excluir'. Requer imagens 'btn_editar.png' 
-                    e 'btn_excluir.png' na pasta de screenshots.
-
-    Returns:
-        bool: True se a navegação foi bem-sucedida e a ação (se houver) foi executada.
-              False se o botão de ação não for encontrado.
     """
     escrever_relatorio("Focando na lista ao clicar no centro da tela...")
     largura, altura = pyautogui.size()
@@ -537,7 +525,7 @@ class TestesResponsavel:
             clicar_imagem("btn_cadastrar_responsavel.png")
             time.sleep(1)
             
-            digitar_texto("98765432100")
+            digitar_texto("37499187080")
             pressionar_tecla("tab")
             digitar_texto("Maria Santos Original")
             pressionar_tecla("tab")
@@ -546,6 +534,8 @@ class TestesResponsavel:
             digitar_texto("FINANCEIRO")
             
             pressionar_tecla("enter")
+            pressionar_tecla("enter")
+
             time.sleep(2)
             fechar_dialogos()
             
@@ -554,7 +544,7 @@ class TestesResponsavel:
             time.sleep(2)
             
             # ALTERAÇÃO AQUI: Usa a nova função de navegação e edição
-            if navegar_e_selecionar_item_lista(posicao='primeiro', acao='editar'):
+            if navegar_e_selecionar_item_lista(posicao='ultimo', acao='editar'):
                 time.sleep(1)
                 
                 # Limpa e edita o nome
@@ -1147,7 +1137,7 @@ def resetar_contadores_globais():
 def executar_suites_de_teste(classes_de_teste_instanciadas):
     """Executa uma lista de suítes de teste e gera relatório"""
     
-    # NOVO: Garante que os contadores estão zerados para esta execução
+    # Garante que os contadores estão zerados para esta execução
     resetar_contadores_globais()
     
     # Inicia relatório
@@ -1209,8 +1199,6 @@ if __name__ == "__main__":
         print("\nExecute este script novamente após capturar as imagens.")
         sys.exit(1) # Sai se as imagens não existirem
 
-    # --- NOVO: Lógica do Menu ---
-
     # Dicionário mapeando opções do menu para as classes de teste
     suites_disponiveis = {
         '1': ("Testes de Login", [TestesLogin()]),
@@ -1219,18 +1207,12 @@ if __name__ == "__main__":
         '4': ("Testes de Integração", [TestesIntegracao()]),
         '5': ("Testes de Navegação", [TestesNavegacao()]),
     }
+
     # Lista com todas as suítes para a opção "Executar Todos"
     todas_as_suites = [
         TestesLogin(), TestesResponsavel(), TestesBombona(), 
         TestesIntegracao(), TestesNavegacao()
     ]
-
-    # MODO NÃO-INTERATIVO (para automação/CI/CD, mantém comportamento original)
-    if "--all" in sys.argv:
-        print("MODO NÃO-INTERATIVO: Executando todos os testes...")
-        arquivo_relatorio, todos_passaram = executar_suites_de_teste(todas_as_suites)
-        print(f"\nRelatório salvo em: {arquivo_relatorio}")
-        sys.exit(0 if todos_passaram else 1)
     
     # MODO INTERATIVO (com menu)
     while True:
@@ -1263,3 +1245,25 @@ if __name__ == "__main__":
         else:
             print("\nOpção inválida! Por favor, escolha um número do menu.")
             time.sleep(2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # # MODO NÃO-INTERATIVO (para automação/CI/CD, mantém comportamento original)
+    # if "--all" in sys.argv:
+    #     print("MODO NÃO-INTERATIVO: Executando todos os testes...")
+    #     arquivo_relatorio, todos_passaram = executar_suites_de_teste(todas_as_suites)
+    #     print(f"\nRelatório salvo em: {arquivo_relatorio}")
+    #     sys.exit(0 if todos_passaram else 1)

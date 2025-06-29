@@ -1,0 +1,238 @@
+======================================================================
+RELATÓRIO DE TESTES E2E - SISTEMA DE BOMBONAS
+======================================================================
+Data/Hora: 29/06/2025 10:34:07
+Simulando comportamento do Cypress para Tkinter
+======================================================================
+
+
+======================================================================
+EXECUTANDO CLASSE: TestesResponsavel
+======================================================================
+
+============================================================
+TESTE: Criar responsável válido
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Imagem encontrada: main_interface.png
+Procurando por: btn_cadastrar_responsavel.png
+Clicou em: btn_cadastrar_responsavel.png
+Digitando: 12345678909
+Pressionando: tab
+Digitando: Joao Silva Teste
+Pressionando: tab
+Digitando: 11999887766
+Pressionando: tab
+Digitando: LABORATORIO
+Pressionando: enter
+Imagem visível: success_message.png
+[PASSOU] Criar responsável com dados válidos
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+============================================================
+TESTE: Editar responsável
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Imagem encontrada: main_interface.png
+Procurando por: btn_cadastrar_responsavel.png
+Clicou em: btn_cadastrar_responsavel.png
+Digitando: 37499187080
+Pressionando: tab
+Digitando: Maria Santos Original
+Pressionando: tab
+Digitando: 11988776655
+Pressionando: tab
+Digitando: FINANCEIRO
+Pressionando: enter
+Pressionando: enter
+Fechando possíveis diálogos...
+Pressionando: enter
+Pressionando: escape
+Procurando por: btn_listar_responsaveis.png
+Clicou em: btn_listar_responsaveis.png
+Focando na lista ao clicar no centro da tela...
+Selecionando o primeiro item da lista (pressionando 'up')...
+Pressionando: up
+Pressionando: up
+Pressionando: up
+Pressionando: up
+Pressionando: up
+Pressionando: up
+Pressionando: up
+Pressionando: up
+Pressionando: up
+Pressionando: up
+Tentando clicar no botão de 'editar'...
+Procurando por: btn_editar.png
+Clicou em: btn_editar.png
+Digitando: Maria Santos Editada
+Pressionando: enter
+Imagem visível: success_message.png
+[PASSOU] Editar responsável
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+============================================================
+TESTE: Rejeitar campos vazios no cadastro de responsável
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Imagem encontrada: main_interface.png
+Procurando por: btn_cadastrar_responsavel.png
+Clicou em: btn_cadastrar_responsavel.png
+Pressionando: enter
+Imagem visível: error_message.png
+[PASSOU] Rejeitar cadastro com campos vazios
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+============================================================
+TESTE: Rejeitar CPF inválido
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Imagem encontrada: main_interface.png
+Procurando por: btn_cadastrar_responsavel.png
+Clicou em: btn_cadastrar_responsavel.png
+Digitando: 11111111111
+Pressionando: tab
+Digitando: Nome Teste
+Pressionando: tab
+Digitando: 11999887766
+Pressionando: tab
+Digitando: SETOR
+Pressionando: enter
+Imagem visível: error_message.png
+[PASSOU] Rejeitar CPF inválido (dígitos iguais)
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+============================================================
+TESTE: Rejeitar CPF com tamanho incorreto
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Imagem encontrada: main_interface.png
+Procurando por: btn_cadastrar_responsavel.png
+Clicou em: btn_cadastrar_responsavel.png
+Digitando: 123456789
+Pressionando: tab
+Digitando: Nome Teste
+Pressionando: tab
+Digitando: 11999887766
+Pressionando: tab
+Digitando: SETOR
+Pressionando: enter
+Imagem visível: error_message.png
+[PASSOU] Rejeitar CPF com menos de 11 dígitos
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+============================================================
+TESTE: Remover responsável sem bombonas
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Imagem encontrada: main_interface.png
+Procurando por: btn_cadastrar_responsavel.png
+Clicou em: btn_cadastrar_responsavel.png
+Digitando: 50572033044
+Pressionando: tab
+Digitando: Teste Remocao
+Pressionando: tab
+Digitando: 11977665544
+Pressionando: tab
+Digitando: TEMPORARIO
+Pressionando: enter
+Pressionando: enter
+Fechando possíveis diálogos...
+Pressionando: enter
+Pressionando: escape
+Procurando por: btn_listar_responsaveis.png
+Clicou em: btn_listar_responsaveis.png
+Focando na lista ao clicar no centro da tela...
+Selecionando o último item da lista (pressionando 'down')...
+Pressionando: down
+Pressionando: down
+Pressionando: down
+Pressionando: down
+Pressionando: down
+Pressionando: down
+Pressionando: down
+Pressionando: down
+Pressionando: down
+Pressionando: down
+Tentando clicar no botão de 'excluir'...
+Procurando por: btn_excluir.png
+Clicou em: btn_excluir.png
+Pressionando: enter
+Imagem visível: success_message.png
+[PASSOU] Remover responsável sem bombonas
+Parando aplicação...
+Aplicação parada
+------------------------------
+
+======================================================================
+RESUMO FINAL DOS TESTES
+======================================================================
+Total de testes executados: 6
+Testes aprovados: 6
+Testes reprovados: 0
+Taxa de sucesso: 100.0%
+======================================================================
