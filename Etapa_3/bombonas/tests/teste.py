@@ -543,7 +543,7 @@ class TestesResponsavel:
             clicar_imagem("btn_listar_responsaveis.png")
             time.sleep(2)
             
-            # ALTERAÇÃO AQUI: Usa a nova função de navegação e edição
+            # Navega na lista e edita
             if navegar_e_selecionar_item_lista(posicao='ultimo', acao='editar'):
                 time.sleep(1)
                 
@@ -602,7 +602,7 @@ class TestesResponsavel:
             clicar_imagem("btn_listar_responsaveis.png")
             time.sleep(2)
             
-            # ALTERAÇÃO AQUI: Usa a nova função de navegação e exclusão
+            # Navega na lista e exclui
             if navegar_e_selecionar_item_lista(posicao='ultimo', acao='excluir'):
                 time.sleep(1)
                 
@@ -807,8 +807,8 @@ class TestesBombona:
             clicar_imagem("btn_listar_bombonas.png")
             time.sleep(2)
             
-            # ALTERAÇÃO AQUI: Usa a nova função de navegação e edição
-            if navegar_e_selecionar_item_lista(posicao='primeiro', acao='editar'):
+            # Navega na lista e edita
+            if navegar_e_selecionar_item_lista(posicao='ultimo', acao='editar'):
                 time.sleep(1)
                 
                 # Edita o volume
@@ -849,8 +849,8 @@ class TestesBombona:
             clicar_imagem("btn_listar_bombonas.png")
             time.sleep(2)
             
-            # ALTERAÇÃO AQUI: Usa a nova função de navegação e exclusão
-            if navegar_e_selecionar_item_lista(posicao='primeiro', acao='excluir'):
+            # Navega na lista e exclui
+            if navegar_e_selecionar_item_lista(posicao='ultimo', acao='excluir'):
                 time.sleep(1)
                 
                 # Confirma exclusão
