@@ -162,7 +162,7 @@ def pressionar_tecla(tecla):
 def aguardar_imagem(nome_imagem, timeout=10, confianca=0.8):
     """Aguarda uma imagem aparecer na tela"""
     caminho_imagem = DIRETORIO_SCREENSHOTS / nome_imagem
-    print(caminho_imagem)
+
     if not caminho_imagem.exists():
         escrever_relatorio(f"Imagem não encontrada: {caminho_imagem}")
         return False
@@ -1137,7 +1137,6 @@ class TestesNavegacao:
 
 # ==================== EXECUÇÃO DOS TESTES ====================
 
-# NOVO: Função para zerar os contadores antes de cada execução do menu
 def resetar_contadores_globais():
     """Reseta os contadores de resultado dos testes."""
     global total_testes, testes_passaram, testes_falharam
@@ -1145,7 +1144,6 @@ def resetar_contadores_globais():
     testes_passaram = 0
     testes_falharam = 0
 
-# MODIFICADO: A função original foi adaptada para aceitar uma lista de suítes de teste
 def executar_suites_de_teste(classes_de_teste_instanciadas):
     """Executa uma lista de suítes de teste e gera relatório"""
     
@@ -1186,7 +1184,6 @@ def executar_suites_de_teste(classes_de_teste_instanciadas):
 
 # ==================== PONTO DE ENTRADA ====================
 
-# MODIFICADO: Bloco principal reescrito para apresentar o menu de execução
 if __name__ == "__main__":
     # Verifica se pasta de screenshots existe (lógica original mantida)
     if not DIRETORIO_SCREENSHOTS.exists():
@@ -1209,7 +1206,6 @@ if __name__ == "__main__":
         for img in imagens_faltando:
             print(f"   - {DIRETORIO_SCREENSHOTS / img}")
         print("\nExecute a aplicação manualmente e capture estas telas.")
-        print("Use: pyautogui.screenshot('caminho/para/imagem.png')")
         print("\nExecute este script novamente após capturar as imagens.")
         sys.exit(1) # Sai se as imagens não existirem
 
