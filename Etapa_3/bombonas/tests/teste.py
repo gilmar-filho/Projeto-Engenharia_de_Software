@@ -969,12 +969,11 @@ class TestesIntegracao:
             clicar_imagem("btn_listar_responsaveis.png")
             time.sleep(2)
             
-            # ALTERAÇÃO AQUI: Usa a nova função de navegação e edição
+            # Navega e edita
             if navegar_e_selecionar_item_lista(posicao='primeiro', acao='editar'):
                 time.sleep(1)
                 
                 # Tenta deixar o nome vazio
-                pressionar_tecla("tab")  # Pula CPF
                 pyautogui.hotkey('ctrl', 'a')
                 pressionar_tecla('delete')
                 
@@ -1013,7 +1012,7 @@ class TestesIntegracao:
             clicar_imagem("btn_listar_bombonas.png")
             time.sleep(2)
             
-            # ALTERAÇÃO AQUI: Usa a nova função de navegação e edição
+            # Navega e edita
             if navegar_e_selecionar_item_lista(posicao='primeiro', acao='editar'):
                 time.sleep(1)
                 
