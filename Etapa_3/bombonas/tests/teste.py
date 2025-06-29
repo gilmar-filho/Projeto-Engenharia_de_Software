@@ -162,7 +162,7 @@ def pressionar_tecla(tecla):
 def aguardar_imagem(nome_imagem, timeout=10, confianca=0.8):
     """Aguarda uma imagem aparecer na tela"""
     caminho_imagem = DIRETORIO_SCREENSHOTS / nome_imagem
-    
+    print(caminho_imagem)
     if not caminho_imagem.exists():
         escrever_relatorio(f"Imagem não encontrada: {caminho_imagem}")
         return False
