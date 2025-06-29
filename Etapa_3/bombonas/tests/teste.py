@@ -1069,7 +1069,7 @@ class TestesNavegacao:
             
             telas_para_testar = [
                 ("btn_cadastrar_responsavel.png", "Cadastrar Responsável"),
-                ("btn_listar_responsaveis.png", "Listar Responsáveis"),6
+                ("btn_listar_responsaveis.png", "Listar Responsáveis"),
                 ("btn_cadastrar_bombona.png", "Cadastrar Bombona"),
                 ("btn_listar_bombonas.png", "Listar Bombonas"),
                 ("btn_relatorios.png", "Relatórios")

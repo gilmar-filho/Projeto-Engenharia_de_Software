@@ -1,0 +1,27 @@
+======================================================================
+RELATÓRIO DE TESTES E2E - SISTEMA DE BOMBONAS
+======================================================================
+Data/Hora: 26/06/2025 09:59:39
+Simulando comportamento do Cypress para Tkinter
+======================================================================
+
+
+======================================================================
+EXECUTANDO CLASSE: TestesNavegacao
+======================================================================
+
+============================================================
+TESTE: Gerar relatório CSV
+============================================================
+Iniciando aplicação...
+Aplicação iniciada
+Realizando login com usuário: admin
+Aguardando: login_screen.png (timeout: 10s)
+Imagem encontrada: login_screen.png
+Digitando: admin
+Pressionando: tab
+Digitando: 123456
+Pressionando: enter
+Aguardando: main_interface.png (timeout: 10s)
+Parando aplicação...
+Aplicação parada
