@@ -1099,8 +1099,6 @@ class TestesNavegacao:
                 clicar_imagem("combo_formato.png", confianca=0.7)
                 time.sleep(0.5)
                 pressionar_tecla("enter")
-                # clicar_imagem("opcao_csv.png", confianca=0.7)
-                # time.sleep(0.5)
                 
                 # Clica em gerar relatório de bombonas
                 if clicar_imagem("btn_relatorio_bombonas.png"):
@@ -1244,25 +1242,3 @@ if __name__ == "__main__":
         else:
             print("\nOpção inválida! Por favor, escolha um número do menu.")
             time.sleep(2)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # # MODO NÃO-INTERATIVO (para automação/CI/CD, mantém comportamento original)
-    # if "--all" in sys.argv:
-    #     print("MODO NÃO-INTERATIVO: Executando todos os testes...")
-    #     arquivo_relatorio, todos_passaram = executar_suites_de_teste(todas_as_suites)
-    #     print(f"\nRelatório salvo em: {arquivo_relatorio}")
-    #     sys.exit(0 if todos_passaram else 1)
