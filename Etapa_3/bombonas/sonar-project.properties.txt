@@ -1,0 +1,17 @@
+# Chave única do projeto (a mesma que você definiu na interface)
+sonar.projectKey=SistemadeBombonas
+
+# Nome do projeto (opcional, para clareza)
+sonar.projectName=Projeto Sistema de Bombonas
+
+# Versão do projeto (opcional)
+sonar.projectVersion=1.0
+
+# URL do seu servidor SonarQube local
+sonar.host.url=http://localhost:9000
+
+# Token de autenticação que você gerou
+sonar.token=sqp_149f9f118c1656090aac116ae2032891542d2be0
+
+# Caminho para o código-fonte principal. O ponto "." significa o diretório atual.
+sonar.sources=.
