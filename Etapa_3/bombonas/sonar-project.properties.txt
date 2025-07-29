@@ -15,3 +15,5 @@ sonar.token=sqp_149f9f118c1656090aac116ae2032891542d2be0
 
 # Caminho para o código-fonte principal. O ponto "." significa o diretório atual.
 sonar.sources=.
+
+sonar.python.version=3.13.3
